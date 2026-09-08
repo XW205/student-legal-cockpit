@@ -686,6 +686,40 @@ input{font-family:inherit}
   .stat-strip{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px){ .map-tools{margin-left:0} }
+
+/* ============ AI 模型接入（夫子·明察） ============ */
+.ai-setbtn{flex:none;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.35);font-size:18px;color:#fff;transition:.2s}
+.ai-setbtn:hover{background:rgba(255,255,255,.32);transform:rotate(12deg) scale(1.05)}
+.modal-mask{position:fixed;inset:0;background:rgba(11,21,48,.46);z-index:300;display:none;
+  align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+.modal-mask.on{display:flex}
+.ai-modal{background:#fff;border-radius:22px;max-width:620px;width:100%;padding:24px;
+  box-shadow:0 26px 64px rgba(0,0,0,.28);max-height:90vh;overflow:auto;animation:fadeUp .25s ease both}
+.am-head{display:flex;gap:10px;margin-bottom:14px}
+.am-head h3{font-size:19px;font-weight:800}
+.am-head p{font-size:12px;color:var(--muted);margin-top:2px}
+.am-close{margin-left:auto;width:34px;height:34px;border-radius:10px;background:#eef2f8;color:#475569;font-size:15px;transition:.2s}
+.am-close:hover{background:#e2e8f2}
+.mode-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seg-btn{padding:12px;border-radius:13px;border:1.5px solid var(--line);background:#f8fafc;
+  font-weight:700;font-size:13.5px;color:var(--slate);transition:.18s}
+.seg-btn:hover{border-color:#b9ccf5}
+.seg-btn.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.28)}
+.fm{margin-bottom:12px}
+.fm label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
+.fm input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;
+  font-size:14px;outline:none;background:#fbfcfe;font-family:inherit;transition:.2s}
+.fm input:focus{border-color:#7ea4ff;background:#fff}
+.am-row{display:flex;align-items:center;gap:10px;margin:6px 0 12px;flex-wrap:wrap}
+.am-test{font-size:12px;color:var(--slate);min-width:0;word-break:break-all}
+.am-test.ok{color:#059669;font-weight:600}
+.am-test.err{color:#dc2626;font-weight:600}
+.am-note{font-size:11.5px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;line-height:1.75;margin-bottom:14px}
+.am-foot{display:flex;justify-content:flex-end;gap:10px}
+.msg.bot .bubble.warn{background:#fff8ed;border-color:#fde0a9;color:#7a4a12}
+.msg.bot .bubble.err{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}
 </style>
 </head>
 <body><!-- ================= 顶部应用栏 ================= -->
@@ -792,8 +826,8 @@ input{font-family:inherit}
         <p>7×24 在线，陪你先把问题理清楚、证据备齐全</p>
       </div>
       <div class="status">
-        <div><span class="dot"></span><b>在线服务中</b></div>
-        <span>模拟回答 · 仅供参考</span>
+        <div><span class="dot" id="aiModeDot"></span><b id="aiModeLabel">离线演示模式</b></div>
+        <span id="aiModeSub">模拟回答 · 仅供参考</span><button class="ai-setbtn" id="aiSetBtn" title="AI 模型接入设置">⚙️</button>
       </div>
     </div>
 
@@ -827,7 +861,7 @@ input{font-family:inherit}
         <div style="flex:1">
           <h4 id="chatTitle">法律咨询</h4>
         </div>
-        <span class="tag">● 法小航在线</span>
+        <button class="chat-back" id="chatClear" title="清空对话">🗑️</button><span class="tag" id="chatModeTag">● 法小航在线</span>
       </div>
       <div class="chat-scroll" id="chatScroll"></div>
       <div class="chat-suggests" id="chatSuggests"></div>
@@ -835,7 +869,7 @@ input{font-family:inherit}
         <input id="chatInput" type="text" placeholder="继续描述你的问题…" autocomplete="off">
         <button class="btn" type="submit">发送 ➤</button>
       </form>
-      <div class="chat-footnote">⚠️ 演示内容为模拟生成，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
+      <div class="chat-footnote">⚠️ 回答由「夫子·明察」司法大模型或离线演示生成，仅供参考，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
     </div>
   </section>
 
@@ -1142,6 +1176,43 @@ input{font-family:inherit}
   <button class="nav-item" data-page="page-rights"><span class="ico">👤</span>我的权益</button>
 </nav>
 
+<!-- ===== AI 模型接入设置（夫子·明察 fuzi-mingcha） ===== -->
+<div class="modal-mask" id="aiModal">
+  <div class="ai-modal">
+    <div class="am-head">
+      <div>
+        <h3>⚙️ AI 模型接入设置</h3>
+        <p>将 AI 法律助手接入本地部署的「夫子·明察」司法大模型（SDUIRLab/fuzi-mingcha-v1_0）</p>
+      </div>
+      <button class="am-close" id="aiModalClose">✕</button>
+    </div>
+    <div class="mode-seg" id="modeSeg">
+      <button class="seg-btn" data-mode="demo">🧪 离线演示模式</button>
+      <button class="seg-btn" data-mode="model">🎓 夫子·明察（本地模型）</button>
+    </div>
+    <div class="fm">
+      <label>服务地址（OpenAI 兼容接口，默认指向本项目代理 8001 端口）</label>
+      <input id="aiBase" placeholder="http://127.0.0.1:8001/v1" autocomplete="off">
+    </div>
+    <div class="fm">
+      <label>模型名称</label>
+      <input id="aiModel" placeholder="fuzi-mingcha-v1_0" autocomplete="off">
+    </div>
+    <div class="fm">
+      <label>API Key（如服务端需要验证，可留空）</label>
+      <input id="aiKey" type="password" placeholder="可选" autocomplete="off">
+    </div>
+    <div class="am-row">
+      <button class="btn ghost sm" id="aiTest">🔌 测试连接</button>
+      <div class="am-test" id="aiTestRes"></div>
+    </div>
+    <div class="am-note">🔒 使用提示：1) 模型由你本机部署的服务提供，问题文本仅发送到上方服务地址；2) 夫子·明察权重遵循 ChatGLM-6B Model License，官方声明仅供学术研究、不得用于商业用途；3) 模型回答仅供参考，不构成法律意见，重大事项请咨询律师或拨打 12348。</div>
+    <div class="am-foot">
+      <button class="btn ghost sm" id="aiCancel">取消</button>
+      <button class="btn sm" id="aiSave">💾 保存并应用</button>
+    </div>
+  </div>
+</div>
 <!-- Toast -->
 <div class="toast-wrap" id="toastWrap"></div><script>
 /* =========================================================
@@ -1338,14 +1409,51 @@ function detectScene(text){
 }
 function fallbackAns(){
   return '收到，你的问题我已记录（演示）。\n\n建议按这个节奏推进：\n① 先把时间线 & 证据整理清楚（文字、截图、转账都算）\n② 明确你的诉求：希望对方做什么 / 赔多少\n③ 先书面沟通并保留记录\n④ 拿不准就打 12348 法律援助热线\n\n💡 想要更精准的演示回答，可以回到列表选择具体场景，或上传合同使用「AI 合同审查」。';
-}/* ---------- 聊天 UI 交互 ---------- */
+}/* =========================================================
+   AI 助手 · 夫子·明察（fuzi-mingcha）接入 + 聊天交互
+   ---------------------------------------------------------
+   - 通过 OpenAI 兼容接口 /v1/chat/completions 调用本地部署的
+     SDUIRLab/fuzi-mingcha-v1_0（推荐用 backend/fuzi_proxy.py 代理，
+     默认 http://127.0.0.1:8001/v1；也可直连 vLLM 的 8000 端口）。
+   - 配置保存在浏览器 localStorage；未连接服务时自动回退离线演示回答。
+   ========================================================= */
+var FUZI_CFG_KEY = 'fuzi_cfg_v1';
+var FUZI_DEFAULT = { mode: 'demo', base: 'http://127.0.0.1:8001/v1', model: 'fuzi-mingcha-v1_0', key: '' };
+function loadFuziCfg(){
+  try {
+    var s = localStorage.getItem(FUZI_CFG_KEY);
+    if (s){ var o = JSON.parse(s); o.mode = (o.mode === 'model') ? 'model' : 'demo';
+      o.base = o.base || FUZI_DEFAULT.base; o.model = o.model || FUZI_DEFAULT.model; o.key = o.key || '';
+      return o; }
+  } catch(e){}
+  return JSON.parse(JSON.stringify(FUZI_DEFAULT));
+}
+var FUZI_CFG = loadFuziCfg();
+function saveFuziCfg(o){ FUZI_CFG = o; try{ localStorage.setItem(FUZI_CFG_KEY, JSON.stringify(o)); }catch(e){} }
+function modelOn(){ return FUZI_CFG.mode === 'model'; }
+function fuziBase(){
+  var b = (FUZI_CFG.base || FUZI_DEFAULT.base).trim().replace(/\/+$/,'');
+  if (!/\/v1$/i.test(b)) b += '/v1';
+  return b;
+}
+/* 系统提示：让模型按“法护启航”的要求回答各类法律问题 */
+var FUZI_SYS = '你是「法护启航」大学生法律安全驾驶舱内置的法律助手「法小航」，底层模型为夫子·明察司法大模型。' +
+  '你面向在校大学生，擅长回答租房、兼职就业、合同纠纷、消费维权、人身权益、网络侵权等法律问题。' +
+  '回答要求：1) 优先引用具体法律名称与条款号；2) 分步骤给出可操作建议（固定证据、协商、投诉渠道、仲裁/诉讼路径）；' +
+  '3) 案情信息不足时先追问关键事实，不要编造；4) 拿不准或涉及重大利益时，明确提示拨打 12348 法律援助热线或咨询执业律师；' +
+  '5) 语言简洁友好、条理清晰。注意：你的回答仅供学习参考，不构成正式法律意见。';
+
+/* 聊天状态 */
 var chatScroll = $('#chatScroll');
 var chatTitle = $('#chatTitle');
-var currentKey = null;   // 当前场景 key
+var currentKey = null;       // 当前场景 key
+var chatHistory = [];        // 发送给模型的多轮对话历史
+var chatBusy = false;        // 是否正在等待模型
+var chatAbort = null;        // 用于中断上一次请求
 
 function scrollBottom(){ chatScroll.scrollTop = chatScroll.scrollHeight; }
 
-/* 添加一条消息（role: bot / self） */
+/* 用户 / 助手消息 */
 function pushMsg(role, text){
   var row = el('div', 'msg ' + (role === 'self' ? 'self' : 'bot'));
   row.appendChild(el('div', 'av', role === 'self' ? '🧑' : '🤖'));
@@ -1356,25 +1464,109 @@ function pushMsg(role, text){
   scrollBottom();
   return bub;
 }
-
-/* 机器人“正在输入”→ 回复 */
-function botReply(text, done){
+/* “正在输入”占位气泡，返回用于后续填充 */
+function botTyping(){
   var row = el('div', 'msg bot');
   row.appendChild(el('div', 'av', '🤖'));
-  var bub = el('div', 'bubble typing',
-    '<i></i><i></i><i></i>');
+  var bub = el('div', 'bubble typing', '<i></i><i></i><i></i>');
   row.appendChild(bub);
   chatScroll.appendChild(row);
   scrollBottom();
+  return bub;
+}
+/* 离线模式：模拟思考后回复 */
+function botReply(text, done){
+  var bub = botTyping();
   setTimeout(function(){
     bub.classList.remove('typing');
-    bub.textContent = text;
+    bub.textContent = text || fallbackAns();
     scrollBottom();
     if (done) done();
-  }, 950);
+  }, 900);
 }
 
-/* 快捷追问 chips */
+/* 离线兜底：覆盖不同法律问题的分类建议（模型不可用时的演示回答） */
+function offlineAnswer(text){
+  var t = text || '';
+  var checks = [
+    { re: /消费|退货|退款|退费|培训|课程|机构|健身房|美容|理发|办卡|预售/,
+      a: '遇到消费 / 预付式纠纷，按四步处理：\n① 固定证据：合同、付款记录、宣传与承诺截图；\n② 先书面协商，明确“退多少、什么时间退”；\n③ 商家拒绝 → 平台投诉 + 拨打 12315（市场监管）；\n④ 仍无果 → 属地调解或小额诉讼。\n\n📌 参考：《消费者权益保护法》第 24、55 条（离线演示回答）' },
+    { re: /校园贷|网贷|高利贷|砍头息|分期|套路贷|利息/,
+      a: '涉借贷纠纷请注意：\n① 核算实际年利率，超过合同成立时一年期 LPR 四倍的部分，法院一般不予支持；\n② 保留借款合同、到账流水与还款记录，警惕“砍头息”；\n③ 遭遇催收骚扰、暴力威胁或疑似“套路贷”，请立即报警；\n④ 可同时向金融监管部门投诉。\n\n📌 参考：《民法典》第 680 条 禁止高利放贷（离线演示回答）' },
+    { re: /受伤|人身|侵权|殴打|霸凌|欺凌|交通事故|被打|骚扰|校园暴力/,
+      a: '人身权益受损，建议按以下步骤处理：\n① 先就医并保留病历与票据；伤情较重请报警并申请验伤；\n② 固定证据：监控、证人、聊天记录等；\n③ 可主张医疗费、护理费、交通费、误工损失等，造成严重精神损害的还可主张精神损害赔偿；\n④ 先与对方或学校调解，不成再起诉。\n\n📌 参考：《民法典》第 1165、1179、1183 条（离线演示回答）' },
+    { re: /名誉|隐私|诽谤|造谣|网暴|人肉|照片|泄露/,
+      a: '遭遇网络侵权（名誉 / 隐私 / 诽谤）：\n① 第一时间用录屏、公证或可信时间戳固定证据；\n② 要求平台删除、断开链接，并通知侵权人停止侵害；\n③ 保留身份线索，可向网信部门投诉或报警（公然侮辱、诽谤可能违反《治安管理处罚法》第 42 条）；\n④ 造成严重后果的可提起民事诉讼。\n\n📌 参考：《民法典》第 1024、1032 条（离线演示回答）' },
+    { re: /论文|抄袭|代写|著作权|版权|盗版|毕设|作品/,
+      a: '涉及知识产权 / 论文问题：\n① 保留原创底稿、过程文件与发布时间证明（时间戳、邮箱记录等）；\n② 先向发布平台投诉下架，或向学校学术部门反映；\n③ 构成侵权的，可要求停止侵害、赔礼道歉并赔偿损失；\n④ 重要作品建议做著作权登记。\n\n📌 参考：《著作权法》相关规定（离线演示回答）' },
+    { re: /维修|漏水|损坏|家电|自然损耗/,
+      a: '房屋维修责任纠纷：\n① 先判断是自然损耗还是人为损坏；\n② 自然损耗（水管老化、家电自然故障等）通常应由出租方负责维修；\n③ 书面通知房东并约定维修时限，保留报修记录；\n④ 房东拖延的，可自行维修后凭票据主张费用。\n\n📌 参考：《民法典》第 712、713 条（离线演示回答）' },
+    { re: /劳动|社保|五险|公积金|离职证明|档案|仲裁/,
+      a: '劳动权益问题通用路径：\n① 整理入职时间、岗位、工资与离职原因；\n② 固定证据：劳动合同、工资流水、考勤、聊天记录；\n③ 社保 / 公积金问题可向人社部门反映；欠薪或违法解除可申请劳动仲裁（时效一般为一年）；\n④ 拿不准先打 12333 或 12348。\n\n📌 参考：《劳动合同法》第 30、38、46、47 条（离线演示回答）' }
+  ];
+  for (var i = 0; i < checks.length; i++){
+    if (checks[i].re.test(t)) return checks[i].a;
+  }
+  return fallbackAns();
+}
+
+/* ---------- 调用夫子·明察（OpenAI 兼容接口） ---------- */
+function buildHeaders(){
+  var headers = { 'Content-Type': 'application/json' };
+  var key = (FUZI_CFG.key || '').trim();
+  if (key) headers['Authorization'] = 'Bearer ' + key;
+  return headers;
+}
+function askModel(text, done){
+  if (chatBusy){ toast('正在生成回答，请稍候…', false); return; }
+  chatBusy = true;
+  var input = $('#chatInput'); if (input) input.disabled = true;
+  if (chatAbort){ chatAbort.intentional = true; chatAbort.abort(); }
+  var ac = new AbortController(); ac.intentional = false; chatAbort = ac;
+  var timer = setTimeout(function(){ ac.abort(); }, 120000);
+
+  chatHistory.push({ role: 'user', content: text });
+  var msgs = chatHistory.slice(-12).map(function(m){ return { role: m.role, content: m.content }; });
+  /* ChatGLM 系对 system 角色支持有限：把系统要求合并进第一条 user 消息 */
+  msgs[0] = { role: 'user', content: FUZI_SYS + '\n\n【我的问题】\n' + msgs[0].content };
+
+  var bub = botTyping();
+  var payload = {
+    model: FUZI_CFG.model || FUZI_DEFAULT.model,
+    messages: msgs,
+    temperature: 0.7, top_p: 0.9,
+    max_tokens: 1024,
+    stream: false
+  };
+  fetch(fuziBase() + '/chat/completions', {
+    method: 'POST', headers: buildHeaders(), body: JSON.stringify(payload), signal: ac.signal
+  }).then(function(r){
+    if (!r.ok) return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ' ' + String(t).slice(0, 140)); });
+    return r.json();
+  }).then(function(j){
+    var content = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!content) throw new Error('模型返回内容为空');
+    bub.classList.remove('typing');
+    bub.textContent = content;
+    chatHistory.push({ role: 'assistant', content: content });
+    if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
+    scrollBottom();
+    if (done) done();
+  }).catch(function(err){
+    if (ac.intentional){ if (bub.parentNode) bub.parentNode.remove(); return; }
+    bub.classList.remove('typing');
+    bub.classList.add('err');
+    bub.textContent = '⚠️ 暂时无法获取「夫子·明察」回答（' + err.message + '）。已切换为离线演示回答：';
+    botReply(offlineAnswer(text), done);
+  }).finally(function(){
+    clearTimeout(timer);
+    if (chatAbort === ac) chatAbort = null;
+    chatBusy = false;
+    if (input) input.disabled = false;
+  });
+}
+
+/* ---------- 快捷追问 chips ---------- */
 function renderSuggests(key){
   var box = $('#chatSuggests'); box.innerHTML = '';
   if (!key) return;
@@ -1382,7 +1574,8 @@ function renderSuggests(key){
     var c = el('button', 'cs-chip', s.q);
     c.addEventListener('click', function(){
       pushMsg('self', s.q);
-      botReply(s.a);
+      if (modelOn()) askModel(s.q);
+      else botReply(s.a);
     });
     box.appendChild(c);
   });
@@ -1392,54 +1585,145 @@ function renderSuggests(key){
 }
 function clearSuggests(){ $('#chatSuggests').innerHTML = ''; }
 
-/* 进入对话视图 */
-function openChat(key){
+/* ---------- 进入 / 退出对话 ---------- */
+function openChat(key, userText){
   currentKey = key;
+  chatHistory = [];
+  if (chatAbort){ chatAbort.intentional = true; chatAbort.abort(); }
   $('#qaList').style.display = 'none';
   $('#chatView').classList.add('on');
   chatTitle.textContent = SCEN[key].icon + ' ' + SCEN[key].title;
   chatScroll.innerHTML = '';
   clearSuggests();
-  pushMsg('self', SCEN[key].ask);
-  botReply(SCEN[key].ans, function(){ renderSuggests(key); });
+  var q = (userText && String(userText).trim()) ? String(userText).trim() : SCEN[key].ask;
+  pushMsg('self', q);
+  if (modelOn()){
+    /* 真实模型模式：问题直接交给夫子·明察回答 */
+    askModel(q, function(){ renderSuggests(key); });
+  } else {
+    /* 离线演示：命中六大场景给内置答案，否则按关键词分类兜底 */
+    var k2 = detectScene(q);
+    var txt = (k2 !== 'other' && SCEN[k2] && SCEN[k2].ans) ? SCEN[k2].ans : offlineAnswer(q);
+    botReply(txt, function(){ renderSuggests(key); });
+  }
 }
 function backToList(){
+  if (chatAbort){ chatAbort.intentional = true; chatAbort.abort(); }
   $('#chatView').classList.remove('on');
   $('#qaList').style.display = '';
   currentKey = null;
   clearSuggests();
 }
 
-/* 自由提问：匹配场景则进入场景对话，否则普通问答 */
+/* 从首页 / 快捷入口 / 风险地图等处进入咨询 */
 function askAI(text){
   text = (text || '').trim();
   var key = detectScene(text);
   showPage('page-ai');
-  openChat(key);
+  openChat(key, text);
 }
 
-/* 快捷问题卡片 */
+/* ---------- 界面状态 ---------- */
+function updateAIModeUI(){
+  var on = modelOn();
+  $('#aiModeLabel').textContent = on ? '夫子·明察已接入' : '离线演示模式';
+  $('#aiModeSub').textContent = on ? '真实模型回答 · 需本地模型服务' : '模拟回答 · 仅供参考';
+  $('#aiModeDot').style.background = on ? '#4ade80' : '#94a3b8';
+  $('#chatModeTag').textContent = on ? '🎓 夫子·明察' : '● 离线演示';
+}
+function setSegUI(){
+  $$('#modeSeg .seg-btn').forEach(function(b){
+    b.classList.toggle('on', b.dataset.mode === FUZI_CFG.mode);
+  });
+}
+function openAiModal(){
+  $('#aiBase').value = FUZI_CFG.base || FUZI_DEFAULT.base;
+  $('#aiModel').value = FUZI_CFG.model || FUZI_DEFAULT.model;
+  $('#aiKey').value = FUZI_CFG.key || '';
+  var res = $('#aiTestRes'); res.className = 'am-test'; res.textContent = '';
+  setSegUI();
+  $('#aiModal').classList.add('on');
+}
+function closeAiModal(){ $('#aiModal').classList.remove('on'); }
+function syncCfgFromInputs(){
+  FUZI_CFG.mode = $$('#modeSeg .seg-btn.on')[0] ? $$('#modeSeg .seg-btn.on')[0].dataset.mode : FUZI_CFG.mode;
+  FUZI_CFG.base = $('#aiBase').value.trim() || FUZI_DEFAULT.base;
+  FUZI_CFG.model = $('#aiModel').value.trim() || FUZI_DEFAULT.model;
+  FUZI_CFG.key = $('#aiKey').value.trim();
+}
+function testFuziConnection(){
+  syncCfgFromInputs();
+  var res = $('#aiTestRes'); res.className = 'am-test'; res.textContent = '⏳ 正在测试连接…';
+  fetch(fuziBase() + '/models', { headers: buildHeaders(), signal: acTimeout(9000) })
+    .then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(j){
+      var names = (j && j.data || []).map(function(x){ return x.id || x.name || ''; });
+      var hit = names.indexOf(FUZI_CFG.model) >= 0;
+      res.classList.add(hit ? 'ok' : 'err');
+      res.textContent = hit
+        ? '✅ 已连接！模型「' + FUZI_CFG.model + '」可用，可开始咨询。'
+        : '✅ 服务已连接，但可用模型列表为：' + (names.join('、') || '空') + '。请核对模型名称是否与启动参数一致。';
+    }).catch(function(err){
+      res.classList.add('err');
+      res.textContent = '❌ 连接失败：' + err.message + '。请确认本地模型服务已启动，且地址 / 端口正确。';
+    });
+}
+function acTimeout(ms){
+  var c = new AbortController();
+  setTimeout(function(){ c.abort(); }, ms);
+  return c.signal;
+}
+
+/* ---------- 事件绑定 ---------- */
 $$('.qa-card').forEach(function(c){
   c.addEventListener('click', function(){ openChat(c.dataset.key); });
 });
 $('#chatBack').addEventListener('click', backToList);
+$('#chatClear').addEventListener('click', function(){
+  chatHistory = [];
+  if (chatAbort){ chatAbort.intentional = true; chatAbort.abort(); }
+  backToList();
+  toast('对话已清空', true);
+});
 
-/* 聊天输入框 */
+/* 聊天输入框：真实模型 / 离线演示双通道 */
 $('#chatForm').addEventListener('submit', function(e){
   e.preventDefault();
   var v = $('#chatInput').value.trim();
-  if (!v) return;
+  if (!v || chatBusy) return;
   $('#chatInput').value = '';
   pushMsg('self', v);
-  if (currentKey){
-    /* 在具体场景内：命中关键词给对应法条速答，否则给通用建议 */
-    botReply(SCEN[currentKey].su.length
-      ? '📌 ' + SCEN[currentKey].title + ' 场景下补充建议：请优先按上面步骤固定证据；如已协商无果，可拨打 12348 咨询下一步（演示回答）。'
-      : fallbackAns());
+  if (modelOn()){
+    askModel(v);
   } else {
-    botReply(fallbackAns());
+    var k = detectScene(v);
+    var txt = (k !== 'other' && SCEN[k] && SCEN[k].ans) ? SCEN[k].ans : offlineAnswer(v);
+    botReply(txt);
   }
-});/* =========================================================
+});
+
+/* 接入设置弹窗 */
+$('#aiSetBtn').addEventListener('click', openAiModal);
+$('#aiModalClose').addEventListener('click', closeAiModal);
+$('#aiCancel').addEventListener('click', closeAiModal);
+$('#aiModal').addEventListener('click', function(e){ if (e.target === this) closeAiModal(); });
+$$('#modeSeg .seg-btn').forEach(function(b){
+  b.addEventListener('click', function(){
+    $$('#modeSeg .seg-btn').forEach(function(x){ x.classList.toggle('on', x === b); });
+  });
+});
+$('#aiTest').addEventListener('click', testFuziConnection);
+$('#aiSave').addEventListener('click', function(){
+  syncCfgFromInputs();
+  saveFuziCfg(FUZI_CFG);
+  updateAIModeUI();
+  closeAiModal();
+  toast(modelOn() ? '已启用「夫子·明察」真实模型回答' : '已切换为离线演示模式', true);
+});
+
+updateAIModeUI();/* =========================================================
    合同审查：模拟数据（示例租房合同）
    ========================================================= */
 var RISK = [
