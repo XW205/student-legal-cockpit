@@ -483,49 +483,6 @@ input{font-family:inherit}
 .report-note{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 18px}
 .report-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:6px}
 
-/* ============ 风险地图（骨架） ============ */
-.map-skeleton{
-  background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;
-  box-shadow:var(--shadow);position:relative;
-}
-.map-toolbar{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);
-  flex-wrap:wrap}
-.map-toolbar .mt-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
-.map-toolbar .mt-live{font-size:11px;color:#b45309;background:#fef3c7;border:1px solid #fde68a;
-  padding:3px 10px;border-radius:99px;font-weight:700}
-.map-canvas{
-  position:relative;height:380px;background:
-    linear-gradient(rgba(30,64,175,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(30,64,175,.06) 1px,transparent 1px),
-    radial-gradient(600px 300px at 60% 30%,rgba(47,107,255,.10),transparent 70%),
-    #fbfcff;
-  background-size:40px 40px,40px 40px,auto,auto;
-  display:flex;align-items:center;justify-content:center;
-}
-.map-center{text-align:center;padding:20px}
-.map-center .m-ico{font-size:54px;display:block;margin-bottom:8px;opacity:.9}
-.map-center h4{font-size:19px;font-weight:800;color:var(--brand-deep)}
-.map-center p{font-size:13px;color:var(--muted);max-width:420px;margin:6px auto 0}
-.shimmer{display:inline-block;margin-top:12px;width:150px;height:10px;border-radius:6px;
-  background:linear-gradient(90deg,#e8eef8 25%,#f6f9ff 40%,#e8eef8 60%);
-  background-size:300% 100%;animation:shimmer 1.4s infinite}
-@keyframes shimmer{0%{background-position:120% 0}100%{background-position:-80% 0}}
-.pin{position:absolute;font-size:24px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));cursor:pointer;
-  animation:pinPulse 2.4s infinite}
-.pin:nth-child(2){left:18%;top:30%}.pin:nth-child(3){left:46%;top:58%}
-.pin:nth-child(4){left:70%;top:26%}.pin:nth-child(5){left:30%;top:72%}
-@keyframes pinPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.map-legend{display:flex;gap:12px;flex-wrap:wrap;padding:16px 20px;border-top:1px solid var(--line)}
-.leg-chip{font-size:12.5px;color:#475569;background:#f2f5fb;border:1px solid #e4eaf4;
-  padding:7px 13px;border-radius:99px;display:flex;align-items:center;gap:6px}
-.leg-chip i{font-style:normal;width:9px;height:9px;border-radius:50%;display:inline-block}
-.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
-.plan-card{background:var(--card);border:1px dashed #c7d6f2;border-radius:16px;padding:16px;
-  text-align:center;box-shadow:var(--shadow)}
-.plan-card .p-ico{font-size:26px;display:block;margin-bottom:6px}
-.plan-card b{font-size:13.5px;display:block}
-.plan-card span{font-size:11.5px;color:var(--muted)}
-
 /* ============ 我的权益 ============ */
 .profile-card{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   background:linear-gradient(120deg,#0d2557,#1d4ed8 60%,#0ea5e9);color:#fff;border-radius:22px;
@@ -604,6 +561,131 @@ input{font-family:inherit}
   .chat-scroll{height:52vh;min-height:340px}
   .bottomnav{border-radius:18px}
 }
+
+/* ============ 风险地图（功能演示版） ============ */
+.ok-tag{color:#059669 !important;background:#e7f9f1 !important;border-color:#b7ecd6 !important}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.stat-mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;
+  display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.stat-mini .sm-ico{font-size:22px;width:44px;height:44px;border-radius:13px;flex:none;
+  display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef4ff,#e0f7ff)}
+.stat-mini b{font-size:20px;font-weight:900;display:block;line-height:1.2}
+.stat-mini span{font-size:11.5px;color:var(--muted)}
+
+.map-layout{display:flex;gap:16px;padding:16px}
+.map-stage{flex:1 1 640px;min-width:0;display:flex;flex-direction:column}
+.map-toolbar2{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.map-toolbar2 .mt-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+.mt-live2{font-size:11.5px;color:#059669;background:#e7f9f1;border:1px solid #b7ecd6;
+  padding:4px 11px;border-radius:99px;font-weight:700;margin-left:auto;transition:.3s}
+.mt-live2.flash{background:#d1fae5;transform:scale(1.04)}
+.map-canvas2{
+  position:relative;height:430px;border-radius:16px;overflow:hidden;
+  background:
+    linear-gradient(rgba(30,64,175,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,64,175,.05) 1px,transparent 1px),
+    radial-gradient(700px 340px at 30% 20%,rgba(47,107,255,.09),transparent 70%),
+    #fbfcff;
+  background-size:38px 38px,38px 38px,auto,auto;
+  border:1px solid var(--line);
+}
+.map-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.heat-layer{position:absolute;inset:0;pointer-events:none;transition:opacity .35s}
+.heat-layer.off{opacity:0}
+.blob{position:absolute;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+  transition:opacity .3s}
+.pin-layer{position:absolute;inset:0;z-index:5}
+.pin-node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:opacity .3s}
+.pin-node.weak{opacity:.38}
+.pin-orb{
+  width:40px;height:40px;border-radius:14px;font-size:20px;color:#fff;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 8px 18px rgba(13,37,87,.28);border:2.5px solid #fff;transition:.18s;
+}
+.pin-orb::after{content:"";position:absolute;inset:-6px;border-radius:18px;border:2px solid rgba(37,99,235,.45);
+  animation:pinPulse2 2s ease-out infinite;opacity:0}
+.pin-node:hover .pin-orb{transform:scale(1.1)}
+.pin-node.sel .pin-orb{transform:scale(1.14);box-shadow:0 0 0 4px rgba(37,99,235,.25),0 8px 18px rgba(13,37,87,.3)}
+.pin-node.sel .pin-orb::after{opacity:1}
+@keyframes pinPulse2{0%{transform:scale(.85);opacity:.9}70%{transform:scale(1.35);opacity:0}100%{opacity:0}}
+.pin-orb.c-rent{background:linear-gradient(135deg,#f87171,#dc2626)}
+.pin-orb.c-job{background:linear-gradient(135deg,#fbbf24,#d97706)}
+.pin-orb.c-consume{background:linear-gradient(135deg,#34d399,#059669)}
+.pin-orb.c-person{background:linear-gradient(135deg,#a78bfa,#7c3aed)}
+.pin-orb.c-all{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+.pin-cnt{font-size:11px;font-weight:800;color:#fff;background:#0d2557;border:1px solid #ffffff;
+  padding:1px 8px;border-radius:99px;box-shadow:0 4px 10px rgba(0,0,0,.18);white-space:nowrap}
+.map-empty{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;
+  background:rgba(251,252,255,.86);color:var(--slate);font-size:14px;font-weight:600}
+.map-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.type-chips{display:flex;gap:8px;flex-wrap:wrap}
+.t-chip{font-size:12.5px;font-weight:700;color:#475569;background:#f1f4fa;border:1px solid transparent;
+  padding:7px 13px;border-radius:99px;transition:.18s;display:inline-flex;align-items:center;gap:6px}
+.t-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.t-chip:hover{color:var(--brand-deep)}
+.t-chip.on{background:#0d2557;color:#fff;box-shadow:0 6px 14px rgba(13,37,87,.25)}
+.map-tools{margin-left:auto;display:flex;gap:8px}
+.mt-btn{font-size:12.5px;font-weight:700;color:var(--brand-deep);background:#eef4ff;border:1px solid #d5e3ff;
+  padding:7px 13px;border-radius:99px;transition:.18s}
+.mt-btn:hover{background:#dfe9ff}
+.mt-btn.off{color:#64748b;background:#f1f4fa;border-color:#e2e8f0}
+.type-bar-wrap{margin-top:14px}
+.tb-cap{font-size:12.5px;color:var(--slate);font-weight:700;display:block;margin-bottom:7px}
+.type-bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#eef2f8}
+.type-bar i{display:block;height:100%;transition:width .5s ease}
+.tb-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.tb-legend span{font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.tb-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* 右侧详情面板 */
+.detail-panel{flex:0 0 320px;min-width:280px;background:#f8fafd;border:1px solid var(--line);
+  border-radius:16px;padding:18px;max-height:560px;overflow:auto;box-shadow:inset 0 1px 0 #fff}
+.dp-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
+.dp-head .dp-ico{font-size:26px;line-height:1}
+.dp-head h4{font-size:16px;font-weight:800;line-height:1.3}
+.dp-sub{font-size:11.5px;color:var(--muted);margin:4px 0 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.risk-pill{font-size:11px;font-weight:800;padding:3px 10px;border-radius:99px}
+.risk-pill.hot{color:#dc2626;background:#fee2e2}
+.risk-pill.watch{color:#b45309;background:#fef3c7}
+.risk-pill.ok{color:#047857;background:#d1fae5}
+.dp-back{font-size:12px;color:#1d4ed8;background:#e8efff;border:1px solid #cddcff;
+  padding:5px 12px;border-radius:99px;font-weight:700;margin-bottom:12px;transition:.2s}
+.dp-back:hover{background:#dbe7ff}
+.dp-block{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:10px}
+.dp-block h5{font-size:12.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;color:var(--brand-deep)}
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dp-cell{background:#f6f8fc;border-radius:10px;padding:8px 10px}
+.dp-cell b{font-size:16px;font-weight:900;display:block;line-height:1.2}
+.dp-cell span{font-size:10.5px;color:var(--muted)}
+.mbar{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px}
+.mbar .mb-lbl{flex:0 0 58px;font-weight:600;color:#475569}
+.mbar .mb-track{flex:1;height:8px;background:#eef2f8;border-radius:99px;overflow:hidden}
+.mbar .mb-track i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.mbar .mb-num{flex:0 0 44px;text-align:right;font-weight:800;color:#33425c}
+.case-li{font-size:12.5px;color:#33425c;line-height:1.55;padding:7px 0 7px 20px;position:relative;border-bottom:1px dashed var(--line)}
+.case-li:last-child{border-bottom:none}
+.case-li::before{content:"▸";position:absolute;left:2px;color:#2f6bff;font-weight:800}
+.guide-li{font-size:12.5px;color:#33425c;line-height:1.6;padding:4px 0 4px 20px;position:relative}
+.guide-li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:50%;background:#2f6bff}
+.dp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.dp-actions .btn{flex:1;min-width:120px;padding:10px 12px;font-size:13px}
+.rank-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:11px;cursor:pointer;transition:.15s}
+.rank-row:hover{background:#eef4ff}
+.rank-row .rk{width:22px;height:22px;border-radius:8px;flex:none;font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;background:#eef1f6;color:#64748b}
+.rank-row:nth-child(1) .rk{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff}
+.rank-row:nth-child(2) .rk{background:linear-gradient(135deg,#cbd5e1,#94a3b8);color:#fff}
+.rank-row:nth-child(3) .rk{background:linear-gradient(135deg,#fcd9a0,#d97706);color:#fff}
+.rank-row .rk-name{flex:1;font-size:13px;font-weight:700}
+.rank-row .rk-num{font-weight:800;color:#0d2557}
+.dp-note{font-size:11px;color:var(--muted);line-height:1.6}
+@media(max-width:900px){
+  .map-layout{flex-direction:column}
+  .detail-panel{flex:auto;max-height:none}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){ .map-tools{margin-left:0} }
 </style>
 </head>
 <body><!-- ================= 顶部应用栏 ================= -->
@@ -875,46 +957,100 @@ input{font-family:inherit}
         <button class="btn ghost" id="reportAiBtn">💬 咨询 AI 助手</button>
       </div>
     </div>
-  </section>  <!-- ================= 页面4：风险地图（骨架预留） ================= -->
+  </section>  
+  <!-- ================= 页面4：风险地图（功能演示版） ================= -->
   <section class="page" id="page-map">
     <div class="page-title">
       <div class="line"></div>
       <h2>🗺️ 法律风险地图</h2>
-      <span class="tag">模块建设中</span>
-      <span class="desc">预留页面骨架：后续将接入「高校周边法律纠纷热力数据」，导航跳转已保留。</span>
+      <span class="tag ok-tag">● 实时演示数据</span>
+      <span class="desc">高校周边法律纠纷热力驾驶舱：类型筛选 · 热点钻取 · 热力图 · 模拟实时刷新（演示环境为前端模拟数据）</span>
     </div>
 
-    <div class="map-skeleton">
-      <div class="map-toolbar">
-        <div class="mt-title">📍 高校周边纠纷热力分布（预览）</div>
-        <span class="mt-live">● 数据接入中</span>
-      </div>
-      <div class="map-canvas">
-        <span class="pin">🏫</span><span class="pin">🏘️</span><span class="pin">🏢</span><span class="pin">⚖️</span>
-        <div class="map-center">
-          <span class="m-ico">🗺️</span>
-          <h4>风险地图 · 数据区域预留</h4>
-          <p>此处将展示：校外租房纠纷高发点 / 兼职欠薪投诉分布 / 培训机构退费预警 / 法律援助站点导航</p>
-          <span class="shimmer"></span>
+    <!-- 顶部指标条 -->
+    <div class="stat-strip">
+      <div class="stat-mini"><span class="sm-ico">🗂️</span>
+        <div><b id="stTotal">1,284</b><span>本月收录纠纷（起）</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🔥</span>
+        <div><b id="stTop">租房纠纷</b><span id="stTopSub">高发类型 · 占比 36%</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🏫</span>
+        <div><b>6</b><span>覆盖高校片区</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">📉</span>
+        <div><b id="stIdx">62</b><span>周风险指数（较上周 ↓8）</span></div></div>
+    </div>
+
+    <!-- 地图 + 详情面板 -->
+    <div class="card map-layout">
+      <!-- 左：地图画布 -->
+      <div class="map-stage">
+        <div class="map-toolbar2">
+          <span class="mt-title">📍 昆明呈贡大学城 · 高校纠纷分布</span>
+          <span class="mt-live2" id="mtLive">● 实时演示 · 刚刚更新</span>
+        </div>
+        <div class="map-canvas2" id="mapCanvas">
+          <!-- 装饰底图（道路/水域/绿地） -->
+          <svg class="map-bg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#7dd3fc"/>
+              </linearGradient>
+            </defs>
+            <!-- 水域 -->
+            <ellipse cx="150" cy="500" rx="180" ry="90" fill="#dbeafe" opacity=".9"/>
+            <path d="M -20 470 C 220 380 420 520 700 430 C 820 390 900 330 1030 300"
+              stroke="url(#river)" stroke-width="34" fill="none" stroke-linecap="round" opacity=".55"/>
+            <!-- 绿地 -->
+            <ellipse cx="860" cy="120" rx="150" ry="80" fill="#dcfce7" opacity=".9"/>
+            <ellipse cx="330" cy="120" rx="120" ry="70" fill="#e6f7ec" opacity=".8"/>
+            <!-- 主干道 -->
+            <path d="M 0 300 H 1030" stroke="#ffffff" stroke-width="16"/>
+            <path d="M 0 300 H 1030" stroke="#e9eef6" stroke-width="12"/>
+            <path d="M 500 0 V 640" stroke="#ffffff" stroke-width="16"/>
+            <path d="M 500 0 V 640" stroke="#e9eef6" stroke-width="12"/>
+            <path d="M 120 0 V 640" stroke="#f1f5fb" stroke-width="9"/>
+            <path d="M 0 120 H 1030" stroke="#f1f5fb" stroke-width="9"/>
+            <path d="M 0 470 H 1030" stroke="#f1f5fb" stroke-width="9"/>
+            <!-- 行政片区名 -->
+            <text x="78" y="96" font-size="17" fill="#b3c0d6">吴家营街道</text>
+            <text x="600" y="96" font-size="17" fill="#b3c0d6">雨花街道</text>
+            <text x="150" y="600" font-size="17" fill="#b3c0d6">斗南片区</text>
+            <text x="640" y="600" font-size="17" fill="#b3c0d6">昆明南站</text>
+          </svg>
+          <!-- 热力光晕层 -->
+          <div class="heat-layer" id="heatLayer"></div>
+          <!-- 片区热点层（JS 渲染） -->
+          <div class="pin-layer" id="pinLayer"></div>
+          <div class="map-empty" id="mapEmpty" style="display:none">😕 当前筛选无命中片区，试试其他类型</div>
+        </div>
+        <!-- 地图底部：类型筛选 + 工具 -->
+        <div class="map-foot">
+          <div class="type-chips" id="typeChips">
+            <button class="t-chip on" data-t="all">全部</button>
+            <button class="t-chip rent" data-t="rent"><i class="dot" style="background:#ef4444"></i>租房</button>
+            <button class="t-chip job" data-t="job"><i class="dot" style="background:#f59e0b"></i>兼职/就业</button>
+            <button class="t-chip consume" data-t="consume"><i class="dot" style="background:#10b981"></i>消费/培训</button>
+            <button class="t-chip person" data-t="person"><i class="dot" style="background:#8b5cf6"></i>人身/其他</button>
+          </div>
+          <div class="map-tools">
+            <button class="mt-btn" id="heatBtn">🔥 热力：开</button>
+            <button class="mt-btn" id="refreshBtn">⟳ 模拟刷新</button>
+          </div>
+        </div>
+        <!-- 类型占比条 -->
+        <div class="type-bar-wrap">
+          <span class="tb-cap" id="tbCap">本月类型占比</span>
+          <div class="type-bar" id="typeBar"></div>
+          <div class="tb-legend" id="tbLegend"></div>
         </div>
       </div>
-      <div class="map-legend">
-        <span class="leg-chip"><i style="background:#ef4444"></i>纠纷高发</span>
-        <span class="leg-chip"><i style="background:#f59e0b"></i>风险关注</span>
-        <span class="leg-chip"><i style="background:#10b981"></i>法援站点</span>
-        <span class="leg-chip" style="margin-left:auto">图例为预留占位</span>
-      </div>
+
+      <!-- 右：片区总览 / 热点详情面板（JS 渲染） -->
+      <aside class="detail-panel" id="detailPanel"></aside>
     </div>
 
-    <div class="plan-cards">
-      <div class="plan-card"><span class="p-ico">🔥</span><b>纠纷热力分布</b><span>宿舍区 · 校外租房区</span></div>
-      <div class="plan-card"><span class="p-ico">🧾</span><b>投诉类型统计</b><span>租房 / 兼职 / 消费</span></div>
-      <div class="plan-card"><span class="p-ico">🏛️</span><b>法援站点导航</b><span>12348 · 高校法援中心</span></div>
-    </div>
-    <div class="section-note">🧩 本页为骨架占位：后续填充真实地图数据与筛选交互，其余导航与页面功能不受影响。</div>
+    <div class="section-note">🧪 本页为「功能演示版」：以昆明呈贡大学城为背景、云南大学为中心片区，地图与纠纷统计均为前端模拟数据，用于展示交互与信息架构；接入真实数据时只需替换 JS 中的 MAP_DATA（详见代码注释）。</div>
   </section>
-
-  <!-- ================= 页面5：我的权益 ================= -->
+<!-- ================= 页面5：我的权益 ================= -->
   <section class="page" id="page-rights">
     <div class="page-title">
       <div class="line"></div>
@@ -929,7 +1065,7 @@ input{font-family:inherit}
         <div class="pf-name">同学，你好 👋</div>
         <div class="pf-role">
           当前身份：<span class="role-tag">应届毕业生</span>
-          <span>毕业城市：杭州 · 档案最近更新：今天</span>
+          <span>毕业城市：昆明 · 档案最近更新：今天</span>
         </div>
       </div>
       <div class="pf-score">
@@ -1589,6 +1725,317 @@ function showPage(id){
   if (id === 'page-ai'){ $('#qaList').style.display = ''; $('#chatView').classList.remove('on'); clearSuggests(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+/* =========================================================
+   风险地图（功能演示版）—— MAP_DATA 即数据源
+   接入真实数据时：仅需替换 MAP_DATA / TYPE_META，其余逻辑不变
+   ========================================================= */
+var TYPE_META = {
+  rent:    { label: '租房',      emoji: '🏠', rgb: '239,68,68' },
+  job:     { label: '兼职/就业', emoji: '💼', rgb: '245,158,11' },
+  consume: { label: '消费/培训', emoji: '🧾', rgb: '16,185,129' },
+  person:  { label: '人身/其他', emoji: '👥', rgb: '139,92,246' }
+};
+var MAP_DATA = [
+  { id: 'ynu', name: '云南大学片区', zone: '呈贡大学城 · 云南大学（中心片区）', x: 46, y: 36, trend: +10,
+    counts: { rent: 170, job: 55, consume: 75, person: 28 },
+    samples: [ '毕业季退租，房东以「墙面有污渍」为由扣留全部押金 2,000 元', '校园周边租房合同违约金过高，提前退租被索要两个月租金' ],
+    aiQ: '房东扣押金、合同违约金太高，我该怎么办？' },
+  { id: 'kust', name: '昆明理工片区', zone: '呈贡大学城 · 昆明理工大学呈贡校区', x: 68, y: 24, trend: +18,
+    counts: { rent: 30, job: 130, consume: 40, person: 15 },
+    samples: [ '在某科技公司实习 2 个月，离职后 4,200 元报酬未结', '参与校外项目外包，口头约定报酬被以「没签合同」拒付' ],
+    aiQ: '实习 / 兼职被拖欠工资，我该怎么办？' },
+  { id: 'ynnu', name: '云南师大片区', zone: '呈贡大学城 · 云南师范大学', x: 18, y: 26, trend: +6,
+    counts: { rent: 35, job: 45, consume: 115, person: 12 },
+    samples: [ '报名教资培训 1.2 万元，机构停课后拒绝退费', '「包过班」宣传与实际不符，要求退款一直被拖延' ],
+    aiQ: '培训机构不退费合法吗？我该怎么办？' },
+  { id: 'ynmz', name: '民大 · 医大片区', zone: '呈贡大学城 · 云南民族大学 / 昆明医科大学', x: 55, y: 62, trend: -4,
+    counts: { rent: 45, job: 30, consume: 90, person: 20 },
+    samples: [ '被诱导办理美容分期，事后才发现是高息消费贷', '网上「刷单返利」兼职被骗 1,500 元' ],
+    aiQ: '我被诱导办理消费分期 / 刷单被骗，能追回吗？' },
+  { id: 'yx', name: '雨花校外公寓带', zone: '呈贡区雨花街道 · 校外公寓带', x: 82, y: 50, trend: +12,
+    counts: { rent: 150, job: 25, consume: 30, person: 25 },
+    samples: [ '二房东转租后失联，「押一付三」5,400 元难追回', '退租时被以「清洁费」名义扣 800 元，合同中并无依据' ],
+    aiQ: '二房东跑路、押金不退，我该怎么办？' },
+  { id: 'yart', name: '云艺 · 中医大片区', zone: '呈贡大学城 · 云南艺术学院 / 云南中医药大学', x: 26, y: 74, trend: +5,
+    counts: { rent: 25, job: 30, consume: 60, person: 55 },
+    samples: [ '参加商演兼职，主办方以「劳务关系」为由拖欠尾款', '画室培训中途退学，协商退费无果' ],
+    aiQ: '兼职劳务费被拖欠、培训退费难，怎么办？' }
+];
+
+var mapState = { activeType: 'all', heatOn: true, selId: null };
+var MAP_TOTAL_BASE = 1335; // 参考值，界面数字以数据实时求和为准
+
+function fmtN(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function two(n){ return (n < 10 ? '0' : '') + n; }
+function nowStr(){ var d = new Date(); return two(d.getHours()) + ':' + two(d.getMinutes()) + ':' + two(d.getSeconds()); }
+function hTotal(h){ return h.counts.rent + h.counts.job + h.counts.consume + h.counts.person; }
+function hTypeCount(h, t){ return t === 'all' ? hTotal(h) : (h.counts[t] || 0); }
+function topType(h){
+  var best = 'rent', bv = -1;
+  Object.keys(TYPE_META).forEach(function(k){
+    if (h.counts[k] > bv){ bv = h.counts[k]; best = k; }
+  });
+  return best;
+}
+function typeTotals(){
+  var t = { rent: 0, job: 0, consume: 0, person: 0 };
+  MAP_DATA.forEach(function(h){ Object.keys(t).forEach(function(k){ t[k] += h.counts[k]; }); });
+  return t;
+}
+
+/* ---------- 顶层指标 + 类型占比条 ---------- */
+function renderStatsAndBar(){
+  var tt = typeTotals();
+  var sum = tt.rent + tt.job + tt.consume + tt.person;
+  $('#stTotal').textContent = fmtN(sum);
+  var dom = Object.keys(tt).slice().sort(function(a, b){ return tt[b] - tt[a]; })[0];
+  $('#stTop').textContent = TYPE_META[dom].label + '纠纷';
+  $('#stTopSub').textContent = '高发类型 · 占比 ' + Math.round(tt[dom] / sum * 100) + '%';
+  /* 占比条 + 图例 */
+  var bar = $('#typeBar'); bar.innerHTML = '';
+  var leg = $('#tbLegend'); leg.innerHTML = '';
+  Object.keys(TYPE_META).forEach(function(k){
+    var pct = tt[k] / sum * 100;
+    var seg = el('i'); seg.style.width = pct + '%'; seg.style.background = 'rgb(' + TYPE_META[k].rgb + ')';
+    bar.appendChild(seg);
+    var s = el('span', null, '<i style="background:rgb(' + TYPE_META[k].rgb + ')"></i>' +
+      TYPE_META[k].label + ' ' + Math.round(pct) + '%');
+    leg.appendChild(s);
+  });
+  $('#tbCap').textContent = mapState.activeType === 'all'
+    ? '本月类型占比（总计 ' + fmtN(sum) + ' 起）'
+    : '正在查看：' + TYPE_META[mapState.activeType].label + '纠纷';
+}
+
+/* ---------- 地图热点 + 热力 ---------- */
+function renderHeat(){
+  var layer = $('#heatLayer'); layer.innerHTML = '';
+  layer.classList.toggle('off', !mapState.heatOn);
+  MAP_DATA.forEach(function(h){
+    var cnt = hTypeCount(h, mapState.activeType);
+    if (cnt <= 0) return;
+    var dom = mapState.activeType === 'all' ? topType(h) : mapState.activeType;
+    var size = 90 + cnt * 0.6;
+    var b = el('div', 'blob');
+    b.style.left = h.x + '%'; b.style.top = h.y + '%';
+    b.style.width = size + 'px'; b.style.height = size + 'px';
+    b.style.background = 'radial-gradient(circle, rgba(' + TYPE_META[dom].rgb + ',.38) 0%, rgba(' +
+      TYPE_META[dom].rgb + ',.14) 52%, transparent 72%)';
+    layer.appendChild(b);
+  });
+}
+function renderPins(){
+  var layer = $('#pinLayer'); layer.innerHTML = '';
+  var shown = 0, sumCnt = 0;
+  MAP_DATA.forEach(function(h){
+    var cnt = hTypeCount(h, mapState.activeType);
+    if (cnt <= 0) return;
+    shown++; sumCnt += cnt;
+    var dom = mapState.activeType === 'all' ? topType(h) : mapState.activeType;
+    var node = el('div', 'pin-node' + (mapState.selId === h.id ? ' sel' : ''));
+    node.style.left = h.x + '%'; node.style.top = h.y + '%';
+    var orb = el('div', 'pin-orb c-' + dom, TYPE_META[dom].emoji);
+    node.appendChild(orb);
+    node.appendChild(el('span', 'pin-cnt', fmtN(cnt)));
+    node.title = h.name + ' · ' + TYPE_META[dom].label + ' ' + fmtN(cnt) + ' 起';
+    node.addEventListener('click', function(){ selectPin(h.id); });
+    layer.appendChild(node);
+  });
+  $('#mapEmpty').style.display = shown ? 'none' : 'flex';
+  return shown;
+}
+
+/* ---------- 右侧面板 ---------- */
+function renderBars(rows){
+  var box = el('div');
+  rows.forEach(function(r){
+    var row = el('div', 'mbar');
+    row.appendChild(el('span', 'mb-lbl', r.label));
+    var tr = el('div', 'mb-track'); var i = el('i');
+    i.style.width = r.pct + '%'; i.style.background = r.color;
+    tr.appendChild(i); row.appendChild(tr);
+    row.appendChild(el('span', 'mb-num', r.num));
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderOverview(){
+  var panel = $('#detailPanel'); panel.innerHTML = '';
+  panel.appendChild(el('div', 'dp-back', '← 返回片区总览')).style.display = 'none';
+  var head = el('div', 'dp-head');
+  head.appendChild(el('span', 'dp-ico', '📊'));
+  var hh = el('div'); hh.appendChild(el('h4', null, '片区总览'));
+  hh.appendChild(el('div', 'dp-sub', '高校周边纠纷驾驶舱 · 更新时间 ' + nowStr()));
+  head.appendChild(hh);
+  panel.appendChild(head);
+
+  var tt = typeTotals(); var sum = tt.rent + tt.job + tt.consume + tt.person;
+  if (mapState.activeType === 'all'){
+    var b1 = el('div', 'dp-block');
+    b1.appendChild(el('h5', null, '📌 本月纠纷类型分布'));
+    b1.appendChild(renderBars(Object.keys(TYPE_META).map(function(k){
+      return { label: TYPE_META[k].label, num: fmtN(tt[k]), pct: Math.round(tt[k] / sum * 100),
+        color: 'rgb(' + TYPE_META[k].rgb + ')' };
+    })));
+    panel.appendChild(b1);
+    var b2 = el('div', 'dp-block');
+    b2.appendChild(el('h5', null, '🏆 纠纷高发片区 Top3'));
+    b2.appendChild(renderRank(TYPE_META, 'all', 'total'));
+    panel.appendChild(b2);
+  } else {
+    var k = mapState.activeType;
+    var tsum = tt[k];
+    var b1 = el('div', 'dp-block');
+    b1.appendChild(el('h5', null, TYPE_META[k].emoji + ' 「' + TYPE_META[k].label + '」纠纷 · Top3 片区'));
+    b1.appendChild(renderRank(TYPE_META, k, k));
+    panel.appendChild(b1);
+    panel.appendChild(el('div', 'dp-block',
+      '<h5>💡 维权提示</h5><div class="guide-li">签约 / 缴费前先核验对方主体资质，保留宣传与承诺截图</div>' +
+      '<div class="guide-li">发生纠纷先固定证据，再通过平台、12315 / 12333 或 12348 逐级投诉</div>' +
+      '<div class="dp-note" style="margin-top:8px">当前筛选命中 ' + tsum + ' 起（演示数据）</div>'));
+  }
+  panel.appendChild(el('div', 'dp-note', '💡 点击左侧地图热点，可查看该片区的典型案例、类型构成与维权指引（演示）。'));
+}
+function renderRank(meta, key, countKey){
+  var wrap = el('div');
+  var sorted = MAP_DATA.slice().sort(function(a, b){
+    return hTypeCount(b, countKey) - hTypeCount(a, countKey);
+  });
+  sorted.slice(0, 3).forEach(function(h, idx){
+    var row = el('div', 'rank-row');
+    row.appendChild(el('span', 'rk', String(idx + 1)));
+    row.appendChild(el('span', 'rk-name', h.name));
+    row.appendChild(el('span', 'rk-num', fmtN(hTypeCount(h, countKey)) + ' 起'));
+    row.addEventListener('click', function(){ selectPin(h.id); });
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+function riskPill(h){
+  var t = hTotal(h);
+  if (t >= 220) return { txt: '🔴 高发片区', cls: 'hot' };
+  if (t >= 150) return { txt: '🟠 关注片区', cls: 'watch' };
+  return { txt: '🟢 相对平稳', cls: 'ok' };
+}
+function renderPinDetail(id){
+  var h = MAP_DATA.filter(function(x){ return x.id === id; })[0];
+  if (!h){ renderOverview(); return; }
+  var panel = $('#detailPanel'); panel.innerHTML = '';
+  var back = el('button', 'dp-back', '← 返回片区总览');
+  back.addEventListener('click', function(){ mapState.selId = null; renderOverview(); });
+  panel.appendChild(back);
+  var head = el('div', 'dp-head');
+  head.appendChild(el('span', 'dp-ico', '📍'));
+  var hh = el('div');
+  hh.appendChild(el('h4', null, h.name));
+  hh.appendChild(el('div', 'dp-sub', h.zone + ' · 更新 ' + nowStr()));
+  head.appendChild(hh);
+  panel.appendChild(head);
+
+  var rp = riskPill(h);
+  var sub2 = el('div', 'dp-sub');
+  sub2.appendChild(el('span', 'risk-pill ' + rp.cls, rp.txt));
+  sub2.appendChild(el('span', null, ' 环比 ' + (h.trend > 0 ? '▲ +' + h.trend : '▼ ' + h.trend) + '%'));
+  panel.appendChild(sub2);
+
+  var tot = hTotal(h);
+  var dom = topType(h);
+  var tt = typeTotals(); var sumAll = tt.rent + tt.job + tt.consume + tt.person;
+  var b0 = el('div', 'dp-block');
+  var grid = el('div', 'dp-grid');
+  grid.appendChild(el('div', 'dp-cell', '<b>' + fmtN(tot) + '</b><span>本月纠纷（起）</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + (h.trend > 0 ? '+' + h.trend : h.trend) + '%</b><span>环比变化</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + TYPE_META[dom].label + '</b><span>主要类型</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + Math.round(h.counts[dom] / tot * 100) + '%</b><span>占本片区纠纷</span>'));
+  b0.appendChild(grid);
+  panel.appendChild(b0);
+
+  /* 类型构成 */
+  var b1 = el('div', 'dp-block');
+  b1.appendChild(el('h5', null, '📊 本片区类型构成'));
+  b1.appendChild(renderBars(Object.keys(TYPE_META).map(function(k){
+    return { label: TYPE_META[k].label, num: h.counts[k],
+      pct: Math.round(h.counts[k] / tot * 100), color: 'rgb(' + TYPE_META[k].rgb + ')' };
+  })));
+  panel.appendChild(b1);
+
+  /* 典型案例 */
+  var b2 = el('div', 'dp-block');
+  b2.appendChild(el('h5', null, '📝 典型案例（脱敏演示）'));
+  h.samples.forEach(function(s){ b2.appendChild(el('div', 'case-li', s)); });
+  panel.appendChild(b2);
+
+  /* 维权指引 */
+  var b3 = el('div', 'dp-block');
+  b3.appendChild(el('h5', null, '🧭 维权指引'));
+  [
+    '固定证据：合同 / 转账 / 聊天记录 / 现场照片',
+    '先书面协商，明确诉求金额与期限',
+    '协商不成 → 平台投诉、12315 / 12333、属地调解',
+    '仍无法解决 → 12348 法律援助或仲裁 / 小额诉讼'
+  ].forEach(function(s){ b3.appendChild(el('div', 'guide-li', s)); });
+  panel.appendChild(b3);
+
+  /* 操作 */
+  var act = el('div', 'dp-actions');
+  var ai = el('button', 'btn sm', '💬 咨询 AI 助手');
+  ai.addEventListener('click', function(){ askAI(h.aiQ); });
+  var law = el('button', 'btn ghost sm', '📍 附近法援点');
+  law.addEventListener('click', function(){ toast('已定位「' + h.zone.split(' · ')[0] + '」最近的高校法律援助中心（演示）', true); });
+  act.appendChild(ai); act.appendChild(law);
+  panel.appendChild(act);
+
+  panel.appendChild(el('div', 'dp-note', '（总榜中本片区约占 ' + Math.round(tot / sumAll * 100) + '%，演示数据）'));
+}
+
+/* ---------- 刷新 & 事件绑定 ---------- */
+function refreshData(){
+  MAP_DATA.forEach(function(h){
+    Object.keys(h.counts).forEach(function(k){
+      h.counts[k] = Math.max(8, Math.round(h.counts[k] * (0.95 + Math.random() * 0.1)));
+    });
+    h.trend = Math.max(-12, Math.min(26, h.trend + Math.round(Math.random() * 6 - 3)));
+  });
+  var live = $('#mtLive');
+  live.textContent = '● 实时演示 · 刚刚更新 ' + nowStr();
+  live.classList.add('flash');
+  setTimeout(function(){ live.classList.remove('flash'); }, 700);
+  renderMapAll();
+  toast('数据已模拟刷新（演示）', true);
+}
+function renderMapAll(){
+  renderStatsAndBar();
+  renderHeat();
+  renderPins();
+  if (mapState.selId){
+    var h = MAP_DATA.filter(function(x){ return x.id === mapState.selId; })[0];
+    if (h && hTypeCount(h, mapState.activeType) > 0){ renderPinDetail(mapState.selId); }
+    else { mapState.selId = null; renderOverview(); }
+  } else { renderOverview(); }
+}
+function selectPin(id){ mapState.selId = id; renderHeat(); renderPins(); renderPinDetail(id); }
+
+/* 类型筛选 */
+$$('#typeChips .t-chip').forEach(function(ch){
+  ch.addEventListener('click', function(){
+    mapState.activeType = ch.dataset.t; mapState.selId = null;
+    $$('#typeChips .t-chip').forEach(function(x){ x.classList.toggle('on', x === ch); });
+    renderMapAll();
+  });
+});
+/* 热力开关 */
+$('#heatBtn').addEventListener('click', function(){
+  mapState.heatOn = !mapState.heatOn;
+  $('#heatBtn').textContent = '🔥 热力：' + (mapState.heatOn ? '开' : '关');
+  $('#heatBtn').classList.toggle('off', !mapState.heatOn);
+  renderHeat();
+});
+/* 模拟刷新 */
+$('#refreshBtn').addEventListener('click', refreshData);
+
+/* 页面初始化 */
+renderMapAll();
 </script>
 </body>
 </html>
