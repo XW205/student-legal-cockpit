@@ -1277,13 +1277,20 @@ function toast(msg, ok){
   setTimeout(function(){ t.remove(); }, 2300);
 }
 
-/* ---------- 页面切换（底部导航） ---------- */
+/* ---------- 页面切换（底部导航，全站唯一定义） ---------- */
 function showPage(id){
   $$('.page').forEach(function(p){ p.classList.remove('active'); });
   $('#' + id).classList.add('active');
   $$('.nav-item').forEach(function(n){
     n.classList.toggle('active', n.dataset.page === id);
   });
+  /* 进入 AI 助手页时默认回到问题列表（演示更清晰）；
+     若由快捷入口 / 搜索带入问题，askAI 会在其后调用 openChat 自动打开对话 */
+  if (id === 'page-ai'){
+    $('#qaList').style.display = '';
+    $('#chatView').classList.remove('on');
+    clearSuggests();
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1549,6 +1556,22 @@ function offlineAnswer(text){
   return fallbackAns();
 }
 
+/* 离线演示统一取答（唯一入口）：优先命中六大场景标准答案，否则走关键词分类兜底。
+   正常演示路径与模型失败兜底都走这里，保证同一问题回答一致。 */
+function demoAnswerFor(text){
+  var k = detectScene(text);
+  return (k !== 'other' && SCEN[k] && SCEN[k].ans) ? SCEN[k].ans : offlineAnswer(text);
+}
+/* 跨场景追问时，同步对话标题与快捷追问 chips，避免“回答是 A 场景、chips 还是 B 场景”的错位 */
+function syncSceneChips(k){
+  if (!k || !SCEN[k]) return;
+  if (k !== currentKey){
+    currentKey = k;
+    chatTitle.textContent = SCEN[k].icon + ' ' + SCEN[k].title;
+  }
+  renderSuggests(k);
+}
+
 /* ---------- 调用 DeepSeek（OpenAI 兼容接口） ---------- */
 function buildHeaders(){
   var headers = { 'Content-Type': 'application/json' };
@@ -1593,10 +1616,13 @@ function askModel(text, done){
     if (done) done();
   }).catch(function(err){
     if (ac.intentional){ if (bub.parentNode) bub.parentNode.remove(); return; }
+    /* 模型不可用：当前气泡只承载错误提示（完整句子，不悬空冒号）；
+       离线答案由 botReply 以独立气泡给出，两个气泡各司其职、内容来源单一 */
     bub.classList.remove('typing');
     bub.classList.add('err');
-    bub.textContent = '⚠️ 暂时无法获取「DeepSeek」回答（' + err.message + '）。已切换为离线演示回答：';
-    botReply(offlineAnswer(text), done);
+    bub.textContent = '⚠️ 暂时无法获取「DeepSeek」回答（' + err.message + '），已自动切换为离线演示回答。';
+    var k = detectScene(text);
+    botReply(demoAnswerFor(text), function(){ syncSceneChips(k); });
   }).finally(function(){
     clearTimeout(timer);
     if (chatAbort === ac) chatAbort = null;
@@ -1640,10 +1666,8 @@ function openChat(key, userText){
     /* 真实模型模式：问题直接交给 DeepSeek 回答 */
     askModel(q, function(){ renderSuggests(key); });
   } else {
-    /* 离线演示：命中六大场景给内置答案，否则按关键词分类兜底 */
-    var k2 = detectScene(q);
-    var txt = (k2 !== 'other' && SCEN[k2] && SCEN[k2].ans) ? SCEN[k2].ans : offlineAnswer(q);
-    botReply(txt, function(){ renderSuggests(key); });
+    /* 离线演示：统一入口取答（命中场景给标准答案，否则关键词兜底），并同步场景 chips */
+    botReply(demoAnswerFor(q), function(){ syncSceneChips(detectScene(q)); });
   }
 }
 function backToList(){
@@ -1737,9 +1761,9 @@ $('#chatForm').addEventListener('submit', function(e){
   if (modelOn()){
     askModel(v);
   } else {
+    /* 离线演示：跨场景追问时，回答后同步对话标题与快捷追问 chips */
     var k = detectScene(v);
-    var txt = (k !== 'other' && SCEN[k] && SCEN[k].ans) ? SCEN[k].ans : offlineAnswer(v);
-    botReply(txt);
+    botReply(demoAnswerFor(v), function(){ syncSceneChips(k); });
   }
 });
 
@@ -1872,7 +1896,7 @@ function applyFilter(f){
   });
   var lb = $('#lowBlock');
   if (f === 'low'){ cards.forEach(function(c){ c.classList.add('hide'); }); lb.style.display = ''; $('#lowBlock').classList.add('open'); }
-  else if (f === 'all'){ lb.style.display = ''; }
+  else if (f === 'all'){ lb.style.display = ''; $('#lowBlock').classList.remove('open'); }
   else { lb.style.display = 'none'; }
 }
 $$('.f-btn').forEach(function(b){
@@ -2035,19 +2059,9 @@ $('#evAddBtn').addEventListener('click', function(){
 $('#callBtn').addEventListener('click', function(){ toast('正在呼叫 12348 …（演示环境不真实拨打）', false); });
 $('#clinicBtn').addEventListener('click', function(){ toast('已定位最近的「高校法律援助中心」（演示）', true); });
 
-/* 默认回到首页 / 初始化报告区默认状态 */
+/* 默认回到首页 / 初始化合同审查区默认状态（showPage 为全站唯一定义，见文件前部） */
 showPage('page-home');
 clearFile();
-
-/* 优化：从底部导航进入 AI 页时，回到问题列表（演示更清晰）；
-   若通过快捷入口/搜索进入，openChat 会在其后自动打开对应对话 */
-function showPage(id){
-  $$('.page').forEach(function(p){ p.classList.remove('active'); });
-  $('#' + id).classList.add('active');
-  $$('.nav-item').forEach(function(n){ n.classList.toggle('active', n.dataset.page === id); });
-  if (id === 'page-ai'){ $('#qaList').style.display = ''; $('#chatView').classList.remove('on'); clearSuggests(); }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
 /* =========================================================
    风险地图（功能演示版）—— MAP_DATA 即数据源
@@ -2259,7 +2273,7 @@ function renderPinDetail(id){
   var rp = riskPill(h);
   var sub2 = el('div', 'dp-sub');
   sub2.appendChild(el('span', 'risk-pill ' + rp.cls, rp.txt));
-  sub2.appendChild(el('span', null, ' 环比 ' + (h.trend > 0 ? '▲ +' + h.trend : '▼ ' + h.trend) + '%'));
+  sub2.appendChild(el('span', null, ' 环比 ' + (h.trend > 0 ? '▲ +' + h.trend : '▼ ' + Math.abs(h.trend)) + '%'));
   panel.appendChild(sub2);
 
   var tot = hTotal(h);
