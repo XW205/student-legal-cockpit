@@ -687,7 +687,7 @@ input{font-family:inherit}
 }
 @media(max-width:600px){ .map-tools{margin-left:0} }
 
-/* ============ AI 模型接入（夫子·明察） ============ */
+/* ============ AI 模型接入（DeepSeek） ============ */
 .ai-setbtn{flex:none;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.16);
   border:1px solid rgba(255,255,255,.35);font-size:18px;color:#fff;transition:.2s}
 .ai-setbtn:hover{background:rgba(255,255,255,.32);transform:rotate(12deg) scale(1.05)}
@@ -720,7 +720,33 @@ input{font-family:inherit}
 .am-foot{display:flex;justify-content:flex-end;gap:10px}
 .msg.bot .bubble.warn{background:#fff8ed;border-color:#fde0a9;color:#7a4a12}
 .msg.bot .bubble.err{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}
+
+/* ============ Markdown 渲染（AI 回复） ============ */
+.bubble.md{white-space:normal;word-break:break-word}
+.bubble.md p{margin:0 0 10px}
+.bubble.md p:last-child{margin-bottom:0}
+.bubble.md h1,.bubble.md h2,.bubble.md h3,.bubble.md h4{margin:14px 0 8px;font-weight:700;line-height:1.4}
+.bubble.md h1{font-size:18px}
+.bubble.md h2{font-size:16.5px}
+.bubble.md h3{font-size:15px}
+.bubble.md h4{font-size:14px}
+.bubble.md ul,.bubble.md ol{margin:8px 0;padding-left:22px}
+.bubble.md li{margin:4px 0;line-height:1.7}
+.bubble.md blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid #7ea4ff;background:#eef4ff;border-radius:0 8px 8px 0;color:#475569}
+.bubble.md code{background:#eef2f7;color:#c026d3;padding:1.5px 6px;border-radius:5px;font-size:13px;font-family:Consolas,Monaco,monospace}
+.bubble.md pre{background:#1e293b;color:#e2e8f0;padding:12px 14px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:13px;line-height:1.6}
+.bubble.md pre code{background:none;color:inherit;padding:0;white-space:pre}
+.bubble.md a{color:#1d4ed8;text-decoration:underline;word-break:break-all}
+.bubble.md hr{border:none;border-top:1px solid #d5e3ff;margin:12px 0}
+.bubble.md table{border-collapse:collapse;margin:10px 0;width:100%;font-size:13px}
+.bubble.md th,.bubble.md td{border:1px solid #d5e3ff;padding:6px 10px;text-align:left}
+.bubble.md th{background:#eef4ff;font-weight:600}
+.bubble.md strong{font-weight:700}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  if (window.marked) marked.setOptions({ gfm: true, breaks: true });
+</script>
 </head>
 <body><!-- ================= 顶部应用栏 ================= -->
 <header class="topbar">
@@ -869,7 +895,7 @@ input{font-family:inherit}
         <input id="chatInput" type="text" placeholder="继续描述你的问题…" autocomplete="off">
         <button class="btn" type="submit">发送 ➤</button>
       </form>
-      <div class="chat-footnote">⚠️ 回答由「夫子·明察」司法大模型或离线演示生成，仅供参考，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
+      <div class="chat-footnote">⚠️ 回答由「DeepSeek」大模型或离线演示生成，仅供参考，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
     </div>
   </section>
 
@@ -1176,37 +1202,37 @@ input{font-family:inherit}
   <button class="nav-item" data-page="page-rights"><span class="ico">👤</span>我的权益</button>
 </nav>
 
-<!-- ===== AI 模型接入设置（夫子·明察 fuzi-mingcha） ===== -->
+<!-- ===== AI 模型接入设置（DeepSeek） ===== -->
 <div class="modal-mask" id="aiModal">
   <div class="ai-modal">
     <div class="am-head">
       <div>
         <h3>⚙️ AI 模型接入设置</h3>
-        <p>将 AI 法律助手接入本地部署的「夫子·明察」司法大模型（SDUIRLab/fuzi-mingcha-v1_0）</p>
+        <p>将 AI 法律助手接入 DeepSeek 大模型（OpenAI 兼容接口）</p>
       </div>
       <button class="am-close" id="aiModalClose">✕</button>
     </div>
     <div class="mode-seg" id="modeSeg">
       <button class="seg-btn" data-mode="demo">🧪 离线演示模式</button>
-      <button class="seg-btn" data-mode="model">🎓 夫子·明察（本地模型）</button>
+      <button class="seg-btn" data-mode="model">🎓 DeepSeek（云端模型）</button>
     </div>
     <div class="fm">
-      <label>服务地址（OpenAI 兼容接口，默认指向本项目代理 8001 端口）</label>
-      <input id="aiBase" placeholder="http://127.0.0.1:8001/v1" autocomplete="off">
+      <label>服务地址（OpenAI 兼容接口，默认 https://api.deepseek.com）</label>
+      <input id="aiBase" placeholder="https://api.deepseek.com" autocomplete="off">
     </div>
     <div class="fm">
       <label>模型名称</label>
-      <input id="aiModel" placeholder="fuzi-mingcha-v1_0" autocomplete="off">
+      <input id="aiModel" placeholder="deepseek-chat" autocomplete="off">
     </div>
     <div class="fm">
-      <label>API Key（如服务端需要验证，可留空）</label>
-      <input id="aiKey" type="password" placeholder="可选" autocomplete="off">
+      <label>API Key（必填，可在 platform.deepseek.com 获取）</label>
+      <input id="aiKey" type="password" placeholder="sk-..." autocomplete="off">
     </div>
     <div class="am-row">
       <button class="btn ghost sm" id="aiTest">🔌 测试连接</button>
       <div class="am-test" id="aiTestRes"></div>
     </div>
-    <div class="am-note">🔒 使用提示：1) 模型由你本机部署的服务提供，问题文本仅发送到上方服务地址；2) 夫子·明察权重遵循 ChatGLM-6B Model License，官方声明仅供学术研究、不得用于商业用途；3) 模型回答仅供参考，不构成法律意见，重大事项请咨询律师或拨打 12348。</div>
+    <div class="am-note">🔒 使用提示：1) API Key 存储在浏览器 localStorage，请勿在公共设备上使用；2) 问题文本将发送至 DeepSeek 官方服务器，请遵守其服务条款；3) 模型回答仅供参考，不构成法律意见，重大事项请咨询律师或拨打 12348。</div>
     <div class="am-foot">
       <button class="btn ghost sm" id="aiCancel">取消</button>
       <button class="btn sm" id="aiSave">💾 保存并应用</button>
@@ -1229,6 +1255,19 @@ function el(tag, cls, html){
   if (cls) n.className = cls;
   if (html != null) n.innerHTML = html;
   return n;
+}
+/* Markdown 渲染：优先用 marked.js，失败则回退纯文本 */
+function renderMd(bub, text){
+  if (!bub) return;
+  try {
+    if (window.marked && typeof marked.parse === 'function'){
+      bub.innerHTML = marked.parse(text || '');
+      bub.classList.add('md');
+      return;
+    }
+  } catch (e) {}
+  bub.textContent = text || '';
+  bub.classList.remove('md');
 }
 function toast(msg, ok){
   var w = $('#toastWrap');
@@ -1410,15 +1449,14 @@ function detectScene(text){
 function fallbackAns(){
   return '收到，你的问题我已记录（演示）。\n\n建议按这个节奏推进：\n① 先把时间线 & 证据整理清楚（文字、截图、转账都算）\n② 明确你的诉求：希望对方做什么 / 赔多少\n③ 先书面沟通并保留记录\n④ 拿不准就打 12348 法律援助热线\n\n💡 想要更精准的演示回答，可以回到列表选择具体场景，或上传合同使用「AI 合同审查」。';
 }/* =========================================================
-   AI 助手 · 夫子·明察（fuzi-mingcha）接入 + 聊天交互
+   AI 助手 · DeepSeek 接入 + 聊天交互
    ---------------------------------------------------------
-   - 通过 OpenAI 兼容接口 /v1/chat/completions 调用本地部署的
-     SDUIRLab/fuzi-mingcha-v1_0（推荐用 backend/fuzi_proxy.py 代理，
-     默认 http://127.0.0.1:8001/v1；也可直连 vLLM 的 8000 端口）。
+   - 通过 OpenAI 兼容接口 https://api.deepseek.com/v1/chat/completions
+     调用 DeepSeek 官方云端大模型（默认模型 deepseek-chat）。
    - 配置保存在浏览器 localStorage；未连接服务时自动回退离线演示回答。
    ========================================================= */
-var FUZI_CFG_KEY = 'fuzi_cfg_v1';
-var FUZI_DEFAULT = { mode: 'demo', base: 'http://127.0.0.1:8001/v1', model: 'fuzi-mingcha-v1_0', key: '' };
+var FUZI_CFG_KEY = 'deepseek_cfg_v1';
+var FUZI_DEFAULT = { mode: 'demo', base: 'https://api.deepseek.com', model: 'deepseek-chat', key: '' };
 function loadFuziCfg(){
   try {
     var s = localStorage.getItem(FUZI_CFG_KEY);
@@ -1437,7 +1475,7 @@ function fuziBase(){
   return b;
 }
 /* 系统提示：让模型按“法护启航”的要求回答各类法律问题 */
-var FUZI_SYS = '你是「法护启航」大学生法律安全驾驶舱内置的法律助手「法小航」，底层模型为夫子·明察司法大模型。' +
+var FUZI_SYS = '你是「法护启航」大学生法律安全驾驶舱内置的法律助手「法小航」，底层模型为 DeepSeek 大模型。' +
   '你面向在校大学生，擅长回答租房、兼职就业、合同纠纷、消费维权、人身权益、网络侵权等法律问题。' +
   '回答要求：1) 优先引用具体法律名称与条款号；2) 分步骤给出可操作建议（固定证据、协商、投诉渠道、仲裁/诉讼路径）；' +
   '3) 案情信息不足时先追问关键事实，不要编造；4) 拿不准或涉及重大利益时，明确提示拨打 12348 法律援助热线或咨询执业律师；' +
@@ -1458,7 +1496,8 @@ function pushMsg(role, text){
   var row = el('div', 'msg ' + (role === 'self' ? 'self' : 'bot'));
   row.appendChild(el('div', 'av', role === 'self' ? '🧑' : '🤖'));
   var bub = el('div', 'bubble');
-  bub.textContent = text;
+  if (role === 'self') bub.textContent = text;
+  else renderMd(bub, text);
   row.appendChild(bub);
   chatScroll.appendChild(row);
   scrollBottom();
@@ -1479,7 +1518,7 @@ function botReply(text, done){
   var bub = botTyping();
   setTimeout(function(){
     bub.classList.remove('typing');
-    bub.textContent = text || fallbackAns();
+    renderMd(bub, text || fallbackAns());
     scrollBottom();
     if (done) done();
   }, 900);
@@ -1510,7 +1549,7 @@ function offlineAnswer(text){
   return fallbackAns();
 }
 
-/* ---------- 调用夫子·明察（OpenAI 兼容接口） ---------- */
+/* ---------- 调用 DeepSeek（OpenAI 兼容接口） ---------- */
 function buildHeaders(){
   var headers = { 'Content-Type': 'application/json' };
   var key = (FUZI_CFG.key || '').trim();
@@ -1527,8 +1566,8 @@ function askModel(text, done){
 
   chatHistory.push({ role: 'user', content: text });
   var msgs = chatHistory.slice(-12).map(function(m){ return { role: m.role, content: m.content }; });
-  /* ChatGLM 系对 system 角色支持有限：把系统要求合并进第一条 user 消息 */
-  msgs[0] = { role: 'user', content: FUZI_SYS + '\n\n【我的问题】\n' + msgs[0].content };
+  /* DeepSeek 支持 system 角色：将系统要求作为独立的 system 消息置于最前 */
+  msgs.unshift({ role: 'system', content: FUZI_SYS });
 
   var bub = botTyping();
   var payload = {
@@ -1547,7 +1586,7 @@ function askModel(text, done){
     var content = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
     if (!content) throw new Error('模型返回内容为空');
     bub.classList.remove('typing');
-    bub.textContent = content;
+    renderMd(bub, content);
     chatHistory.push({ role: 'assistant', content: content });
     if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
     scrollBottom();
@@ -1556,7 +1595,7 @@ function askModel(text, done){
     if (ac.intentional){ if (bub.parentNode) bub.parentNode.remove(); return; }
     bub.classList.remove('typing');
     bub.classList.add('err');
-    bub.textContent = '⚠️ 暂时无法获取「夫子·明察」回答（' + err.message + '）。已切换为离线演示回答：';
+    bub.textContent = '⚠️ 暂时无法获取「DeepSeek」回答（' + err.message + '）。已切换为离线演示回答：';
     botReply(offlineAnswer(text), done);
   }).finally(function(){
     clearTimeout(timer);
@@ -1598,7 +1637,7 @@ function openChat(key, userText){
   var q = (userText && String(userText).trim()) ? String(userText).trim() : SCEN[key].ask;
   pushMsg('self', q);
   if (modelOn()){
-    /* 真实模型模式：问题直接交给夫子·明察回答 */
+    /* 真实模型模式：问题直接交给 DeepSeek 回答 */
     askModel(q, function(){ renderSuggests(key); });
   } else {
     /* 离线演示：命中六大场景给内置答案，否则按关键词分类兜底 */
@@ -1626,10 +1665,10 @@ function askAI(text){
 /* ---------- 界面状态 ---------- */
 function updateAIModeUI(){
   var on = modelOn();
-  $('#aiModeLabel').textContent = on ? '夫子·明察已接入' : '离线演示模式';
-  $('#aiModeSub').textContent = on ? '真实模型回答 · 需本地模型服务' : '模拟回答 · 仅供参考';
+  $('#aiModeLabel').textContent = on ? 'DeepSeek 已接入' : '离线演示模式';
+  $('#aiModeSub').textContent = on ? '真实模型回答 · 需有效 API Key' : '模拟回答 · 仅供参考';
   $('#aiModeDot').style.background = on ? '#4ade80' : '#94a3b8';
-  $('#chatModeTag').textContent = on ? '🎓 夫子·明察' : '● 离线演示';
+  $('#chatModeTag').textContent = on ? '🎓 DeepSeek' : '● 离线演示';
 }
 function setSegUI(){
   $$('#modeSeg .seg-btn').forEach(function(b){
@@ -1664,10 +1703,10 @@ function testFuziConnection(){
       res.classList.add(hit ? 'ok' : 'err');
       res.textContent = hit
         ? '✅ 已连接！模型「' + FUZI_CFG.model + '」可用，可开始咨询。'
-        : '✅ 服务已连接，但可用模型列表为：' + (names.join('、') || '空') + '。请核对模型名称是否与启动参数一致。';
+        : '✅ 服务已连接，但可用模型列表为：' + (names.join('、') || '空') + '。请核对模型名称（默认 deepseek-chat）。';
     }).catch(function(err){
       res.classList.add('err');
-      res.textContent = '❌ 连接失败：' + err.message + '。请确认本地模型服务已启动，且地址 / 端口正确。';
+      res.textContent = '❌ 连接失败：' + err.message + '。请确认 API Key 有效，且服务地址填写正确（默认 https://api.deepseek.com）。';
     });
 }
 function acTimeout(ms){
@@ -1720,7 +1759,7 @@ $('#aiSave').addEventListener('click', function(){
   saveFuziCfg(FUZI_CFG);
   updateAIModeUI();
   closeAiModal();
-  toast(modelOn() ? '已启用「夫子·明察」真实模型回答' : '已切换为离线演示模式', true);
+  toast(modelOn() ? '已启用「DeepSeek」真实模型回答' : '已切换为离线演示模式', true);
 });
 
 updateAIModeUI();/* =========================================================
