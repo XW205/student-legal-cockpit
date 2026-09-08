@@ -366,6 +366,28 @@ input{font-family:inherit}
 .file-chip .f-rm:hover{background:#fee2e2}
 .scan-actions{display:flex;justify-content:center;gap:12px;margin-top:18px;flex-wrap:wrap}
 
+/* ============ 合同审查：DeepSeek 接入（粘贴文本 / 状态） ============ */
+.paste-panel{background:var(--card);border:1px dashed #b9ccf5;border-radius:16px;padding:16px;margin-top:14px}
+.pp-head{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--brand-deep);margin-bottom:8px}
+.pp-head::before{content:"✍️"}
+.paste-panel textarea{width:100%;min-height:150px;resize:vertical;border:1.5px solid var(--line);border-radius:12px;
+  padding:12px 14px;font-size:13.5px;line-height:1.75;color:var(--ink);background:#fbfdff;outline:none;font-family:inherit}
+.paste-panel textarea:focus{border-color:#7ea4ff;background:#fff}
+.pp-row{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.ds-status{font-size:12px;font-weight:600;padding:6px 12px;border-radius:99px;background:#f1f5f9;color:#64748b;border:1px solid var(--line)}
+.ds-status.ok{background:#e7f9f1;color:#047857;border-color:#c3f0de}
+.ds-status.warn{background:#fff4e0;color:#b45309;border-color:#fde0a9}
+.ds-status.err{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
+.ds-status button{margin-left:6px;color:#1d4ed8;font-weight:700;text-decoration:underline}
+.scan-note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+/* ============ 合同审查：审查失败提示界面 ============ */
+.review-fail{display:none;align-items:center;justify-content:center;padding:34px 12px}
+.rf-box{max-width:560px;width:100%;text-align:center;background:var(--card);border:1px solid #fecaca;border-radius:22px;padding:38px 28px;box-shadow:var(--shadow-lg);animation:fadeUp .3s ease both}
+.rf-ico{font-size:56px;line-height:1}
+.rf-box h3{font-size:24px;font-weight:900;color:#b91c1c;margin:14px 0 8px}
+.rf-reason{font-size:14px;color:var(--slate);line-height:1.9;background:#fef2f2;border:1px dashed #fecaca;border-radius:12px;padding:12px 14px;text-align:left;white-space:pre-wrap}
+.rf-actions{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.rf-note{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.8}
 /* 扫描动画 */
 .scan-panel{display:none;text-align:center;padding:30px 10px}
 .scan-panel.on{display:block;animation:fadeUp .3s ease both}
@@ -914,9 +936,9 @@ input{font-family:inherit}
       <div class="upload-zone" id="uploadZone">
         <span class="up-ico">📂</span>
         <h4>拖拽文件到这里，或点击选择文件</h4>
-        <p>支持 PDF / Word / 图片，文件将仅在本机做演示解析</p>
-        <span class="formats">PDF · DOCX · JPG · PNG · WEBP（≤20MB）</span>
-        <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp">
+        <p>支持 PDF / Word / 图片 / TXT，浏览器本地抽取文字后交给 DeepSeek 分析</p>
+        <span class="formats">PDF · DOCX · JPG · PNG · WEBP · TXT（≤20MB）</span>
+        <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,.md">
       </div>
       <div class="file-chip" id="fileChip">
         <span class="f-ico">📄</span>
@@ -928,8 +950,17 @@ input{font-family:inherit}
       </div>
       <div class="scan-actions">
         <button class="btn" id="scanBtn">🚀 开始风险扫描</button>
-        <button class="btn ghost" id="scanDemoBtn">✨ 使用示例合同（演示）</button>
       </div>
+      <div class="paste-panel">
+        <div class="pp-head">或粘贴合同全文（DeepSeek 云端分析，输出风险评分 + 风险条款明细）</div>
+        <textarea id="contractText" spellcheck="false" placeholder="把合同条款全文粘贴到这里，例如《房屋租赁合同》逐条内容……"></textarea>
+        <div class="pp-row">
+          <button class="btn" id="txtScanBtn">🚀 AI 文本审查</button>
+          <button class="btn ghost" id="fillSampleBtn">📋 填入示例租房合同</button>
+          <span class="ds-status" id="dsStatusLine">检查中…</span>
+        </div>
+      </div>
+      <div class="scan-note">💡 说明：PDF / Word / 图片 / TXT 均可由浏览器本地抽取文字后再调用 DeepSeek 分析（需联网加载解析库，旧版 .doc 除外）；DeepSeek 未配置或审查失败时会显示「审查失败」提示，可手动查看离线演示报告。</div>
     </div>
 
     <!-- 阶段2：扫描动画 -->
@@ -950,13 +981,28 @@ input{font-family:inherit}
       <div class="scan-pct" id="scanPct">0%</div>
     </div>
 
+    <!-- 阶段2.5：审查失败提示 -->
+    <div class="review-fail" id="stage-fail">
+      <div class="rf-box">
+        <div class="rf-ico">😥</div>
+        <h3>AI 审查失败</h3>
+        <p class="rf-reason" id="failReason">DeepSeek 未能完成本次合同审查，请稍后重试。</p>
+        <div class="rf-actions">
+          <button class="btn" id="failRetryBtn">↻ 重新审查</button>
+          <button class="btn ghost" id="failEditBtn">✏️ 返回修改文本</button>
+          <button class="btn ghost sm" id="failDemoBtn">🧪 查看离线演示报告</button>
+        </div>
+        <div class="rf-note">若持续失败：请检查网络连接、DeepSeek API Key 与账户余额，或将模型改用「deepseek-chat」后重试。<br>「离线演示报告」仅为效果展示，不代表本次审查结果。</div>
+      </div>
+    </div>
+
     <!-- 阶段3：风险报告 -->
     <div class="report-panel" id="stage-report">
       <div class="page-title">
         <div class="line"></div>
         <h2>审查报告</h2>
-        <span class="desc">已完成扫描 · 报告生成于 2026-09-08（演示数据）</span>
-        <span class="tag">✅ 审查完成</span>
+        <span class="desc" id="reportMeta">已完成扫描 · 报告生成于 2026-09-08（演示数据）</span>
+        <span class="tag" id="reportTag">✅ 审查完成</span>
       </div>
 
       <div class="report-top">
@@ -970,20 +1016,20 @@ input{font-family:inherit}
           </div>
           <div class="sb-copy">
             <h3>合同综合风险得分</h3>
-            <p>合同存在一定风险，建议优先修改高、中风险条款后再签署</p>
-            <span class="verdict">🟠 建议：修改后再签约</span>
+            <p id="scoreCopy">合同存在一定风险，建议优先修改高、中风险条款后再签署</p>
+            <span class="verdict" id="scoreVerdict">🟠 建议：修改后再签约</span>
           </div>
         </div>
         <div class="stat-chips">
           <div class="stat-chip high"><span class="s-ico">🔴</span>
             <div><b>高风险</b></div>
-            <div class="s-num"><b>3</b><span class="s-lbl">处 · 必须修改</span></div></div>
+            <div class="s-num"><b id="highCnt">3</b><span class="s-lbl">处 · 必须修改</span></div></div>
           <div class="stat-chip mid"><span class="s-ico">🟡</span>
             <div><b>中风险</b></div>
-            <div class="s-num"><b>5</b><span class="s-lbl">处 · 建议修改</span></div></div>
+            <div class="s-num"><b id="midCnt">5</b><span class="s-lbl">处 · 建议修改</span></div></div>
           <div class="stat-chip low"><span class="s-ico">🟢</span>
             <div><b>低风险</b></div>
-            <div class="s-num"><b>12</b><span class="s-lbl">处 · 优化建议</span></div></div>
+            <div class="s-num"><b id="lowCnt">12</b><span class="s-lbl">处 · 优化建议</span></div></div>
         </div>
       </div>
 
@@ -1004,13 +1050,13 @@ input{font-family:inherit}
         <div class="low-head" id="lowHead">
           <span class="sev-dot low"></span>
           <b>🟢 低风险优化建议</b>
-          <span class="cnt">12 处</span>
+          <span class="cnt" id="lowCntBig">12 处</span>
           <span class="caret">▾</span>
         </div>
         <div class="low-list" id="lowList"></div>
       </div>
 
-      <div class="report-note">* 演示报告基于示例租房合同模拟生成，仅展示关键条目；完整报告含全部 20 处提示。</div>
+      <div class="report-note" id="reportNote">* 演示报告基于示例租房合同模拟生成，仅展示关键条目；完整报告含全部 20 处提示。</div>
       <div class="report-actions">
         <button class="btn" id="exportBtn">📥 导出审查报告</button>
         <button class="btn ghost" id="rescanBtn">↻ 重新扫描</button>
@@ -1579,6 +1625,21 @@ function buildHeaders(){
   if (key) headers['Authorization'] = 'Bearer ' + key;
   return headers;
 }
+/* DeepSeek 响应内容提取：content 为空时回退 reasoning_content（reasoner 模型），并给出可读空返回原因 */
+function dsContent(j){
+  var ch = (j && j.choices && j.choices[0]) || {};
+  var msg = ch.message || {};
+  var c = msg.content;
+  if (c === null || c === undefined || String(c).trim() === '') c = msg.reasoning_content;
+  return (c === null || c === undefined) ? '' : String(c);
+}
+function dsFinishReason(j){ return (j && j.choices && j.choices[0] && j.choices[0].finish_reason) || ''; }
+function dsEmptyError(j){
+  var fr = dsFinishReason(j);
+  if (fr === 'length') return '模型回答因超出长度上限被截断，请缩小问题或拆分后重试';
+  if (!j || !j.choices || !j.choices.length) return '模型未返回候选内容：可能账户余额不足、Key 失效或服务异常，请检查后重试';
+  return '模型返回内容为空：可能被内容安全策略拦截、余额不足或输出超长，请稍后重试（已尝试解析 reasoning_content）';
+}
 function askModel(text, done){
   if (chatBusy){ toast('正在生成回答，请稍候…', false); return; }
   chatBusy = true;
@@ -1597,7 +1658,7 @@ function askModel(text, done){
     model: FUZI_CFG.model || FUZI_DEFAULT.model,
     messages: msgs,
     temperature: 0.7, top_p: 0.9,
-    max_tokens: 1024,
+    max_tokens: 2048,
     stream: false
   };
   fetch(fuziBase() + '/chat/completions', {
@@ -1606,8 +1667,8 @@ function askModel(text, done){
     if (!r.ok) return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ' ' + String(t).slice(0, 140)); });
     return r.json();
   }).then(function(j){
-    var content = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!content) throw new Error('模型返回内容为空');
+    var content = dsContent(j);
+    if (!content) throw new Error(dsEmptyError(j));
     bub.classList.remove('typing');
     renderMd(bub, content);
     chatHistory.push({ role: 'assistant', content: content });
@@ -1904,13 +1965,15 @@ $$('.f-btn').forEach(function(b){
 });/* =========================================================
    合同审查：上传 / 扫描 / 报告交互
    ========================================================= */
-var ACCEPT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
+var ACCEPT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp', 'txt', 'md'];
 var fileData = null, scanTimers = [];
 
-function setFile(f){
+function setFile(f, busyNote){
   fileData = f;
   $('#fileName').textContent = f.name;
-  $('#fileMeta').textContent = '大小 ' + f.size + ' · 已就绪，可开始扫描';
+  if (busyNote){ $('#fileMeta').textContent = busyNote; }
+  else if (f.text){ $('#fileMeta').textContent = '已抽取文本 ' + f.text.length + ' 字 · 可调用 DeepSeek 审查'; }
+  else { $('#fileMeta').textContent = '大小 ' + f.size + ' · 已载入（未能抽取文字，可改粘贴全文）'; }
   $('#fileChip').classList.add('on');
   $('#scanBtn').disabled = false;
 }
@@ -1920,13 +1983,110 @@ function clearFile(){
   $('#fileInput').value = '';
   $('#scanBtn').disabled = true;
 }
+function fileStatus(msg){
+  var m = $('#fileMeta');
+  if (m) m.textContent = msg;
+}
+var libCache = {};
+function ensureLib(src){
+  if (libCache[src]) return libCache[src];
+  var pr = new Promise(function(res, rej){
+    var s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = function(){ res(); };
+    s.onerror = function(){ rej(new Error('解析库加载失败，请检查网络后重试')); };
+    document.head.appendChild(s);
+  });
+  libCache[src] = pr;
+  return pr;
+}
+function clipText(t, max){
+  t = String(t || '').trim();
+  if (t.length > max){ t = t.slice(0, max) + '\n……（文本过长已截断，仅分析前 ' + max + ' 字）'; }
+  return t;
+}
+/* PDF：用 pdf.js 在浏览器本地抽取文字 */
+function extractPdf(f){
+  return ensureLib('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js').then(function(){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    return f.arrayBuffer().then(function(buf){
+      return window.pdfjsLib.getDocument({ data: buf }).promise.then(function(pdf){
+        var jobs = [];
+        for (var i = 1; i <= pdf.numPages; i++){
+          jobs.push(pdf.getPage(i).then(function(page){
+            return page.getTextContent().then(function(tc){
+              return tc.items.map(function(it){ return it.str || ''; }).join(' ');
+            });
+          }));
+        }
+        return Promise.all(jobs).then(function(parts){
+          var txt = parts.join('\n');
+          if (String(txt).trim().length < 20) throw new Error('该 PDF 可能是扫描件（无文字层），请截图后上传图片识别，或粘贴全文');
+          return clipText(txt, 12000);
+        });
+      });
+    });
+  });
+}
+/* Word(.docx)：用 mammoth 在浏览器本地抽取文字；旧版 .doc 不支持 */
+function extractDocx(f){
+  return ensureLib('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js').then(function(){
+    return f.arrayBuffer().then(function(buf){
+      return window.mammoth.extractRawText({ arrayBuffer: buf }).then(function(r){
+        return clipText(r.value, 12000);
+      });
+    });
+  });
+}
+/* 图片：用 Tesseract.js 本地 OCR 识别中文/英文 */
+function extractImage(f){
+  return ensureLib('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js').then(function(){
+    return window.Tesseract.recognize(f, 'chi_sim+eng', {
+      logger: function(m){
+        if (m && m.status) fileStatus('🔍 OCR 识别中：' + m.status + (typeof m.progress === 'number' ? ' ' + Math.round(m.progress * 100) + '%' : ''));
+      }
+    }).then(function(res){ return clipText(res.data.text, 12000); });
+  });
+}
+function withTimeout(p, ms, msg){
+  return Promise.race([
+    p,
+    new Promise(function(res, rej){ setTimeout(function(){ rej(new Error(msg)); }, ms); })
+  ]);
+}
 function pickFiles(files){
   var f = files && files[0];
   if (!f) return;
   var ext = (f.name.split('.').pop() || '').toLowerCase();
-  if (ACCEPT.indexOf(ext) === -1){ toast('暂不支持该格式，请上传 PDF / Word / 图片', false); return; }
-  setFile({ name: f.name, size: fmtSize(f.size) });
-  toast('文件已载入（演示解析）', true);
+  if (ACCEPT.indexOf(ext) === -1){ toast('暂不支持该格式，请上传 PDF / Word / 图片 / TXT', false); return; }
+  $('#contractText').value = '';
+  $('#fileName').textContent = f.name;
+  $('#fileChip').classList.add('on');
+  $('#scanBtn').disabled = false;
+  if (ext === 'txt' || ext === 'md'){
+    fileStatus('读取文本中…');
+    var rd = new FileReader();
+    rd.onload = function(){ setFile({ name: f.name, size: fmtSize(f.size), text: String(rd.result || '') }); toast('已读取文本，可开始 AI 扫描', true); };
+    rd.onerror = function(){ setFile({ name: f.name, size: fmtSize(f.size) }); toast('文本读取失败，请改为粘贴全文', false); };
+    rd.readAsText(f, 'utf-8');
+    return;
+  }
+  if (ext === 'doc'){
+    setFile({ name: f.name, size: fmtSize(f.size) });
+    toast('旧版 .doc 无法直接解析，请另存为 .docx，或粘贴全文后审查', false);
+    return;
+  }
+  fileStatus(ext === 'pdf' ? '📄 正在解析 PDF（本地抽取文字）…'
+    : ext === 'docx' ? '📝 正在解析 Word（本地抽取文字）…'
+    : '🖼️ 正在 OCR 识别图片文字…（首次需下载识别模型）');
+  var p = withTimeout(ext === 'pdf' ? extractPdf(f) : (ext === 'docx' ? extractDocx(f) : extractImage(f)), 90000, '解析超时（首次 OCR 需下载识别模型，请检查网络后重试）');
+  p.then(function(text){
+    setFile({ name: f.name, size: fmtSize(f.size), text: text });
+    toast('已抽取合同文字，可开始 AI 扫描', true);
+  }).catch(function(err){
+    setFile({ name: f.name, size: fmtSize(f.size) });
+    toast('解析失败：' + (err.message || err) + '；可粘贴全文后审查', false);
+  });
 }
 function fmtSize(b){
   if (b > 1024 * 1024) return (b / 1024 / 1024).toFixed(1) + ' MB';
@@ -1944,13 +2104,10 @@ zone.addEventListener('drop', function(e){
 });
 $('#fileInput').addEventListener('change', function(){ pickFiles(this.files); });
 $('#fileRemove').addEventListener('click', clearFile);
-$('#scanDemoBtn').addEventListener('click', function(){
-  setFile({ name: '房屋租赁合同（示例）.pdf', size: '286 KB' });
-  startScan();
-});
-$('#scanBtn').addEventListener('click', startScan);
+/* 示例合同入口已迁移为「📋 填入示例租房合同」（填充文本后调用 DeepSeek） */
+/* scanBtn 点击统一由新逻辑绑定（DeepSeek 合同审查） */
 
-/* ---------- 扫描动画 ---------- */
+/* ---------- 扫描动画（保留原有视觉） ---------- */
 var stepEls = [];
 function prepSteps(){
   stepEls = $$('#scanSteps .scan-step');
@@ -1971,70 +2128,400 @@ function setBar(pct){
   $('#scanPct').textContent = pct + '%';
 }
 
-function startScan(){
-  if (!fileData){ toast('请先选择要审查的合同文件', false); return; }
+/* ---------- 合同示例（可填入文本区，便于现场演示） ---------- */
+var SAMPLE_CONTRACT = '《房屋租赁合同（示例 · 大学生版）》\n' +
+'出租方（甲方）：______  承租方（乙方）：______（在读大学生）\n' +
+'第一条 房屋基本情况：甲方将位于昆明市呈贡区××小区×栋×室的房屋出租给乙方居住，建筑面积约 60 平方米。\n' +
+'第二条 租期：自 2026 年 9 月 1 日至 2027 年 8 月 31 日。\n' +
+'第三条 租金：每月租金 1800 元，押一付三，每季度首月 5 日前支付；续租时甲方可根据市场情况调整租金。\n' +
+'第四条 押金：乙方签约当日支付押金 5400 元；退租时押金是否退还由甲方视房屋情况决定，扣除项目由甲方自行决定。\n' +
+'第五条 费用：租赁期间水、电、燃气、物业费由乙方承担。\n' +
+'第六条 违约责任：乙方提前退租须向甲方支付两个月租金作为违约金；甲方可因经营需要或房屋出售提前解除合同，无需另行补偿。\n' +
+'第七条 维修责任：租赁期内房屋及设施故障由双方协商处理，维修费用由乙方先行垫付。\n' +
+'第八条 转租：未经甲方书面同意，乙方不得转租、转借。\n' +
+'第九条 使用：乙方应按约定用途使用房屋，不得从事违法活动。\n' +
+'第十条 通知送达：双方可通过口头或微信沟通，通知以甲方收到为准。\n' +
+'第十一条 争议解决：协商不成的，可向法院提起诉讼。\n' +
+'第十二条 其他：本合同一式两份，双方各执一份，自签字之日起生效。\n' +
+'甲方（签字）：______  乙方（签字）：______  日期：2026 年 9 月 1 日';
+
+/* ---------- DeepSeek 配置读取（与 AI 助手共用 deepseek_cfg_v1） ---------- */
+function dsOnline(){
+  return FUZI_CFG && FUZI_CFG.mode === 'model' && (FUZI_CFG.key || '').trim() !== '';
+}
+function dsModelLabel(){ return (FUZI_CFG && FUZI_CFG.model) || 'deepseek-chat'; }
+function dsConfiguredButOff(){ return !!(FUZI_CFG && (FUZI_CFG.key || '').trim()); }
+function updateReviewStatus(){
+  var el0 = $('#dsStatusLine');
+  if (!el0) return;
+  el0.className = 'ds-status';
+  el0.innerHTML = '';
+  if (dsOnline()){
+    el0.classList.add('ok');
+    el0.appendChild(document.createTextNode('🟢 DeepSeek 已连接 · ' + dsModelLabel()));
+  } else if (dsConfiguredButOff()){
+    el0.classList.add('warn');
+    el0.appendChild(document.createTextNode('🟡 已填 Key 但未启用'));
+    var b = document.createElement('button'); b.textContent = '去启用';
+    b.addEventListener('click', function(){ showPage('page-ai'); openAiModal(); });
+    el0.appendChild(b);
+  } else {
+    el0.classList.add('err');
+    el0.appendChild(document.createTextNode('⚪ 未配置 DeepSeek'));
+    var b2 = document.createElement('button'); b2.textContent = '去配置';
+    b2.addEventListener('click', function(){ showPage('page-ai'); openAiModal(); });
+    el0.appendChild(b2);
+  }
+}
+
+/* ---------- 调用 DeepSeek（OpenAI 兼容 /chat/completions） ---------- */
+function callDeepSeekChat(messages, done, fail){
+  var ac = new AbortController();
+  var timer = setTimeout(function(){ ac.abort(); }, 150000);
+  var body = {
+    model: (FUZI_CFG && FUZI_CFG.model) || 'deepseek-chat',
+    messages: messages,
+    temperature: 0.2,
+    max_tokens: 12000,
+    stream: false,
+    response_format: { type: 'json_object' }
+  };
+  var attempt = 0;
+  function request(){
+    attempt++;
+    fetch(fuziBase() + '/chat/completions', {
+      method: 'POST', headers: buildHeaders(), body: JSON.stringify(body), signal: ac.signal
+    }).then(function(r){
+      if (!r.ok) return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ' ' + String(t).slice(0, 120)); });
+      return r.json();
+    }).then(function(j){
+      var content = dsContent(j);
+      if (!content){
+        /* finish_reason=length 说明是超长截断，重试无意义；其余偶发空输出自动重试一次 */
+        if (dsFinishReason(j) !== 'length' && attempt < 2){ request(); return; }
+        throw new Error(dsEmptyError(j));
+      }
+      clearTimeout(timer);
+      done(content);
+    }).catch(function(err){
+      clearTimeout(timer);
+      fail(err);
+    });
+  }
+  request();
+}
+function extractJsonObj(text){
+  var t = String(text || '');
+  t = t.replace(/```(?:json)?/gi, '').trim();
+  var s = t.indexOf('{'), e = t.lastIndexOf('}');
+  if (s < 0 || e < 0) return null;
+  try { return JSON.parse(t.slice(s, e + 1)); } catch(err){}
+  return null;
+}
+/* 解析合同文本 → 结构化风险报告 */
+function parseContractReport(content){
+  var j = extractJsonObj(content);
+  if (!j) throw new Error('无法解析模型返回的 JSON');
+  var risks = Array.isArray(j.risks) ? j.risks : [];
+  var lowTips = Array.isArray(j.low_tips) ? j.low_tips : [];
+  var high = 0, mid = 0;
+  risks.forEach(function(r){
+    r.level = (r.level === 'high' || r.level === '高风险') ? 'high' : (r.level === 'mid' || r.level === '中风险') ? 'mid' : 'high';
+    if (r.level === 'high') high++; else mid++;
+  });
+  var stats = j.stats || {};
+  var h = (typeof stats.high === 'number') ? stats.high : high;
+  var m = (typeof stats.mid === 'number') ? stats.mid : mid;
+  var l = (typeof stats.low === 'number') ? stats.low : lowTips.length;
+  var score = Math.max(0, Math.min(100, Math.round(Number(j.score) || 55)));
+  return {
+    score: score,
+    level: (j.level === '低' || j.level === 'low') ? '低' : (j.level === '高' || j.level === 'high') ? '高' : '中',
+    summary: String(j.summary || ''),
+    high: h, mid: m, low: l,
+    risks: risks,
+    low_tips: lowTips
+  };
+}
+
+/* ---------- 报告通用填充 ---------- */
+function scoreColor(score){ return score >= 70 ? '#ef4444' : (score >= 45 ? '#f59e0b' : '#10b981'); }
+function verdictText(score){
+  return score >= 70 ? '🔴 高风险：建议修改后再签约'
+    : (score >= 45 ? '🟠 中风险：建议修改后再签约' : '🟢 低风险：可签署，注意履约留痕');
+}
+function setCounts(h, m, l){
+  var hc = $('#highCnt'), mc = $('#midCnt'), lc = $('#lowCnt'), lb = $('#lowCntBig');
+  if (hc) hc.textContent = h; if (mc) mc.textContent = m; if (lc) lc.textContent = l;
+  if (lb) lb.textContent = l + ' 处';
+  $$('.f-btn').forEach(function(b){
+    var n = (b.dataset.f === 'high') ? h : (b.dataset.f === 'mid') ? m : l;
+    var icon = (b.dataset.f === 'high') ? '🔴' : (b.dataset.f === 'mid') ? '🟡' : '🟢';
+    b.textContent = icon + ' ' + (b.dataset.f === 'high' ? '高风险' : b.dataset.f === 'mid' ? '中风险' : '低风险') + ' ' + n;
+  });
+}
+function animateScore(score){
+  var color = scoreColor(score);
+  var bar = $('#gaugeBar');
+  var len = 2 * Math.PI * 54;
+  bar.style.strokeDasharray = len;
+  bar.style.strokeDashoffset = len;
+  bar.style.stroke = color;
+  var num = $('#scoreNum'); num.textContent = '0';
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ bar.style.strokeDashoffset = len * (1 - score / 100); });
+  });
+  var cur = 0;
+  var t = setInterval(function(){
+    cur += 2;
+    if (cur >= score){ cur = score; clearInterval(t); }
+    num.textContent = cur;
+  }, 18);
+}
+function fillReportMeta(metaHtml, tagHtml, noteHtml, verdict){
+  var m = $('#reportMeta'); if (m) m.innerHTML = metaHtml;
+  var t = $('#reportTag'); if (t) t.innerHTML = tagHtml;
+  var n = $('#reportNote'); if (n) n.innerHTML = noteHtml;
+  var v = $('#scoreVerdict'); if (v){ v.textContent = verdict; v.className = 'verdict'; }
+  var c = $('#scoreCopy'); if (c) c.textContent = '';
+}
+function renderRiskList(items){
+  var wrap = $('#riskList');
+  wrap.innerHTML = '';
+  (items || []).forEach(function(it, i){
+    var card = el('div', 'risk-card' + (it.level === 'high' && i === 0 ? ' open' : ''));
+    card.dataset.level = it.level;
+    var head = el('div', 'risk-head');
+    head.appendChild(el('span', 'sev-dot ' + it.level));
+    var tt = el('div', 'rh-t');
+    tt.appendChild(el('b', null, (it.title || '风险条款')));
+    tt.appendChild(el('span', null, (it.clause || '') + (it.level === 'high' ? ' · 必须修改' : ' · 建议修改')));
+    head.appendChild(tt);
+    head.appendChild(el('span', 'sev-tag ' + it.level, it.level === 'high' ? '🔴 高风险' : '🟡 中风险'));
+    head.appendChild(el('span', 'caret', '▾'));
+    card.appendChild(head);
+    var body = el('div', 'risk-body');
+    body.appendChild(rRow('reason', '风险原因', it.reason || ''));
+    body.appendChild(rRow('fix', '修改建议', it.fix || ''));
+    body.appendChild(rRow('law', '法律依据', it.law || ''));
+    card.appendChild(body);
+    head.addEventListener('click', function(){ card.classList.toggle('open'); });
+    wrap.appendChild(card);
+  });
+}
+function renderLowTips(tips){
+  var wrap = $('#lowList');
+  wrap.innerHTML = '';
+  (tips || []).forEach(function(t){ wrap.appendChild(el('div', 'low-item', t)); });
+  var lb = $('#lowBlock');
+  lb.classList.remove('open');
+  lb.style.display = (tips && tips.length) ? '' : 'none';
+}
+
+/* 报告阶段切换 */
+function enterScanStage(){
   scanTimers.forEach(clearTimeout); scanTimers = [];
   $('#stage-upload').style.display = 'none';
   $('#stage-report').classList.remove('on');
+  $('#stage-fail').style.display = 'none';
   $('#stage-scan').classList.add('on');
-  prepSteps();
-  setBar(0);
+  prepSteps(); setBar(0);
+}
+function showReportStage(){
+  $('#stage-scan').classList.remove('on');
+  $('#stage-fail').style.display = 'none';
+  $('#stage-report').classList.add('on');
+  $('#stage-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-  var per = [14, 34, 58, 80, 100];
+/* ---------- 展示报告：DeepSeek 结果 ---------- */
+function showReportAI(res){
+  showReportStage();
+  renderRiskList(res.risks);
+  setCounts(res.high, res.mid, res.low);
+  applyFilter('all');
+  renderLowTips(res.low_tips);
+  animateScore(res.score);
+  var d = new Date();
+  var ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  fillReportMeta(
+    '由 DeepSeek（' + dsModelLabel() + '）云端分析生成 · ' + ds,
+    '🤖 DeepSeek 审查完成',
+    '* 风险评分与条款由 DeepSeek 依据合同文本生成，仅供学习参考；法律依据请以官方最新文本为准，重大事项请咨询执业律师或拨打 12348。',
+    verdictText(res.score)
+  );
+  var cp = $('#scoreCopy');
+  if (cp) cp.textContent = res.summary || 'AI 已完成风险扫描，建议优先修改高、中风险条款后再签署。';
+}
+
+/* ---------- 展示报告：离线演示（原模拟数据） ---------- */
+function showReport(){
+  /* 清空历史渲染，避免与 AI 报告叠加 */
+  riskBuilt = false; lowBuilt = false;
+  $('#riskList').innerHTML = '';
+  $('#lowList').innerHTML = '';
+  showReportStage();
+  buildRiskCards();
+  buildLowList();
+  var h = RISK.filter(function(x){ return x.level === 'high'; }).length;
+  var m = RISK.filter(function(x){ return x.level === 'mid'; }).length;
+  var l = LOW_TIPS.length;
+  setCounts(h, m, l);
+  applyFilter('all');
+  animateScore(72);
+  var d = new Date();
+  var ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  fillReportMeta(
+    '已完成扫描 · 演示数据生成于 ' + ds,
+    '✅ 审查完成（演示）',
+    '* 演示报告基于示例租房合同模拟生成，仅展示关键条目；完整报告含全部 ' + (h + m + l) + ' 处提示。',
+    '🟠 建议：修改后再签约'
+  );
+  var cp = $('#scoreCopy');
+  if (cp) cp.textContent = '合同存在一定风险，建议优先修改高、中风险条款后再签署';
+}
+
+/* ---------- DeepSeek 真实分析 ---------- */
+function analyzeWithDeepSeek(text){
+  var sys = '你是「法护启航」AI 合同风险雷达内置的资深合同审阅助手（基于 DeepSeek）。' +
+    '你的任务：对用户提供的合同文本做风险审查，输出合同综合风险评分与逐条风险条款。' +
+    '输出要求：1) 只输出一个合法 JSON 对象，不要输出任何解释或 markdown 代码块；' +
+    '2) 评分 score 为 0-100 的整数，越高代表风险越大；' +
+    '3) 字段固定为：{"score":整数,"level":"低|中|高","summary":"一句话总体评价","high":整数,"mid":整数,"low":整数,"risks":[{"level":"high|mid","clause":"条款位置或原文摘录","title":"风险点短标题","reason":"风险原因","fix":"修改建议","law":"法律依据"}],"low_tips":["低风险优化建议字符串"]}；' +
+    '4) 高、中风险合计不超过 8 条，低风险提示不超过 6 条；risks 的条数要与 high/mid 统计一致；' +
+    '5) 法律依据引用中国大陆现行法律并写明条号；无法确认条号时写法律名称与原则并标注「建议人工核对」；' +
+    '6) 面向在校大学生，语言简洁清楚，重点提示：违约金过高、押金、单方解除权、维修责任、费用、管辖、送达、空白条款等常见风险。';
+  var msgs = [
+    { role: 'system', content: sys },
+    { role: 'user', content: '请审查下面这份合同，并按要求输出 JSON：\n\n' + text }
+  ];
+  return new Promise(function(resolve, reject){
+    callDeepSeekChat(msgs, function(content){
+      try { resolve(parseContractReport(content)); }
+      catch (e){ reject(e); }
+    }, reject);
+  });
+}
+
+/* ---------- 扫描入口：文件 / 粘贴文本 / 示例 ---------- */
+function currentContractText(){
+  var t = $('#contractText').value.trim();
+  if (t) return t;
+  if (fileData && fileData.text) return String(fileData.text).trim();
+  return '';
+}
+function startScan(){
+  var text = currentContractText();
+  enterScanStage();
+  var st = $('#stage-scan .scan-title');
+  var ss = $('#stage-scan .scan-sub');
+  if (!text){
+    showFailStage('未获取到可分析的合同文本：请粘贴合同全文，或重新上传 .txt / 可解析的文件。');
+    return;
+  }
+  if (!dsOnline()){
+    showFailStage(dsConfiguredButOff()
+      ? '已填写 API Key，但尚未在「AI 助手 → ⚙️ 设置」中启用 DeepSeek 云端模型。\n请先在 AI 助手设置中把模式切换为 DeepSeek（云端模型）并保存。'
+      : '尚未配置 DeepSeek：请先在「AI 助手 → ⚙️ 设置」填写 API Key 并选择 DeepSeek（云端模型）后，再执行审查。');
+    return;
+  }
+  if (st) st.textContent = 'DeepSeek 云端风险扫描中……';
+  if (ss) ss.textContent = '正在调用 DeepSeek 逐条比对条款与法律依据，请稍候（长合同可能需要 30~60 秒）';
+  var per = [12, 30, 52, 76];
   per.forEach(function(p, i){
     scanTimers.push(setTimeout(function(){
       if (i > 0) setStep(i - 1, 'done');
       setStep(i, 'doing');
       setBar(p);
-      if (i === per.length - 1){
-        scanTimers.push(setTimeout(showReport, 620));
-      }
-    }, 500 + i * 640));
+    }, 260 + i * 520));
+  });
+  analyzeWithDeepSeek(text).then(function(res){
+    setStep(4, 'done');
+    setBar(100);
+    $('#scanPct').textContent = '100%';
+    showReportAI(res);
+  }).catch(function(err){
+    setBar(100);
+    showFailStage('DeepSeek 分析失败：' + (err.message || err) + '。\n请检查网络连接、API Key 与账户余额后点击「↻ 重新审查」；或先「🧪 查看离线演示报告」浏览展示效果。');
   });
 }
 
-/* ---------- 展示报告 ---------- */
-function showReport(){
+/* ---------- 审查失败提示界面 ---------- */
+function showFailStage(reason){
+  scanTimers.forEach(clearTimeout); scanTimers = [];
   $('#stage-scan').classList.remove('on');
-  $('#stage-report').classList.add('on');
-  buildRiskCards();
-  buildLowList();
-  applyFilter('all');
-  /* 得分圆环动画：72 / 100 */
-  var bar = $('#gaugeBar');
-  var len = 2 * Math.PI * 54; /* ≈339.3 */
-  bar.style.strokeDasharray = len;
-  bar.style.strokeDashoffset = len;
-  bar.style.stroke = '#f59e0b';
-  var num = $('#scoreNum'); num.textContent = '0';
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      bar.style.strokeDashoffset = len * (1 - 72 / 100);
-    });
-  });
-  var cur = 0;
-  var t = setInterval(function(){
-    cur += 2;
-    if (cur >= 72){ cur = 72; clearInterval(t); }
-    num.textContent = cur;
-  }, 18);
-  $('#stage-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('#stage-report').classList.remove('on');
+  $('#stage-upload').style.display = 'none';
+  var fr = $('#failReason');
+  if (fr) fr.textContent = reason || 'DeepSeek 未能完成本次合同审查，请稍后重试。';
+  var box = $('#stage-fail');
+  if (box) box.style.display = 'flex';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+$('#failRetryBtn').addEventListener('click', startScan);
+$('#failEditBtn').addEventListener('click', function(){
+  $('#stage-fail').style.display = 'none';
+  $('#stage-scan').classList.remove('on');
+  $('#stage-report').classList.remove('on');
+  $('#stage-upload').style.display = '';
+  $('#stage-upload').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+$('#failDemoBtn').addEventListener('click', function(){
+  toast('正在展示离线演示报告（非本次 DeepSeek 审查结果）', false);
+  showReport();
+});
 
-/* 报告操作 */
-$('#exportBtn').addEventListener('click', function(){ toast('审查报告已导出（演示）', true); });
+/* ---------- 事件绑定（上传 / 粘贴 / 示例 / 报告操作） ---------- */
+$('#scanBtn').addEventListener('click', function(){
+  if (!fileData && !$('#contractText').value.trim()){ toast('请先选择文件，或粘贴合同全文', false); return; }
+  startScan();
+});
+$('#txtScanBtn').addEventListener('click', function(){
+  if (!$('#contractText').value.trim()){ toast('请先粘贴合同全文', false); return; }
+  startScan();
+});
+$('#fillSampleBtn').addEventListener('click', function(){
+  $('#contractText').value = SAMPLE_CONTRACT;
+  $('#fileMeta').textContent = '示例合同已填入 · 文本约 ' + SAMPLE_CONTRACT.length + ' 字';
+  toast(dsOnline() ? '示例合同已填入，点击「🚀 AI 文本审查」调用 DeepSeek' : '示例合同已填入（需先配置 DeepSeek 才能 AI 审查）', true);
+});
 $('#rescanBtn').addEventListener('click', function(){
   $('#stage-report').classList.remove('on');
   $('#stage-scan').classList.remove('on');
+  $('#stage-fail').style.display = 'none';
   $('#stage-upload').style.display = '';
   clearFile();
   toast('已回到上传页，可重新扫描', false);
 });
+$('#exportBtn').addEventListener('click', function(){
+  var items = $$('#riskList .risk-card');
+  var txt = '【法护启航 · AI 合同风险审查报告】\n得分：' + $('#scoreNum').textContent + '/100\n\n';
+  items.forEach(function(c){
+    txt += '- ' + c.querySelector('.rh-t b').textContent + '\n';
+  });
+  var blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '法护启航-合同审查报告.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('审查报告已导出为文本', true);
+});
 $('#reportAiBtn').addEventListener('click', function(){
   askAI('我刚用 AI 合同审查扫了一份合同，高风险条款应该怎么改？');
 });
+/* 粘贴输入时允许直接回车进入审查（Ctrl+Enter） */
+$('#contractText').addEventListener('keydown', function(e){
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); $('#txtScanBtn').click(); }
+});
 
-/* =========================================================
+/* 页面状态刷新：进入合同审查页 / 初始加载时更新 DeepSeek 连接状态 */
+updateReviewStatus();
+$$('.nav-item').forEach(function(n){
+  n.addEventListener('click', function(){
+    if (n.dataset.page === 'page-review') setTimeout(updateReviewStatus, 30);
+  });
+});/* =========================================================
    我的权益：上传证据 / 法援通道（模拟）
    ========================================================= */
 var EV_POOL = [
@@ -2059,7 +2546,7 @@ $('#evAddBtn').addEventListener('click', function(){
 $('#callBtn').addEventListener('click', function(){ toast('正在呼叫 12348 …（演示环境不真实拨打）', false); });
 $('#clinicBtn').addEventListener('click', function(){ toast('已定位最近的「高校法律援助中心」（演示）', true); });
 
-/* 默认回到首页 / 初始化合同审查区默认状态（showPage 为全站唯一定义，见文件前部） */
+/* 默认回到首页 / 初始化报告区默认状态（showPage 为全站唯一定义，见文件前部） */
 showPage('page-home');
 clearFile();
 
