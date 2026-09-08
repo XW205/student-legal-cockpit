@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法护启航 · 大学生法律安全驾驶舱</title>
+<style>
+/* ============ 全局变量与基础 ============ */
+:root{
+  --bg:#e9eef6;
+  --bg2:#f4f7fc;
+  --card:#ffffff;
+  --ink:#0b1530;
+  --slate:#46566f;
+  --muted:#8a98af;
+  --line:#e3e9f2;
+  --brand:#2f6bff;
+  --brand-deep:#1e3a8a;
+  --brand-ink:#0c2350;
+  --cyan:#22d3ee;
+  --high:#ef4444;
+  --mid:#f59e0b;
+  --low:#10b981;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(15,42,110,.10);
+  --shadow-lg:0 18px 50px rgba(15,42,110,.16);
+  --grad:linear-gradient(135deg,#1d4ed8 0%,#2563eb 45%,#0ea5e9 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.6;
+  min-height:100vh;
+}
+/* 科技感背景：网格 + 光晕 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 420px at 85% -10%,rgba(46,107,255,.14),transparent 60%),
+    radial-gradient(700px 380px at -10% 20%,rgba(34,211,238,.10),transparent 55%),
+    linear-gradient(180deg,#edf1f8,#e7edf6);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(30,64,175,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,64,175,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(1200px 800px at 50% 0%,#000 30%,transparent 80%);
+  mask-image:radial-gradient(1200px 800px at 50% 0%,#000 30%,transparent 80%);
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#c3cfe3;border-radius:9px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* 布局容器 */
+.app{max-width:1080px;margin:0 auto;padding:0 20px 130px}
+
+/* ============ 顶部 App Bar ============ */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:12px;
+  padding:14px 20px;margin-bottom:18px;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(227,233,242,.8);
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-badge{
+  width:40px;height:40px;border-radius:12px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--grad);color:#fff;font-size:20px;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+.logo-name{font-weight:800;font-size:19px;letter-spacing:1px;
+  background:linear-gradient(90deg,#1d4ed8,#0ea5e9);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:-2px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.chip-pill{
+  font-size:12px;color:#1d4ed8;background:#e8efff;border:1px solid #cddcff;
+  padding:5px 12px;border-radius:999px;font-weight:600;
+}
+
+/* ============ 页面切换 ============ */
+.page{display:none;animation:fadeUp .42s ease both}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ============ 通用组件 ============ */
+.page-title{display:flex;align-items:center;gap:14px;margin:26px 4px 18px;flex-wrap:wrap}
+.page-title h2{font-size:27px;font-weight:800;letter-spacing:.5px}
+.page-title .line{width:5px;height:26px;border-radius:6px;background:var(--grad)}
+.page-title .desc{color:var(--slate);font-size:13.5px;width:100%;margin-top:2px}
+.page-title .tag{margin-left:auto;font-size:12px;color:#1d4ed8;background:#eaf0ff;
+  padding:6px 12px;border-radius:999px;border:1px solid #d6e2ff;font-weight:600}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:22px;margin-bottom:18px}
+.card-title{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.card-title small{font-weight:500;color:var(--muted);font-size:12.5px}
+.muted{color:var(--slate)}
+.small{font-size:12.5px;color:var(--muted)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--grad);color:#fff;font-weight:600;
+  padding:12px 22px;border-radius:13px;font-size:15px;
+  box-shadow:0 8px 20px rgba(37,99,235,.30);transition:.2s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(37,99,235,.40)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:#fff;color:var(--brand-deep);border:1.5px solid #c7d8ff;
+  box-shadow:none}
+.btn.ghost:hover{border-color:#8fb0ff;background:#f3f7ff}
+.btn.sm{padding:9px 16px;font-size:13.5px;border-radius:11px}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* 底部导航 */
+.bottomnav{
+  position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+  width:min(700px,calc(100% - 24px));z-index:100;
+  display:flex;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid #dbe4f2;border-radius:20px;
+  box-shadow:0 14px 40px rgba(12,35,80,.18);
+  padding:8px 10px;
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:8px 2px;border-radius:14px;color:var(--muted);
+  font-size:11px;font-weight:600;transition:.2s;position:relative;
+}
+.nav-item .ico{font-size:20px;line-height:1;filter:grayscale(.4);transition:.2s}
+.nav-item:hover{color:var(--brand-deep);background:#f2f6ff}
+.nav-item.active{color:#1d4ed8;background:linear-gradient(180deg,#eef4ff,#e3edff)}
+.nav-item.active .ico{filter:none;transform:translateY(-1px) scale(1.06)}
+.nav-item.active::before{
+  content:"";position:absolute;top:-8px;width:26px;height:3px;border-radius:4px;
+  background:var(--grad);
+}/* ============ 首页 Hero ============ */
+.hero{text-align:center;padding:34px 10px 8px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
+  color:#1d4ed8;background:#e8efff;border:1px solid #cddcff;
+  padding:7px 16px;border-radius:999px;margin-bottom:18px;
+}
+.hero h1{
+  font-size:54px;font-weight:900;letter-spacing:6px;line-height:1.15;
+  background:linear-gradient(100deg,#16285e 5%,#1d4ed8 45%,#0ea5e9 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero .sub{margin-top:10px;font-size:19px;color:#33425c;letter-spacing:1px;font-weight:500}
+.hero .sub b{color:#1d4ed8}
+.hero .flow{margin-top:14px;font-size:12.5px;color:var(--muted);letter-spacing:2px}
+.hero .flow span{display:inline-block;margin:0 6px;color:#b9c6dc}
+
+/* 搜索卡片 */
+.search-card{
+  margin-top:26px;border-radius:22px;padding:26px 26px 22px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0d2557 0%,#153a86 55%,#1763c9 120%);
+  box-shadow:0 18px 46px rgba(13,37,87,.28);border:none;color:#fff;
+}
+.search-card::before{
+  content:"";position:absolute;right:-80px;top:-90px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,238,.30),transparent 65%);
+}
+.search-card::after{
+  content:"";position:absolute;left:-60px;bottom:-110px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%);
+}
+.search-card .sc-title{position:relative;z-index:1;font-size:22px;font-weight:800;margin-bottom:14px}
+.search-box{
+  position:relative;z-index:1;display:flex;gap:10px;background:#fff;border-radius:15px;
+  padding:6px;box-shadow:0 10px 26px rgba(0,0,0,.18);
+}
+.search-box input{
+  flex:1;border:none;outline:none;padding:12px 16px;font-size:15px;color:var(--ink);
+  background:transparent;min-width:0;
+}
+.search-box .btn{border-radius:11px;padding:12px 22px;white-space:nowrap}
+.hot-words{position:relative;z-index:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hot-words .lbl{font-size:12.5px;opacity:.85}
+.hot-tag{
+  font-size:12.5px;color:#dbe7ff;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);padding:4px 12px;border-radius:999px;cursor:pointer;transition:.2s;
+}
+.hot-tag:hover{background:rgba(255,255,255,.28)}
+
+/* 快捷入口 */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.quick-card{
+  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 18px;
+  box-shadow:var(--shadow);cursor:pointer;transition:.22s;position:relative;overflow:hidden;
+}
+.quick-card::after{
+  content:"";position:absolute;right:-36px;top:-36px;width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle,rgba(47,107,255,.14),transparent 70%);
+  transition:.25s;
+}
+.quick-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:#bcd0ff}
+.quick-card:hover::after{transform:scale(1.35)}
+.quick-card .q-ico{
+  width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+  font-size:25px;margin-bottom:12px;background:linear-gradient(135deg,#eaf0ff,#e3f6ff);
+}
+.quick-card:nth-child(2) .q-ico{background:linear-gradient(135deg,#e6fbf3,#e3f6ff)}
+.quick-card:nth-child(3) .q-ico{background:linear-gradient(135deg,#fff3e0,#ffeef4)}
+.quick-card h4{font-size:16.5px;font-weight:800;margin-bottom:4px}
+.quick-card p{font-size:12.5px;color:var(--slate);line-height:1.5}
+.quick-card .go{position:absolute;right:16px;top:18px;color:#b9c6dc;font-size:18px;transition:.2s}
+.quick-card:hover .go{color:#1d4ed8;transform:translateX(3px)}
+
+/* 风险测试 */
+.quiz-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.quiz-icon{
+  width:74px;height:74px;border-radius:20px;flex:none;font-size:34px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#eef4ff,#e0f7ff);
+  box-shadow:inset 0 0 0 1px #d9e6ff;
+}
+.quiz-copy{flex:1;min-width:220px}
+.quiz-copy h4{font-size:17px;font-weight:800;margin-bottom:4px}
+.quiz-copy p{font-size:13px;color:var(--slate)}
+.quiz-body{display:none;margin-top:18px;border-top:1px dashed var(--line);padding-top:18px}
+.quiz-body.on{display:block}
+.quiz-progress{height:8px;background:#e9effa;border-radius:99px;overflow:hidden;margin-bottom:16px}
+.quiz-progress i{display:block;height:100%;width:0%;background:var(--grad);border-radius:99px;transition:.4s}
+.quiz-step{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600}
+.quiz-q{font-size:17px;font-weight:800;margin-bottom:14px}
+.quiz-opts{display:flex;flex-direction:column;gap:10px}
+.quiz-opt{
+  text-align:left;border:1.5px solid var(--line);background:#fbfcfe;border-radius:13px;
+  padding:13px 16px;font-size:14.5px;color:var(--ink);transition:.18s;display:flex;align-items:center;gap:10px;
+}
+.quiz-opt:hover{border-color:#7ea4ff;background:#f3f7ff;transform:translateX(3px)}
+.quiz-opt .m{color:#b9c6dc;font-weight:700}
+.quiz-result{display:none;text-align:center;padding:12px 4px}
+.quiz-result.on{display:block}
+.quiz-result .r-emoji{font-size:56px;display:block;margin-bottom:6px}
+.quiz-result h4{font-size:24px;font-weight:900;margin-bottom:6px}
+.quiz-result p{max-width:560px;margin:0 auto 18px;color:var(--slate);font-size:14.5px}/* ============ AI 助手 ============ */
+.ai-hero{
+  display:flex;align-items:center;gap:16px;padding:22px;border-radius:22px;color:#fff;
+  background:linear-gradient(120deg,#0d2557,#1d4ed8 55%,#0ea5e9);
+  box-shadow:0 16px 40px rgba(13,37,87,.24);margin-bottom:18px;position:relative;overflow:hidden;
+}
+.ai-hero::after{content:"";position:absolute;right:-50px;top:-70px;width:230px;height:230px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%)}
+.ai-avatar{
+  width:62px;height:62px;border-radius:20px;flex:none;font-size:30px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  background:linear-gradient(135deg,#38bdf8,#818cf8);box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+.ai-avatar::after{content:"";position:absolute;inset:-5px;border-radius:24px;
+  border:2px solid rgba(255,255,255,.5);animation:pulseRing 2s ease-out infinite}
+@keyframes pulseRing{0%{transform:scale(.92);opacity:.8}70%{transform:scale(1.14);opacity:0}100%{opacity:0}}
+.ai-hero h3{font-size:22px;font-weight:800}
+.ai-hero p{font-size:13px;opacity:.85;margin-top:2px}
+.ai-hero .status{margin-left:auto;position:relative;z-index:1;text-align:right}
+.ai-hero .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ade80;
+  margin-right:6px;box-shadow:0 0 0 4px rgba(74,222,128,.25)}
+.ai-hero .status b{font-size:13px}
+.ai-hero .status span{display:block;font-size:11px;opacity:.7;margin-top:2px}
+
+.quick-grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.qa-card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;
+  cursor:pointer;transition:.2s;box-shadow:var(--shadow);display:flex;align-items:center;gap:13px;
+}
+.qa-card:hover{transform:translateY(-4px);border-color:#a9c3ff;box-shadow:var(--shadow-lg)}
+.qa-card .e{font-size:26px;width:50px;height:50px;flex:none;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;background:#f0f5ff}
+.qa-card h5{font-size:15.5px;font-weight:800}
+.qa-card p{font-size:12px;color:var(--slate);margin-top:2px}
+
+/* 聊天视图 */
+.chat-view{display:none}
+.chat-view.on{display:block;animation:fadeUp .3s ease both}
+.chat-head{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;margin-bottom:14px;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+}
+.chat-back{
+  width:36px;height:36px;border-radius:11px;background:#eef3ff;color:#1d4ed8;font-size:17px;
+  display:flex;align-items:center;justify-content:center;transition:.2s;flex:none;
+}
+.chat-back:hover{background:#dbe7ff}
+.chat-head h4{font-size:16px;font-weight:800}
+.chat-head .tag{font-size:11px;color:#059669;background:#e7f9f1;padding:3px 10px;border-radius:99px;
+  border:1px solid #c3f0de;font-weight:600}
+.chat-scroll{
+  height:56vh;min-height:420px;overflow-y:auto;background:var(--card);
+  border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:14px;
+}
+.msg{max-width:82%;display:flex;gap:9px;animation:msgIn .3s ease both}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.self{align-self:flex-end;flex-direction:row-reverse}
+.msg .av{width:32px;height:32px;border-radius:10px;flex:none;font-size:16px;
+  display:flex;align-items:center;justify-content:center}
+.msg.bot .av{background:linear-gradient(135deg,#38bdf8,#818cf8)}
+.msg.self .av{background:#e8efff}
+.bubble{
+  padding:12px 15px;border-radius:16px;font-size:14px;white-space:pre-wrap;line-height:1.75;
+}
+.msg.bot .bubble{background:#f2f6ff;border:1px solid #e1eaff;border-top-left-radius:5px}
+.msg.self .bubble{background:var(--grad);color:#fff;border-top-right-radius:5px}
+.typing{display:inline-flex;gap:5px;padding:14px 18px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#7ea4ff;animation:tp 1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes tp{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.chat-suggests{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.cs-chip{
+  font-size:12.5px;color:#1d4ed8;background:#eef4ff;border:1px solid #d5e3ff;
+  padding:6px 13px;border-radius:999px;font-weight:600;transition:.2s;
+}
+.cs-chip:hover{background:#1d4ed8;color:#fff}
+.chat-input{
+  display:flex;gap:10px;margin-top:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:8px;box-shadow:var(--shadow);
+}
+.chat-input input{flex:1;border:none;outline:none;padding:10px 12px;font-size:14.5px;background:transparent}
+.chat-input .btn{border-radius:12px;padding:10px 18px}
+.chat-footnote{font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px}
+
+/* ============ 合同审查 ============ */
+.review-hero{
+  background:linear-gradient(120deg,#16285e,#1d4ed8 60%,#0ea5e9);
+  color:#fff;border-radius:22px;padding:26px;text-align:center;position:relative;overflow:hidden;
+  box-shadow:0 16px 42px rgba(13,37,87,.26);margin-bottom:18px;
+}
+.review-hero::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(600px 200px at 50% -40%,rgba(34,211,238,.35),transparent 70%)}
+.review-hero h2{font-size:34px;font-weight:900;letter-spacing:2px;position:relative}
+.review-hero h2 .radar-ico{display:inline-block;margin-right:6px;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.review-hero p{position:relative;opacity:.85;font-size:13.5px;margin-top:6px}
+.review-hero .flow2{margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;position:relative}
+.review-hero .flow2 span{font-size:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+  padding:5px 13px;border-radius:999px}
+
+.upload-zone{
+  border:2px dashed #b8ccf7;border-radius:20px;background:#f7faff;padding:44px 20px;
+  text-align:center;cursor:pointer;transition:.22s;
+}
+.upload-zone:hover,.upload-zone.drag{border-color:#2f6bff;background:#eef4ff;transform:translateY(-2px)}
+.upload-zone .up-ico{font-size:44px;display:block;margin-bottom:8px}
+.upload-zone h4{font-size:17px;font-weight:800}
+.upload-zone p{font-size:13px;color:var(--slate);margin-top:4px}
+.upload-zone .formats{display:inline-block;margin-top:10px;font-size:12px;color:#1d4ed8;
+  background:#e8efff;padding:5px 14px;border-radius:99px;font-weight:600}
+.file-chip{
+  margin-top:14px;display:none;align-items:center;gap:12px;background:#f2f7ff;
+  border:1px solid #d5e3ff;border-radius:14px;padding:12px 16px;
+}
+.file-chip.on{display:flex;animation:fadeUp .3s ease both}
+.file-chip .f-ico{font-size:24px}
+.file-chip .f-name{font-weight:700;font-size:14px;word-break:break-all}
+.file-chip .f-meta{font-size:12px;color:var(--muted)}
+.file-chip .f-rm{margin-left:auto;color:#ef4444;font-size:18px;width:32px;height:32px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center}
+.file-chip .f-rm:hover{background:#fee2e2}
+.scan-actions{display:flex;justify-content:center;gap:12px;margin-top:18px;flex-wrap:wrap}
+
+/* 扫描动画 */
+.scan-panel{display:none;text-align:center;padding:30px 10px}
+.scan-panel.on{display:block;animation:fadeUp .3s ease both}
+.radar{
+  width:170px;height:170px;margin:0 auto 20px;position:relative;border-radius:50%;
+  background:
+    radial-gradient(circle at center,#dbe7ff 0 4px,transparent 5px),
+    repeating-radial-gradient(circle,transparent 0 26px,#dfe8fb 27px 28px);
+  border:1px solid #c9d8fa;overflow:hidden;
+}
+.radar::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,rgba(47,107,255,.5),transparent 80deg,transparent 360deg);
+  animation:sweep 1.6s linear infinite;
+}
+@keyframes sweep{to{transform:rotate(360deg)}}
+.radar::after{
+  content:"⚖️";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:34px;filter:drop-shadow(0 2px 6px rgba(37,99,235,.4));
+}
+.radar-x{width:100%;height:1px;background:rgba(47,107,255,.5);position:absolute;top:50%}
+.radar-y{height:100%;width:1px;background:rgba(47,107,255,.5);position:absolute;left:50%;top:0}
+.scan-title{font-size:21px;font-weight:800;color:var(--brand-deep)}
+.scan-sub{font-size:13px;color:var(--muted);margin:6px 0 22px}
+.scan-steps{max-width:520px;margin:0 auto;text-align:left;display:flex;flex-direction:column;gap:10px}
+.scan-step{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);
+  padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fbfcfe;transition:.25s}
+.scan-step .st-ico{width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;
+  justify-content:center;font-size:12px;background:#eef1f6;color:#8a98af}
+.scan-step.doing{border-color:#7ea4ff;color:var(--brand-deep);background:#f0f5ff;transform:translateX(4px)}
+.scan-step.doing .st-ico{background:var(--grad);color:#fff;animation:spin 1s linear infinite}
+.scan-step.done{color:#33425c}
+.scan-step.done .st-ico{background:#d1fae5;color:#059669}
+.scan-bar{max-width:520px;margin:20px auto 0;height:10px;background:#e9effa;border-radius:99px;overflow:hidden}
+.scan-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#22d3ee);
+  border-radius:99px;transition:.3s}
+.scan-pct{font-size:15px;font-weight:800;color:var(--brand-deep);margin-top:8px}/* 审查报告 */
+.report-panel{display:none}
+.report-panel.on{display:block;animation:fadeUp .4s ease both}
+.report-top{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.score-box{flex:1;min-width:260px;background:linear-gradient(135deg,#0d2557,#1d4ed8);
+  color:#fff;border-radius:20px;padding:22px;display:flex;align-items:center;gap:20px;
+  box-shadow:0 14px 34px rgba(13,37,87,.22)}
+.gauge{position:relative;width:132px;height:132px;flex:none}
+.gauge svg{width:132px;height:132px;transform:rotate(-90deg)}
+.gauge .track{fill:none;stroke:rgba(255,255,255,.18);stroke-width:11}
+.gauge .bar{fill:none;stroke:#4ade80;stroke-width:11;stroke-linecap:round;
+  stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.2s cubic-bezier(.6,0,.2,1)}
+.gauge .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .num b{font-size:34px;font-weight:900;line-height:1}
+.gauge .num span{font-size:10.5px;opacity:.75;margin-top:3px;letter-spacing:1px}
+.score-box .sb-copy h3{font-size:24px;font-weight:900;line-height:1.2}
+.score-box .sb-copy p{font-size:13px;opacity:.85;margin-top:6px}
+.score-box .verdict{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;
+  font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  padding:6px 13px;border-radius:99px}
+.stat-chips{flex:1;min-width:230px;display:flex;flex-direction:column;gap:11px}
+.stat-chip{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+  border-radius:15px;padding:12px 16px;box-shadow:var(--shadow)}
+.stat-chip .s-ico{font-size:22px}
+.stat-chip b{font-size:19px;font-weight:900}
+.stat-chip .s-lbl{font-size:12.5px;color:var(--slate);margin-left:auto;font-weight:600}
+.stat-chip .s-num{margin-left:auto;display:flex;align-items:baseline;gap:3px}
+.stat-chip.high .s-num b{color:var(--high)}.stat-chip.mid .s-num b{color:var(--mid)}.stat-chip.low .s-num b{color:var(--low)}
+
+.filter-bar{display:flex;gap:9px;flex-wrap:wrap;margin:6px 0 14px;align-items:center}
+.filter-bar .fb-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-right:4px}
+.f-btn{font-size:13px;font-weight:700;color:var(--slate);background:#f1f4fa;border:1px solid transparent;
+  padding:7px 14px;border-radius:99px;transition:.18s}
+.f-btn:hover{color:var(--brand-deep)}
+.f-btn.on{background:#1d4ed8;color:#fff;box-shadow:0 6px 14px rgba(29,78,216,.3)}
+
+.risk-card{background:var(--card);border:1px solid var(--line);border-radius:17px;
+  box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden;transition:.2s}
+.risk-card:hover{border-color:#c3d4fa}
+.risk-card.hide{display:none}
+.risk-head{display:flex;align-items:center;gap:13px;padding:15px 18px;cursor:pointer;user-select:none}
+.sev-dot{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:0 0 0 5px rgba(0,0,0,.04)}
+.sev-dot.high{background:var(--high)}.sev-dot.mid{background:var(--mid)}.sev-dot.low{background:var(--low)}
+.risk-head .rh-t{flex:1;min-width:0}
+.risk-head .rh-t b{font-size:15px;font-weight:800;display:block}
+.risk-head .rh-t span{font-size:12px;color:var(--muted)}
+.sev-tag{font-size:11.5px;font-weight:800;padding:4px 11px;border-radius:99px;flex:none}
+.sev-tag.high{color:#dc2626;background:#fee2e2}
+.sev-tag.mid{color:#b45309;background:#fef3c7}
+.sev-tag.low{color:#047857;background:#d1fae5}
+.risk-head .caret{color:#b9c6dc;transition:.25s;flex:none;font-size:15px}
+.risk-card.open .caret{transform:rotate(180deg)}
+.risk-body{display:none;border-top:1px dashed var(--line);padding:14px 18px 16px;background:#fbfcfe}
+.risk-card.open .risk-body{display:block;animation:fadeUp .25s ease both}
+.r-row{display:flex;gap:9px;margin-bottom:11px;font-size:13.5px;line-height:1.7}
+.r-row:last-child{margin-bottom:0}
+.r-row .r-ico{flex:none;font-weight:800;font-size:12px;width:20px;height:20px;margin-top:3px;
+  border-radius:7px;display:flex;align-items:center;justify-content:center;background:#eef1f6}
+.r-row.reason .r-ico{background:#fee2e2}
+.r-row.fix .r-ico{background:#d1fae5}
+.r-row.law .r-ico{background:#dbeafe}
+.r-row .r-body b{display:block;font-size:12px;letter-spacing:1px;margin-bottom:1px}
+.r-row .r-body{color:#33425c}
+.r-row.reason .r-body b{color:#dc2626}
+.r-row.fix .r-body b{color:#059669}
+.r-row.law .r-body b{color:#1d4ed8}
+
+.low-block{background:var(--card);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);
+  margin-bottom:18px;overflow:hidden}
+.low-head{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer}
+.low-head b{font-size:15px;font-weight:800}
+.low-head .cnt{font-size:12px;background:#e7f9f1;color:#059669;padding:2px 10px;border-radius:99px;font-weight:700}
+.low-head .caret{margin-left:auto;color:#b9c6dc;transition:.25s}
+.low-block.open .caret{transform:rotate(180deg)}
+.low-list{display:none;grid-template-columns:repeat(2,1fr);gap:9px;padding:0 18px 18px}
+.low-block.open .low-list{display:grid;animation:fadeUp .25s ease both}
+.low-item{font-size:12.5px;color:#475569;background:#f6f8fc;border:1px solid #e8edf6;border-radius:10px;
+  padding:9px 12px}
+.report-note{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 18px}
+.report-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:6px}
+
+/* ============ 我的权益 ============ */
+.profile-card{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  background:linear-gradient(120deg,#0d2557,#1d4ed8 60%,#0ea5e9);color:#fff;border-radius:22px;
+  padding:24px;box-shadow:0 16px 40px rgba(13,37,87,.24);position:relative;overflow:hidden}
+.profile-card::after{content:"";position:absolute;right:-60px;top:-70px;width:220px;height:220px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%)}
+.pf-avatar{width:78px;height:78px;border-radius:24px;font-size:40px;flex:none;
+  background:linear-gradient(135deg,#38bdf8,#818cf8);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 22px rgba(0,0,0,.25)}
+.pf-copy{flex:1;min-width:200px;position:relative;z-index:1}
+.pf-copy .pf-name{font-size:21px;font-weight:900}
+.pf-copy .pf-role{font-size:12.5px;opacity:.9;margin-top:3px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pf-role .role-tag{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  padding:2px 10px;border-radius:99px;font-weight:700}
+.pf-score{position:relative;z-index:1;text-align:right}
+.pf-score b{font-size:34px;font-weight:900;display:block;line-height:1.1}
+.pf-score span{font-size:12px;opacity:.8}
+.pf-score .pf-bar{width:170px;height:8px;background:rgba(255,255,255,.2);border-radius:99px;margin:8px 0 4px auto;overflow:hidden}
+.pf-score .pf-bar i{display:block;height:100%;width:68%;background:linear-gradient(90deg,#4ade80,#22d3ee);
+  border-radius:99px}
+
+.risk-tags{display:flex;flex-wrap:wrap;gap:11px}
+.risk-tag{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  padding:11px 16px;border-radius:14px;font-weight:700;font-size:14px;box-shadow:var(--shadow);cursor:pointer;transition:.2s}
+.risk-tag:hover{transform:translateY(-3px)}
+.risk-tag .rt-dot{width:9px;height:9px;border-radius:50%}
+.risk-tag.red .rt-dot{background:var(--high);box-shadow:0 0 0 4px rgba(239,68,68,.15)}
+.risk-tag.yellow .rt-dot{background:var(--mid);box-shadow:0 0 0 4px rgba(245,158,11,.15)}
+.risk-tag.green .rt-dot{background:var(--low);box-shadow:0 0 0 4px rgba(16,185,129,.15)}
+.risk-tag small{font-weight:500;color:var(--muted);font-size:12px}
+.risk-tag .go2{margin-left:6px;color:#b9c6dc;font-size:13px}
+
+.evidence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.ev-card{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);transition:.2s}
+.ev-card:hover{transform:translateY(-3px);border-color:#bcd0ff}
+.ev-card .e-ico{width:46px;height:46px;border-radius:13px;flex:none;font-size:22px;
+  display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef4ff,#e3f6ff)}
+.ev-card .e-copy{flex:1;min-width:0}
+.ev-card .e-copy b{font-size:14.5px;font-weight:800;display:block}
+.ev-card .e-copy span{font-size:11.5px;color:var(--muted)}
+.ev-card .e-st{font-size:11px;color:#059669;background:#e7f9f1;padding:3px 9px;border-radius:99px;font-weight:700;flex:none}
+.upload-new{width:100%;margin-top:13px;border:1.5px dashed #b8ccf7;border-radius:15px;padding:14px;
+  color:#1d4ed8;font-weight:700;font-size:14px;background:#f7faff;transition:.2s;display:flex;
+  align-items:center;justify-content:center;gap:8px}
+.upload-new:hover{background:#eef4ff;border-color:#2f6bff}
+
+.legal-line{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#eef4ff,#f0f9ff);
+  border:1px solid #d5e3ff;border-radius:16px;padding:15px 18px;margin-bottom:10px;flex-wrap:wrap}
+.legal-line .ll-ico{font-size:26px}
+.legal-line b{font-size:14.5px}
+.legal-line span{font-size:12px;color:var(--slate);width:100%}
+.legal-line .btn{margin-left:auto}
+
+/* ============ Toast & 其他 ============ */
+.toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;
+  display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{
+  background:#0d2557;color:#fff;font-size:13.5px;padding:11px 20px;border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);display:flex;align-items:center;gap:8px;
+  animation:toastIn .3s ease both;max-width:90vw;
+}
+.toast.ok{background:linear-gradient(90deg,#0d2557,#065f46)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.section-note{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* ============ 响应式 ============ */
+@media(max-width:760px){
+  .app{padding:0 12px 124px}
+  .hero h1{font-size:40px;letter-spacing:3px}
+  .quick-grid,.quick-grid2{grid-template-columns:1fr}
+  .plan-cards{grid-template-columns:1fr}
+  .evidence-grid{grid-template-columns:1fr}
+  .low-list{grid-template-columns:1fr}
+  .topbar-right .chip-pill{display:none}
+  .chat-scroll{height:52vh;min-height:340px}
+  .bottomnav{border-radius:18px}
+}
+
+/* ============ 风险地图（功能演示版） ============ */
+.ok-tag{color:#059669 !important;background:#e7f9f1 !important;border-color:#b7ecd6 !important}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.stat-mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;
+  display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.stat-mini .sm-ico{font-size:22px;width:44px;height:44px;border-radius:13px;flex:none;
+  display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef4ff,#e0f7ff)}
+.stat-mini b{font-size:20px;font-weight:900;display:block;line-height:1.2}
+.stat-mini span{font-size:11.5px;color:var(--muted)}
+
+.map-layout{display:flex;gap:16px;padding:16px}
+.map-stage{flex:1 1 640px;min-width:0;display:flex;flex-direction:column}
+.map-toolbar2{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.map-toolbar2 .mt-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+.mt-live2{font-size:11.5px;color:#059669;background:#e7f9f1;border:1px solid #b7ecd6;
+  padding:4px 11px;border-radius:99px;font-weight:700;margin-left:auto;transition:.3s}
+.mt-live2.flash{background:#d1fae5;transform:scale(1.04)}
+.map-canvas2{
+  position:relative;height:430px;border-radius:16px;overflow:hidden;
+  background:
+    linear-gradient(rgba(30,64,175,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,64,175,.05) 1px,transparent 1px),
+    radial-gradient(700px 340px at 30% 20%,rgba(47,107,255,.09),transparent 70%),
+    #fbfcff;
+  background-size:38px 38px,38px 38px,auto,auto;
+  border:1px solid var(--line);
+}
+.map-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.heat-layer{position:absolute;inset:0;pointer-events:none;transition:opacity .35s}
+.heat-layer.off{opacity:0}
+.blob{position:absolute;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+  transition:opacity .3s}
+.pin-layer{position:absolute;inset:0;z-index:5}
+.pin-node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:opacity .3s}
+.pin-node.weak{opacity:.38}
+.pin-orb{
+  width:40px;height:40px;border-radius:14px;font-size:20px;color:#fff;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 8px 18px rgba(13,37,87,.28);border:2.5px solid #fff;transition:.18s;
+}
+.pin-orb::after{content:"";position:absolute;inset:-6px;border-radius:18px;border:2px solid rgba(37,99,235,.45);
+  animation:pinPulse2 2s ease-out infinite;opacity:0}
+.pin-node:hover .pin-orb{transform:scale(1.1)}
+.pin-node.sel .pin-orb{transform:scale(1.14);box-shadow:0 0 0 4px rgba(37,99,235,.25),0 8px 18px rgba(13,37,87,.3)}
+.pin-node.sel .pin-orb::after{opacity:1}
+@keyframes pinPulse2{0%{transform:scale(.85);opacity:.9}70%{transform:scale(1.35);opacity:0}100%{opacity:0}}
+.pin-orb.c-rent{background:linear-gradient(135deg,#f87171,#dc2626)}
+.pin-orb.c-job{background:linear-gradient(135deg,#fbbf24,#d97706)}
+.pin-orb.c-consume{background:linear-gradient(135deg,#34d399,#059669)}
+.pin-orb.c-person{background:linear-gradient(135deg,#a78bfa,#7c3aed)}
+.pin-orb.c-all{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+.pin-cnt{font-size:11px;font-weight:800;color:#fff;background:#0d2557;border:1px solid #ffffff;
+  padding:1px 8px;border-radius:99px;box-shadow:0 4px 10px rgba(0,0,0,.18);white-space:nowrap}
+.map-empty{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;
+  background:rgba(251,252,255,.86);color:var(--slate);font-size:14px;font-weight:600}
+.map-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.type-chips{display:flex;gap:8px;flex-wrap:wrap}
+.t-chip{font-size:12.5px;font-weight:700;color:#475569;background:#f1f4fa;border:1px solid transparent;
+  padding:7px 13px;border-radius:99px;transition:.18s;display:inline-flex;align-items:center;gap:6px}
+.t-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.t-chip:hover{color:var(--brand-deep)}
+.t-chip.on{background:#0d2557;color:#fff;box-shadow:0 6px 14px rgba(13,37,87,.25)}
+.map-tools{margin-left:auto;display:flex;gap:8px}
+.mt-btn{font-size:12.5px;font-weight:700;color:var(--brand-deep);background:#eef4ff;border:1px solid #d5e3ff;
+  padding:7px 13px;border-radius:99px;transition:.18s}
+.mt-btn:hover{background:#dfe9ff}
+.mt-btn.off{color:#64748b;background:#f1f4fa;border-color:#e2e8f0}
+.type-bar-wrap{margin-top:14px}
+.tb-cap{font-size:12.5px;color:var(--slate);font-weight:700;display:block;margin-bottom:7px}
+.type-bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#eef2f8}
+.type-bar i{display:block;height:100%;transition:width .5s ease}
+.tb-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.tb-legend span{font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.tb-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* 右侧详情面板 */
+.detail-panel{flex:0 0 320px;min-width:280px;background:#f8fafd;border:1px solid var(--line);
+  border-radius:16px;padding:18px;max-height:560px;overflow:auto;box-shadow:inset 0 1px 0 #fff}
+.dp-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
+.dp-head .dp-ico{font-size:26px;line-height:1}
+.dp-head h4{font-size:16px;font-weight:800;line-height:1.3}
+.dp-sub{font-size:11.5px;color:var(--muted);margin:4px 0 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.risk-pill{font-size:11px;font-weight:800;padding:3px 10px;border-radius:99px}
+.risk-pill.hot{color:#dc2626;background:#fee2e2}
+.risk-pill.watch{color:#b45309;background:#fef3c7}
+.risk-pill.ok{color:#047857;background:#d1fae5}
+.dp-back{font-size:12px;color:#1d4ed8;background:#e8efff;border:1px solid #cddcff;
+  padding:5px 12px;border-radius:99px;font-weight:700;margin-bottom:12px;transition:.2s}
+.dp-back:hover{background:#dbe7ff}
+.dp-block{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:10px}
+.dp-block h5{font-size:12.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;color:var(--brand-deep)}
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dp-cell{background:#f6f8fc;border-radius:10px;padding:8px 10px}
+.dp-cell b{font-size:16px;font-weight:900;display:block;line-height:1.2}
+.dp-cell span{font-size:10.5px;color:var(--muted)}
+.mbar{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px}
+.mbar .mb-lbl{flex:0 0 58px;font-weight:600;color:#475569}
+.mbar .mb-track{flex:1;height:8px;background:#eef2f8;border-radius:99px;overflow:hidden}
+.mbar .mb-track i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.mbar .mb-num{flex:0 0 44px;text-align:right;font-weight:800;color:#33425c}
+.case-li{font-size:12.5px;color:#33425c;line-height:1.55;padding:7px 0 7px 20px;position:relative;border-bottom:1px dashed var(--line)}
+.case-li:last-child{border-bottom:none}
+.case-li::before{content:"▸";position:absolute;left:2px;color:#2f6bff;font-weight:800}
+.guide-li{font-size:12.5px;color:#33425c;line-height:1.6;padding:4px 0 4px 20px;position:relative}
+.guide-li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:50%;background:#2f6bff}
+.dp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.dp-actions .btn{flex:1;min-width:120px;padding:10px 12px;font-size:13px}
+.rank-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:11px;cursor:pointer;transition:.15s}
+.rank-row:hover{background:#eef4ff}
+.rank-row .rk{width:22px;height:22px;border-radius:8px;flex:none;font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;background:#eef1f6;color:#64748b}
+.rank-row:nth-child(1) .rk{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff}
+.rank-row:nth-child(2) .rk{background:linear-gradient(135deg,#cbd5e1,#94a3b8);color:#fff}
+.rank-row:nth-child(3) .rk{background:linear-gradient(135deg,#fcd9a0,#d97706);color:#fff}
+.rank-row .rk-name{flex:1;font-size:13px;font-weight:700}
+.rank-row .rk-num{font-weight:800;color:#0d2557}
+.dp-note{font-size:11px;color:var(--muted);line-height:1.6}
+@media(max-width:900px){
+  .map-layout{flex-direction:column}
+  .detail-panel{flex:auto;max-height:none}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){ .map-tools{margin-left:0} }
+</style>
+</head>
+<body><!-- ================= 顶部应用栏 ================= -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-badge">🛡️</div>
+    <div>
+      <div class="logo-name">法护启航</div>
+      <div class="logo-sub">大学生法律安全驾驶舱 · PROTOTYPE</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="chip-pill">AI 演示版 v1.0</span>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- ================= 页面1：首页 ================= -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <span class="hero-badge">🎓 面向大学生的 AI 法律安全驾驶舱</span>
+      <h1>法护启航</h1>
+      <div class="sub">让每一次<b>签约</b>，都多一份<b>底气</b></div>
+      <div class="flow">租房安全 <span>·</span> 兼职就业 <span>·</span> 合同纠纷 <span>·</span> 证据管理</div>
+    </div>
+
+    <!-- 核心搜索区 -->
+    <div class="card search-card">
+      <div class="sc-title">🔍 我遇到什么问题？</div>
+      <form class="search-box" id="homeSearch">
+        <input id="homeInput" type="text" placeholder="房东不退押金怎么办？" autocomplete="off">
+        <button class="btn" type="submit">立即咨询</button>
+      </form>
+      <div class="hot-words">
+        <span class="lbl">大家都在问：</span>
+        <button type="button" class="hot-tag" data-q="房东不退押金怎么办？">押金不退</button>
+        <button type="button" class="hot-tag" data-q="试用期被辞退有补偿吗？">试用期被辞退</button>
+        <button type="button" class="hot-tag" data-q="兼职公司拖欠工资怎么办？">兼职欠薪</button>
+        <button type="button" class="hot-tag" data-q="培训机构不退费合法吗？">培训退费</button>
+      </div>
+    </div>
+
+    <!-- 快捷功能入口 -->
+    <div class="quick-grid">
+      <div class="quick-card" data-nav="page-ai" data-q="房东扣押金，我该怎么办？">
+        <div class="q-ico">🏠</div>
+        <h4>租房安全</h4>
+        <p>押金被扣 · 退租纠纷<br>中介套路 · 合同陷阱</p>
+        <span class="go">→</span>
+      </div>
+      <div class="quick-card" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？">
+        <div class="q-ico">💼</div>
+        <h4>兼职 / 就业</h4>
+        <p>兼职欠薪 · 虚假招聘<br>试用期辞退 · 三方协议</p>
+        <span class="go">→</span>
+      </div>
+      <div class="quick-card" data-nav="page-review">
+        <div class="q-ico">📄</div>
+        <h4>AI 合同审查</h4>
+        <p>上传合同 · 秒级扫描<br>风险雷达 · 逐条给建议</p>
+        <span class="go">→</span>
+      </div>
+    </div>
+
+    <!-- 30秒法律风险测试 -->
+    <div class="card">
+      <div class="quiz-wrap">
+        <div class="quiz-icon">🧪</div>
+        <div class="quiz-copy">
+          <h4>30 秒测测你的法律风险</h4>
+          <p>4 道题快速定位你的签约风险等级，测完给出针对性建议（演示模拟）。</p>
+        </div>
+        <button class="btn" id="quizStart">开始测试 ⚡</button>
+      </div>
+
+      <!-- 测试主体 -->
+      <div class="quiz-body" id="quizBody">
+        <div class="quiz-progress"><i id="quizBar"></i></div>
+        <div class="quiz-step" id="quizStep">题目 1 / 4</div>
+        <div class="quiz-q" id="quizQ"></div>
+        <div class="quiz-opts" id="quizOpts"></div>
+      </div>
+
+      <!-- 测试结果 -->
+      <div class="quiz-result" id="quizResult">
+        <span class="r-emoji" id="qrEmoji">🟢</span>
+        <h4 id="qrTitle">风险较低</h4>
+        <p id="qrText"></p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn sm" id="qrAi">去咨询 AI 助手</button>
+          <button class="btn ghost sm" id="qrAgain">重新测试</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-note">⚠️ 本原型为演示用途，模拟数据与 AI 回答不构成法律意见；紧急法律问题请拨打 12348 法律援助热线。</div>
+  </section>  <!-- ================= 页面2：AI 助手 ================= -->
+  <section class="page" id="page-ai">
+    <div class="ai-hero">
+      <div class="ai-avatar">🤖</div>
+      <div>
+        <h3>AI 法律助手 · 法小航</h3>
+        <p>7×24 在线，陪你先把问题理清楚、证据备齐全</p>
+      </div>
+      <div class="status">
+        <div><span class="dot"></span><b>在线服务中</b></div>
+        <span>模拟回答 · 仅供参考</span>
+      </div>
+    </div>
+
+    <!-- 快捷问题列表视图 -->
+    <div id="qaList">
+      <div class="page-title">
+        <div class="line"></div>
+        <h2>遇到什么问题？</h2>
+        <span class="desc">点击下方常见场景，即可开始对话（演示为模拟回答）</span>
+      </div>
+      <div class="quick-grid2">
+        <button class="qa-card" data-key="housing"><span class="e">🏠</span>
+          <span><h5>房东扣押金</h5><p>押金不退 / 扣款理由不明</p></span></button>
+        <button class="qa-card" data-key="parttime"><span class="e">💼</span>
+          <span><h5>兼职欠薪</h5><p>实习/兼职工资被拖欠</p></span></button>
+        <button class="qa-card" data-key="contract"><span class="e">📄</span>
+          <span><h5>合同问题</h5><p>条款看不懂 / 怕被坑</p></span></button>
+        <button class="qa-card" data-key="probation"><span class="e">👔</span>
+          <span><h5>试用期辞退</h5><p>试用期被辞退 / 无补偿</p></span></button>
+        <button class="qa-card" data-key="fakejob"><span class="e">🔎</span>
+          <span><h5>虚假招聘</h5><p>收费入职 / 货不对板</p></span></button>
+        <button class="qa-card" data-key="other"><span class="e">⚖️</span>
+          <span><h5>其他法律问题</h5><p>培训退费 / 校园贷等</p></span></button>
+      </div>
+    </div>
+
+    <!-- 对话视图 -->
+    <div class="chat-view" id="chatView">
+      <div class="chat-head">
+        <button class="chat-back" id="chatBack">←</button>
+        <div style="flex:1">
+          <h4 id="chatTitle">法律咨询</h4>
+        </div>
+        <span class="tag">● 法小航在线</span>
+      </div>
+      <div class="chat-scroll" id="chatScroll"></div>
+      <div class="chat-suggests" id="chatSuggests"></div>
+      <form class="chat-input" id="chatForm">
+        <input id="chatInput" type="text" placeholder="继续描述你的问题…" autocomplete="off">
+        <button class="btn" type="submit">发送 ➤</button>
+      </form>
+      <div class="chat-footnote">⚠️ 演示内容为模拟生成，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
+    </div>
+  </section>
+
+  <!-- ================= 页面3：合同审查（答辩爆点） ================= -->
+  <section class="page" id="page-review">
+    <div class="review-hero">
+      <h2><span class="radar-ico">📡</span>AI 合同风险雷达</h2>
+      <p>上传合同 / 协议，AI 逐条扫描风险条款并给出修改建议与法律依据</p>
+      <div class="flow2">
+        <span>① 上传文件</span><span>② 风险扫描</span><span>③ 逐条报告</span><span>④ 下载建议</span>
+      </div>
+    </div>
+
+    <!-- 阶段1：上传 -->
+    <div id="stage-upload">
+      <div class="upload-zone" id="uploadZone">
+        <span class="up-ico">📂</span>
+        <h4>拖拽文件到这里，或点击选择文件</h4>
+        <p>支持 PDF / Word / 图片，文件将仅在本机做演示解析</p>
+        <span class="formats">PDF · DOCX · JPG · PNG · WEBP（≤20MB）</span>
+        <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp">
+      </div>
+      <div class="file-chip" id="fileChip">
+        <span class="f-ico">📄</span>
+        <div style="min-width:0">
+          <div class="f-name" id="fileName"></div>
+          <div class="f-meta" id="fileMeta"></div>
+        </div>
+        <button class="f-rm" id="fileRemove">✕</button>
+      </div>
+      <div class="scan-actions">
+        <button class="btn" id="scanBtn">🚀 开始风险扫描</button>
+        <button class="btn ghost" id="scanDemoBtn">✨ 使用示例合同（演示）</button>
+      </div>
+    </div>
+
+    <!-- 阶段2：扫描动画 -->
+    <div class="scan-panel" id="stage-scan">
+      <div class="radar">
+        <div class="radar-x"></div><div class="radar-y"></div>
+      </div>
+      <div class="scan-title">风险扫描中……</div>
+      <div class="scan-sub">AI 正在逐条比对法律条款，请稍候</div>
+      <div class="scan-steps" id="scanSteps">
+        <div class="scan-step"><span class="st-ico">✓</span>解析文档内容</div>
+        <div class="scan-step"><span class="st-ico">✓</span>智能切分合同条款</div>
+        <div class="scan-step"><span class="st-ico">✓</span>语义风险分析</div>
+        <div class="scan-step"><span class="st-ico">✓</span>法律依据比对</div>
+        <div class="scan-step"><span class="st-ico">✓</span>生成审查报告</div>
+      </div>
+      <div class="scan-bar"><i id="scanBar"></i></div>
+      <div class="scan-pct" id="scanPct">0%</div>
+    </div>
+
+    <!-- 阶段3：风险报告 -->
+    <div class="report-panel" id="stage-report">
+      <div class="page-title">
+        <div class="line"></div>
+        <h2>审查报告</h2>
+        <span class="desc">已完成扫描 · 报告生成于 2026-09-08（演示数据）</span>
+        <span class="tag">✅ 审查完成</span>
+      </div>
+
+      <div class="report-top">
+        <div class="score-box">
+          <div class="gauge">
+            <svg viewBox="0 0 120 120">
+              <circle class="track" cx="60" cy="60" r="54"></circle>
+              <circle class="bar" id="gaugeBar" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <div class="num"><b id="scoreNum">72</b><span>/ 100</span></div>
+          </div>
+          <div class="sb-copy">
+            <h3>合同综合风险得分</h3>
+            <p>合同存在一定风险，建议优先修改高、中风险条款后再签署</p>
+            <span class="verdict">🟠 建议：修改后再签约</span>
+          </div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip high"><span class="s-ico">🔴</span>
+            <div><b>高风险</b></div>
+            <div class="s-num"><b>3</b><span class="s-lbl">处 · 必须修改</span></div></div>
+          <div class="stat-chip mid"><span class="s-ico">🟡</span>
+            <div><b>中风险</b></div>
+            <div class="s-num"><b>5</b><span class="s-lbl">处 · 建议修改</span></div></div>
+          <div class="stat-chip low"><span class="s-ico">🟢</span>
+            <div><b>低风险</b></div>
+            <div class="s-num"><b>12</b><span class="s-lbl">处 · 优化建议</span></div></div>
+        </div>
+      </div>
+
+      <!-- 筛选 -->
+      <div class="filter-bar">
+        <span class="fb-lbl">风险筛选：</span>
+        <button class="f-btn on" data-f="all">全部</button>
+        <button class="f-btn" data-f="high">🔴 高风险 3</button>
+        <button class="f-btn" data-f="mid">🟡 中风险 5</button>
+        <button class="f-btn" data-f="low">🟢 低风险 12</button>
+      </div>
+
+      <!-- JS 渲染风险卡片 -->
+      <div id="riskList"></div>
+
+      <!-- 低风险折叠块 -->
+      <div class="low-block" id="lowBlock">
+        <div class="low-head" id="lowHead">
+          <span class="sev-dot low"></span>
+          <b>🟢 低风险优化建议</b>
+          <span class="cnt">12 处</span>
+          <span class="caret">▾</span>
+        </div>
+        <div class="low-list" id="lowList"></div>
+      </div>
+
+      <div class="report-note">* 演示报告基于示例租房合同模拟生成，仅展示关键条目；完整报告含全部 20 处提示。</div>
+      <div class="report-actions">
+        <button class="btn" id="exportBtn">📥 导出审查报告</button>
+        <button class="btn ghost" id="rescanBtn">↻ 重新扫描</button>
+        <button class="btn ghost" id="reportAiBtn">💬 咨询 AI 助手</button>
+      </div>
+    </div>
+  </section>  
+  <!-- ================= 页面4：风险地图（功能演示版） ================= -->
+  <section class="page" id="page-map">
+    <div class="page-title">
+      <div class="line"></div>
+      <h2>🗺️ 法律风险地图</h2>
+      <span class="tag ok-tag">● 实时演示数据</span>
+      <span class="desc">高校周边法律纠纷热力驾驶舱：类型筛选 · 热点钻取 · 热力图 · 模拟实时刷新（演示环境为前端模拟数据）</span>
+    </div>
+
+    <!-- 顶部指标条 -->
+    <div class="stat-strip">
+      <div class="stat-mini"><span class="sm-ico">🗂️</span>
+        <div><b id="stTotal">1,284</b><span>本月收录纠纷（起）</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🔥</span>
+        <div><b id="stTop">租房纠纷</b><span id="stTopSub">高发类型 · 占比 36%</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🏫</span>
+        <div><b>6</b><span>覆盖高校片区</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">📉</span>
+        <div><b id="stIdx">62</b><span>周风险指数（较上周 ↓8）</span></div></div>
+    </div>
+
+    <!-- 地图 + 详情面板 -->
+    <div class="card map-layout">
+      <!-- 左：地图画布 -->
+      <div class="map-stage">
+        <div class="map-toolbar2">
+          <span class="mt-title">📍 昆明呈贡大学城 · 高校纠纷分布</span>
+          <span class="mt-live2" id="mtLive">● 实时演示 · 刚刚更新</span>
+        </div>
+        <div class="map-canvas2" id="mapCanvas">
+          <!-- 装饰底图（道路/水域/绿地） -->
+          <svg class="map-bg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#7dd3fc"/>
+              </linearGradient>
+            </defs>
+            <!-- 水域 -->
+            <ellipse cx="150" cy="500" rx="180" ry="90" fill="#dbeafe" opacity=".9"/>
+            <path d="M -20 470 C 220 380 420 520 700 430 C 820 390 900 330 1030 300"
+              stroke="url(#river)" stroke-width="34" fill="none" stroke-linecap="round" opacity=".55"/>
+            <!-- 绿地 -->
+            <ellipse cx="860" cy="120" rx="150" ry="80" fill="#dcfce7" opacity=".9"/>
+            <ellipse cx="330" cy="120" rx="120" ry="70" fill="#e6f7ec" opacity=".8"/>
+            <!-- 主干道 -->
+            <path d="M 0 300 H 1030" stroke="#ffffff" stroke-width="16"/>
+            <path d="M 0 300 H 1030" stroke="#e9eef6" stroke-width="12"/>
+            <path d="M 500 0 V 640" stroke="#ffffff" stroke-width="16"/>
+            <path d="M 500 0 V 640" stroke="#e9eef6" stroke-width="12"/>
+            <path d="M 120 0 V 640" stroke="#f1f5fb" stroke-width="9"/>
+            <path d="M 0 120 H 1030" stroke="#f1f5fb" stroke-width="9"/>
+            <path d="M 0 470 H 1030" stroke="#f1f5fb" stroke-width="9"/>
+            <!-- 行政片区名 -->
+            <text x="78" y="96" font-size="17" fill="#b3c0d6">吴家营街道</text>
+            <text x="600" y="96" font-size="17" fill="#b3c0d6">雨花街道</text>
+            <text x="150" y="600" font-size="17" fill="#b3c0d6">斗南片区</text>
+            <text x="640" y="600" font-size="17" fill="#b3c0d6">昆明南站</text>
+          </svg>
+          <!-- 热力光晕层 -->
+          <div class="heat-layer" id="heatLayer"></div>
+          <!-- 片区热点层（JS 渲染） -->
+          <div class="pin-layer" id="pinLayer"></div>
+          <div class="map-empty" id="mapEmpty" style="display:none">😕 当前筛选无命中片区，试试其他类型</div>
+        </div>
+        <!-- 地图底部：类型筛选 + 工具 -->
+        <div class="map-foot">
+          <div class="type-chips" id="typeChips">
+            <button class="t-chip on" data-t="all">全部</button>
+            <button class="t-chip rent" data-t="rent"><i class="dot" style="background:#ef4444"></i>租房</button>
+            <button class="t-chip job" data-t="job"><i class="dot" style="background:#f59e0b"></i>兼职/就业</button>
+            <button class="t-chip consume" data-t="consume"><i class="dot" style="background:#10b981"></i>消费/培训</button>
+            <button class="t-chip person" data-t="person"><i class="dot" style="background:#8b5cf6"></i>人身/其他</button>
+          </div>
+          <div class="map-tools">
+            <button class="mt-btn" id="heatBtn">🔥 热力：开</button>
+            <button class="mt-btn" id="refreshBtn">⟳ 模拟刷新</button>
+          </div>
+        </div>
+        <!-- 类型占比条 -->
+        <div class="type-bar-wrap">
+          <span class="tb-cap" id="tbCap">本月类型占比</span>
+          <div class="type-bar" id="typeBar"></div>
+          <div class="tb-legend" id="tbLegend"></div>
+        </div>
+      </div>
+
+      <!-- 右：片区总览 / 热点详情面板（JS 渲染） -->
+      <aside class="detail-panel" id="detailPanel"></aside>
+    </div>
+
+    <div class="section-note">🧪 本页为「功能演示版」：以昆明呈贡大学城为背景、云南大学为中心片区，地图与纠纷统计均为前端模拟数据，用于展示交互与信息架构；接入真实数据时只需替换 JS 中的 MAP_DATA（详见代码注释）。</div>
+  </section>
+<!-- ================= 页面5：我的权益 ================= -->
+  <section class="page" id="page-rights">
+    <div class="page-title">
+      <div class="line"></div>
+      <h2>我的法律安全档案</h2>
+      <span class="desc">集中管理你的风险标签、证据材料与维权进度（演示数据）</span>
+    </div>
+
+    <!-- 身份卡片 -->
+    <div class="profile-card">
+      <div class="pf-avatar">🎓</div>
+      <div class="pf-copy">
+        <div class="pf-name">同学，你好 👋</div>
+        <div class="pf-role">
+          当前身份：<span class="role-tag">应届毕业生</span>
+          <span>毕业城市：昆明 · 档案最近更新：今天</span>
+        </div>
+      </div>
+      <div class="pf-score">
+        <b>68<small style="font-size:16px">%</small></b>
+        <span>档案完整度</span>
+        <div class="pf-bar"><i></i></div>
+        <span style="font-size:11px">补齐证据材料可提升</span>
+      </div>
+    </div>
+
+    <!-- 风险标签 -->
+    <div class="card">
+      <div class="card-title">🏷️ 我的风险标签 <small>按关注度排序 · 点击可跳转处理</small></div>
+      <div class="risk-tags">
+        <button class="risk-tag red" data-nav="page-review">
+          <span class="rt-dot"></span>🔴 就业合同 <small>试用期/违约金 待审查</small><span class="go2">→</span>
+        </button>
+        <button class="risk-tag yellow" data-nav="page-ai" data-q="房东扣押金，我该怎么办？">
+          <span class="rt-dot"></span>🟡 租房 <small>押金条款 重点关注</small><span class="go2">→</span>
+        </button>
+        <button class="risk-tag green" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？">
+          <span class="rt-dot"></span>🟢 兼职 <small>证据已整理 保持关注</small><span class="go2">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 证据材料 -->
+    <div class="card">
+      <div class="card-title">📁 我的证据材料 <small>本地加密存证（演示） · 共 4 份</small></div>
+      <div class="evidence-grid" id="evGrid">
+        <div class="ev-card"><span class="e-ico">📄</span>
+          <div class="e-copy"><b>租房合同</b><span>2026-08-01 上传 · PDF</span></div>
+          <span class="e-st">已存证</span></div>
+        <div class="ev-card"><span class="e-ico">📸</span>
+          <div class="e-copy"><b>房屋照片</b><span>2026-08-03 上传 · JPG×6</span></div>
+          <span class="e-st">已存证</span></div>
+        <div class="ev-card"><span class="e-ico">💬</span>
+          <div class="e-copy"><b>聊天记录</b><span>2026-08-05 上传 · 截图</span></div>
+          <span class="e-st">已存证</span></div>
+        <div class="ev-card"><span class="e-ico">💰</span>
+          <div class="e-copy"><b>工资记录</b><span>2026-08-07 上传 · 银行流水</span></div>
+          <span class="e-st">已存证</span></div>
+      </div>
+      <button class="upload-new" id="evAddBtn">＋ 上传新证据材料（演示）</button>
+    </div>
+
+    <!-- 法援通道 -->
+    <div class="card">
+      <div class="card-title">🆘 法援通道 <small>关键时刻，找对地方</small></div>
+      <div class="legal-line">
+        <span class="ll-ico">📞</span>
+        <b>12348 法律援助热线</b>
+        <span>全国法律援助咨询热线，遇到拿不准的问题先打这个电话（演示环境不真实拨打）</span>
+        <button class="btn sm" id="callBtn">拨打电话</button>
+      </div>
+      <div class="legal-line">
+        <span class="ll-ico">🏛️</span>
+        <b>高校法律援助中心</b>
+        <span>多数高校设有法律援助中心 / 法援社团，可预约免费咨询（演示）</span>
+        <button class="btn ghost sm" id="clinicBtn">查找最近站点</button>
+      </div>
+      <div class="section-note">提示：证据材料建议定期备份并保留原件；本页内容为演示模拟数据。</div>
+    </div>
+  </section>
+
+</div><!-- /app -->
+
+<!-- ================= 底部固定导航（5 个按钮） ================= -->
+<nav class="bottomnav">
+  <button class="nav-item active" data-page="page-home"><span class="ico">🏠</span>首页</button>
+  <button class="nav-item" data-page="page-ai"><span class="ico">🤖</span>AI助手</button>
+  <button class="nav-item" data-page="page-review"><span class="ico">🛡️</span>合同审查</button>
+  <button class="nav-item" data-page="page-map"><span class="ico">🗺️</span>风险地图</button>
+  <button class="nav-item" data-page="page-rights"><span class="ico">👤</span>我的权益</button>
+</nav>
+
+<!-- Toast -->
+<div class="toast-wrap" id="toastWrap"></div><script>
+/* =========================================================
+   法护启航 · 大学生法律安全驾驶舱（前端原型）
+   原生 HTML + CSS + JS，无框架，页面模拟切换，无后端。
+   ========================================================= */
+'use strict';
+
+/* ---------- 小工具 ---------- */
+function $(s, r){ return (r || document).querySelector(s); }
+function $$(s, r){ return Array.from((r || document).querySelectorAll(s)); }
+function el(tag, cls, html){
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+}
+function toast(msg, ok){
+  var w = $('#toastWrap');
+  var t = el('div', 'toast' + (ok ? ' ok' : ''), (ok ? '✅ ' : 'ℹ️ ') + msg);
+  w.appendChild(t);
+  setTimeout(function(){ t.style.opacity = 0; t.style.transition = '.4s'; }, 1800);
+  setTimeout(function(){ t.remove(); }, 2300);
+}
+
+/* ---------- 页面切换（底部导航） ---------- */
+function showPage(id){
+  $$('.page').forEach(function(p){ p.classList.remove('active'); });
+  $('#' + id).classList.add('active');
+  $$('.nav-item').forEach(function(n){
+    n.classList.toggle('active', n.dataset.page === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* 绑定底部导航 */
+$$('.nav-item').forEach(function(n){
+  n.addEventListener('click', function(){ showPage(n.dataset.page); });
+});
+
+/* 跨页面跳转：元素带 data-nav / data-q */
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-nav]');
+  if (!t) return;
+  var page = t.dataset.nav;
+  if (page === 'page-ai' && t.dataset.q){
+    askAI(t.dataset.q);               // 带问题跳转到 AI 助手
+  } else {
+    showPage(page);
+  }
+});
+
+/* =========================================================
+   首页：搜索 + 快捷入口 + 30 秒风险测试
+   ========================================================= */
+/* 首页搜索 */
+$('#homeSearch').addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = $('#homeInput').value.trim();
+  askAI(v || '我遇到一个法律问题，想咨询一下');
+});
+
+/* 热门问题标签：点击填入搜索框 */
+$$('.hot-tag').forEach(function(b){
+  b.addEventListener('click', function(){
+    $('#homeInput').value = b.dataset.q;
+    askAI(b.dataset.q);
+  });
+});
+
+/* ---------- 30 秒风险测试 ---------- */
+var QUIZ = [
+  { q: '你最近一次签约的场景是？',
+    opts: [ { t: '🏠 租房（押金 / 退租）', p: 1 }, { t: '💼 实习 / 兼职劳动合同', p: 1 }, { t: '🛒 网购 / 培训等消费合同', p: 0 }, { t: '🙅 暂时还没签过', p: 0 } ] },
+  { q: '签约之前，你会认真看合同条款吗？',
+    opts: [ { t: '会，逐条读并保留备份', p: 0 }, { t: '大概扫一遍重点条款', p: 2 }, { t: '基本不看，直接签', p: 4 } ] },
+  { q: '合同里有“高额违约金 / 押金不退 / 可单方解除”这类条款时，你通常会？',
+    opts: [ { t: '没注意过，也不清楚', p: 2 }, { t: '看到了，但觉得只能接受', p: 3 }, { t: '会主动提出修改或要求解释', p: 0 } ] },
+  { q: '真遇到纠纷，你的第一反应是？',
+    opts: [ { t: '先查法规、固定证据再协商', p: 0 }, { t: '找老师 / 法援 / 12348 咨询', p: 0 }, { t: '先在网上发帖吐槽', p: 2 }, { t: '忍一忍算了，怕麻烦', p: 3 } ] }
+];
+var quizScore = 0, quizIdx = 0;
+
+function quizReset(){
+  quizScore = 0; quizIdx = 0;
+  $('#quizResult').classList.remove('on');
+  $('#quizBody').classList.add('on');
+  $('#quizStart').textContent = '重新测试 ⚡';
+  renderQuizQ();
+}
+function renderQuizQ(){
+  var it = QUIZ[quizIdx];
+  $('#quizStep').textContent = '题目 ' + (quizIdx + 1) + ' / ' + QUIZ.length;
+  $('#quizBar').style.width = ((quizIdx) / QUIZ.length * 100) + '%';
+  $('#quizQ').textContent = it.q;
+  var box = $('#quizOpts'); box.innerHTML = '';
+  it.opts.forEach(function(o, i){
+    var b = el('button', 'quiz-opt', '<span class="m">' + String.fromCharCode(65 + i) + '</span><span>' + o.t + '</span>');
+    b.addEventListener('click', function(){
+      quizScore += o.p;
+      quizIdx++;
+      if (quizIdx < QUIZ.length){ renderQuizQ(); }
+      else { showQuizResult(); }
+    });
+    box.appendChild(b);
+  });
+}
+function showQuizResult(){
+  $('#quizBody').classList.remove('on');
+  var r = $('#quizResult');
+  var level = quizScore <= 2 ? 0 : (quizScore <= 7 ? 1 : 2);
+  var map = [
+    { e: '🟢', t: '风险较低', c: '#059669', txt: '你的签约习惯比较安全。继续保持「先读条款、再留证据」的好习惯；遇到金额较大的合同，可再用 AI 合同审查把把关。' },
+    { e: '🟡', t: '存在一定风险', c: '#b45309', txt: '建议签约前先用「AI 合同审查」扫一遍；重点核对押金、违约金、解除条款；一旦发生纠纷，第一时间固定证据再协商。' },
+    { e: '🔴', t: '风险较高，签约需谨慎', c: '#dc2626', txt: '强烈建议先咨询 AI 助手或拨打 12348，重要合同务必逐条审查后再签；不要因为「怕麻烦」就忽略条款里的坑。' }
+  ][level];
+  $('#qrEmoji').textContent = map.e;
+  $('#qrTitle').textContent = map.t;
+  $('#qrTitle').style.color = map.c;
+  $('#qrText').textContent = map.txt + '（测试结果：得分 ' + quizScore + '，演示模拟）';
+  r.classList.add('on');
+  r.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+$('#quizStart').addEventListener('click', quizReset);
+$('#qrAgain').addEventListener('click', quizReset);
+$('#qrAi').addEventListener('click', function(){ showPage('page-ai'); });/* =========================================================
+   AI 助手：场景数据 + 模拟对话
+   ========================================================= */
+var SCEN = {
+  housing: {
+    icon: '🏠', title: '房东扣押金',
+    ask: '🏠 房东扣押金，我该怎么办？',
+    ans: '别慌，帮你把思路理清楚👇\n\n1️⃣ 先看约定\n翻出合同 / 聊天记录，确认押金金额、退租时间，以及有无书面扣款约定。没有约定就不能随便扣。\n\n2️⃣ 固定证据（关键一步）\n保留：合同原件、押金转账记录、入住 / 退房照片、房东说明扣款理由的聊天或录音。\n\n3️⃣ 先书面沟通\n发一条正式消息：请房东书面列明扣款项目、对应条款和票据，并约定返还时间。\n\n4️⃣ 升级路径\n协商不成 → 街道调解 → 拨打 12348 法律援助热线 → 必要时申请小额诉讼。\n\n📌 参考依据：《民法典》第 709、710 条 等（演示内容，正式使用请核对最新法条）',
+    su: [
+      { q: '房东一直拖延怎么办？', a: '① 每 3~5 天书面催告一次并保留记录；② 同步向社区 / 街道申请调解；③ 拨打 12348 咨询，准备起诉材料。拖延不等于消失，要在时效内持续主张权利（演示）。' },
+      { q: '押金收多少算合理？', a: '市场惯例一般为 1~2 个月租金。金额、退还条件与期限最好都写进合同；付款时备注「租房押金」，退租时索要书面验收记录（演示）。' }
+    ]
+  },
+  parttime: {
+    icon: '💼', title: '兼职 / 实习欠薪',
+    ask: '💼 兼职 / 实习被拖欠工资，我该怎么办？',
+    ans: '兼职 / 实习被欠薪，很多同学都踩过坑，按顺序处理：\n\n1️⃣ 盘点事实\n入职时间、约定报酬、工作内容、欠薪金额与周期，先列一张表。\n\n2️⃣ 收集证据\n排班 / 打卡记录、工作群聊天、工资转账流水、公司全称与老板身份信息。\n\n3️⃣ 正式催讨\n用文字（微信 / 邮件）明确欠薪金额与支付期限，保留对方回复。\n\n4️⃣ 投诉渠道\n劳动监察 12333 → 劳动仲裁 → 法院起诉；也可先找学校就业办 / 法援中心。\n\n📌 参考依据：《劳动法》《劳动合同法》及当地最低工资规定（演示内容）',
+    su: [
+      { q: '没签合同也能要回工资吗？', a: '可以。存在事实劳动关系即可主张权利，考勤、工作群、转账记录都能证明。未签书面合同还可能主张二倍工资差额（演示）。' },
+      { q: '申请仲裁要多久？', a: '劳动仲裁时效一般为一年，自知道权利被侵害之日起算；仲裁通常 45 日内审结，金额不大也可先走调解（演示）。' }
+    ]
+  },
+  contract: {
+    icon: '📄', title: '合同问题',
+    ask: '📄 合同条款看不懂 / 怕被坑，怎么办？',
+    ans: '合同看不懂？教你三步自查：\n\n1️⃣ 重点看 5 类条款\n金额与支付方式、违约金、押金 / 保证金、解除与违约、争议解决（仲裁 or 法院）。\n\n2️⃣ 检查「空白」\n空白处没填、用词模糊（“视情况”“另行协商”）最容易埋雷。\n\n3️⃣ 别怕提修改\n签约前你有权要求修改；谈不拢就保留证据，别急着签字。\n\n💡 小技巧：上传到「AI 合同审查」，一键扫描风险条款，附修改建议与法律依据（演示）。',
+    su: [
+      { q: '违约金太高怎么办？', a: '违约金过分高于实际损失时，可请求法院 / 仲裁机构适当调低，实务中常以实际损失的 30% 为参考上限（演示）。' },
+      { q: '哪些条款必须写清楚？', a: '金额与支付节点、违约金、押金退还、解除条件、争议解决方式。留白与「另行协商」字样要特别警惕（演示）。' }
+    ]
+  },
+  probation: {
+    icon: '👔', title: '试用期辞退',
+    ask: '👔 试用期被辞退，有补偿吗？',
+    ans: '试用期被辞退，先判断是否合法：\n\n1️⃣ 看理由\n只有「不符合录用条件」且已明确告知时，单位才能合法解除；不能随口一句「不合适」就辞退。\n\n2️⃣ 看证据\n要求对方出具书面解除通知与理由；保存考勤、工作产出与沟通记录。\n\n3️⃣ 谈补偿\n违法辞退可主张赔偿金；协商解除通常有经济补偿。试用期工资不得低于约定工资的 80% 或当地最低工资。\n\n4️⃣ 维权路径\n劳动监察 12333 → 劳动仲裁 → 法院；应届生可同步联系学校就业办。\n\n📌 参考依据：《劳动合同法》第 19、21、39、47、87 条（演示内容）',
+    su: [
+      { q: '试用期有工资吗？', a: '有。试用期工资不得低于本单位相同岗位最低档工资或合同约定工资的 80%，且不得低于当地最低工资标准（演示）。' },
+      { q: '试用期一般多久？', a: '合同 3 个月以上不满 1 年，试用期不超过 1 个月；1~3 年不超过 2 个月；3 年以上不超过 6 个月。同一单位只能约定一次试用期（演示）。' }
+    ]
+  },
+  fakejob: {
+    icon: '🔎', title: '虚假招聘',
+    ask: '🔎 遇到虚假招聘 / 收费入职怎么办？',
+    ans: '遇到虚假招聘、收费入职，记住一句话：先交钱的招聘基本都是坑！\n\n1️⃣ 停止付费\n「押金、培训费、服装费、建档费」都属于违规收费，不要再转账。\n\n2️⃣ 固定证据\n保存招聘信息截图、聊天记录、转账凭证、公司主体信息。\n\n3️⃣ 举报渠道\n平台内举报 → 12315 投诉 → 金额较大涉嫌诈骗可报警。\n\n4️⃣ 身份核验\n签约前用「国家企业信用信息公示系统」查公司是否真实存在、有无经营异常。\n\n📌 参考依据：《劳动合同法》第 9 条——不得要求劳动者提供担保或收取财物（演示内容）',
+    su: [
+      { q: '已经被骗钱了怎么办？', a: '立即停止转账，保存全部凭证；向平台举报并拨打 12315，金额较大涉嫌诈骗可报警，同时提醒身边同学防范（演示）。' },
+      { q: '怎么查公司靠不靠谱？', a: '用「国家企业信用信息公示系统」查注册信息、经营异常与行政处罚；再核对招聘信息、办公地址与公司官网是否一致（演示）。' }
+    ]
+  },
+  other: {
+    icon: '⚖️', title: '其他法律问题',
+    ask: '⚖️ 我遇到了其他法律问题，想咨询一下',
+    ans: '好的，我大概理解你的情况了（演示）。\n\n建议先按这个框架整理：\n① 发生了什么（时间、人物、地点）\n② 你希望对方做什么 / 赔偿多少\n③ 手上有哪些证据（文字、图片、转账）\n④ 是否已向学校、平台或有关部门反馈过\n\n把材料整理清楚后：\n- 消费 / 培训退费 → 12315\n- 人身 / 财产损失 → 学校保卫处或报警\n- 拿不准 → 12348 法律援助热线\n\n📌 你可以在下方继续补充描述，我会帮你进一步梳理（演示回答）。',
+    su: [
+      { q: '12348 是什么？', a: '全国法律援助热线：免费咨询，可判断是否符合法律援助条件，并引导你到最近的援助机构（演示）。' },
+      { q: '学生打官司有优惠吗？', a: '符合条件的可申请法律援助（免费代理）；小额诉讼程序简单、费用低，很多纠纷不必请律师（演示）。' }
+    ]
+  }
+};
+
+/* 关键词 → 场景匹配 */
+function detectScene(text){
+  if (/押金|房东|租房|退租|中介/.test(text)) return 'housing';
+  if (/工资|欠薪|兼职|实习|劳务/.test(text)) return 'parttime';
+  if (/试用期|辞退|开除|裁员/.test(text)) return 'probation';
+  if (/招聘|骗|中介费|收费|入职/.test(text)) return 'fakejob';
+  if (/合同|违约金|条款|签约|协议/.test(text)) return 'contract';
+  return 'other';
+}
+function fallbackAns(){
+  return '收到，你的问题我已记录（演示）。\n\n建议按这个节奏推进：\n① 先把时间线 & 证据整理清楚（文字、截图、转账都算）\n② 明确你的诉求：希望对方做什么 / 赔多少\n③ 先书面沟通并保留记录\n④ 拿不准就打 12348 法律援助热线\n\n💡 想要更精准的演示回答，可以回到列表选择具体场景，或上传合同使用「AI 合同审查」。';
+}/* ---------- 聊天 UI 交互 ---------- */
+var chatScroll = $('#chatScroll');
+var chatTitle = $('#chatTitle');
+var currentKey = null;   // 当前场景 key
+
+function scrollBottom(){ chatScroll.scrollTop = chatScroll.scrollHeight; }
+
+/* 添加一条消息（role: bot / self） */
+function pushMsg(role, text){
+  var row = el('div', 'msg ' + (role === 'self' ? 'self' : 'bot'));
+  row.appendChild(el('div', 'av', role === 'self' ? '🧑' : '🤖'));
+  var bub = el('div', 'bubble');
+  bub.textContent = text;
+  row.appendChild(bub);
+  chatScroll.appendChild(row);
+  scrollBottom();
+  return bub;
+}
+
+/* 机器人“正在输入”→ 回复 */
+function botReply(text, done){
+  var row = el('div', 'msg bot');
+  row.appendChild(el('div', 'av', '🤖'));
+  var bub = el('div', 'bubble typing',
+    '<i></i><i></i><i></i>');
+  row.appendChild(bub);
+  chatScroll.appendChild(row);
+  scrollBottom();
+  setTimeout(function(){
+    bub.classList.remove('typing');
+    bub.textContent = text;
+    scrollBottom();
+    if (done) done();
+  }, 950);
+}
+
+/* 快捷追问 chips */
+function renderSuggests(key){
+  var box = $('#chatSuggests'); box.innerHTML = '';
+  if (!key) return;
+  SCEN[key].su.forEach(function(s){
+    var c = el('button', 'cs-chip', s.q);
+    c.addEventListener('click', function(){
+      pushMsg('self', s.q);
+      botReply(s.a);
+    });
+    box.appendChild(c);
+  });
+  var back = el('button', 'cs-chip', '← 返回问题列表');
+  back.addEventListener('click', backToList);
+  box.appendChild(back);
+}
+function clearSuggests(){ $('#chatSuggests').innerHTML = ''; }
+
+/* 进入对话视图 */
+function openChat(key){
+  currentKey = key;
+  $('#qaList').style.display = 'none';
+  $('#chatView').classList.add('on');
+  chatTitle.textContent = SCEN[key].icon + ' ' + SCEN[key].title;
+  chatScroll.innerHTML = '';
+  clearSuggests();
+  pushMsg('self', SCEN[key].ask);
+  botReply(SCEN[key].ans, function(){ renderSuggests(key); });
+}
+function backToList(){
+  $('#chatView').classList.remove('on');
+  $('#qaList').style.display = '';
+  currentKey = null;
+  clearSuggests();
+}
+
+/* 自由提问：匹配场景则进入场景对话，否则普通问答 */
+function askAI(text){
+  text = (text || '').trim();
+  var key = detectScene(text);
+  showPage('page-ai');
+  openChat(key);
+}
+
+/* 快捷问题卡片 */
+$$('.qa-card').forEach(function(c){
+  c.addEventListener('click', function(){ openChat(c.dataset.key); });
+});
+$('#chatBack').addEventListener('click', backToList);
+
+/* 聊天输入框 */
+$('#chatForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = $('#chatInput').value.trim();
+  if (!v) return;
+  $('#chatInput').value = '';
+  pushMsg('self', v);
+  if (currentKey){
+    /* 在具体场景内：命中关键词给对应法条速答，否则给通用建议 */
+    botReply(SCEN[currentKey].su.length
+      ? '📌 ' + SCEN[currentKey].title + ' 场景下补充建议：请优先按上面步骤固定证据；如已协商无果，可拨打 12348 咨询下一步（演示回答）。'
+      : fallbackAns());
+  } else {
+    botReply(fallbackAns());
+  }
+});/* =========================================================
+   合同审查：模拟数据（示例租房合同）
+   ========================================================= */
+var RISK = [
+  { level: 'high', title: '押金扣除条款过于宽泛（第 9 条）',
+    reason: '条款仅写「押金是否退还由出租方视房屋情况决定」，未列明可扣除情形、未约定返还期限，等于把解释权全部交给出租方，极易被滥用。',
+    fix: '改为逐项列明可扣除情形（如欠费、人为损坏），并补充：无扣款情形的，应在退租后 X 日内无息全额退还；扣款的需出具票据。',
+    law: '《民法典》第 709、710 条；《住房租赁条例》关于押金收取与退还的规定（演示参考）' },
+  { level: 'high', title: '违约金条款过高（第 6 条）',
+    reason: '约定「承租方提前退租需支付两个月租金作为违约金」，明显高于可能造成的实际损失，涉嫌显失公平。',
+    fix: '参照实际损失适当调低（实务参考：不超过损失的 30%），或改为「相当于一个月租金」，并约定双方对等适用。',
+    law: '《民法典》第 585 条第 2 款：约定的违约金过分高于造成的损失的，人民法院可适当减少（演示参考）' },
+  { level: 'high', title: '出租方单方解除权（第 14 条）',
+    reason: '仅约定「出租方可因经营需要提前解除合同」，未约定提前通知期限、搬家补偿与押金处理，权利义务明显不对等。',
+    fix: '补充：出租方提前解除需提前 30 日书面通知，支付搬家补偿并全额退还押金；违约解除应承担违约责任。',
+    law: '《民法典》第 563 条（法定解除）、第 566 条（解除后责任承担）（演示参考）' },
+  { level: 'mid', title: '维修责任约定不明（第 12 条）',
+    reason: '未区分房屋自然损耗与人为损坏，维修费用由谁承担不明确，入住期间电器、管道出问题容易互相扯皮。',
+    fix: '明确「自然损耗由出租方负责维修并承担费用，人为损坏由承租方承担」，并约定报修后 X 日内响应。',
+    law: '《民法典》第 712、713 条：出租人应履行租赁物维修义务（演示参考）' },
+  { level: 'mid', title: '租金调整无上限（第 3 条）',
+    reason: '约定出租方可「根据市场情况调整租金」，未设涨幅上限与提前通知期，续租时租金可能被随意抬高。',
+    fix: '增加限制：租期内租金不变；续租如需调整，年度涨幅不超过 X%，且需提前 30 日书面通知。',
+    law: '《民法典》第 509 条（诚信原则与全面履行）（演示参考）' },
+  { level: 'mid', title: '押金金额偏高（第 5 条）',
+    reason: '押金按三个月租金收取，明显高于市场常见水平（1~2 个月），对学生资金占用较大。',
+    fix: '争取将押金降至 1 个月租金；若对方坚持，请把退还条件与期限写得尽可能明确。',
+    law: '《住房租赁条例》关于押金的相关规定（演示参考）' },
+  { level: 'mid', title: '争议管辖约定不明确（第 15 条）',
+    reason: '仅写「协商不成可向法院起诉」，未约定管辖法院。租房多发生在学校所在地，若按被告住所地管辖，异地维权成本高。',
+    fix: '补充约定：「因本合同引起的争议，由合同签订地（学校所在地）人民法院管辖」，便于就近维权。',
+    law: '《民事诉讼法》第 34 条（协议管辖）（演示参考）' },
+  { level: 'mid', title: '送达与通知条款缺失（第 10 条）',
+    reason: '未约定双方确认的送达地址与电子送达方式，口头通知是否有效、是否送达到位都容易引发争议。',
+    fix: '补充：「双方确认下列地址 / 邮箱 / 微信为有效通知方式，变更需提前书面告知」，并注明拒收视为送达。',
+    law: '《民法典》第 137 条（以非对话方式作出的意思表示的生效）（演示参考）' }
+];
+
+var LOW_TIPS = [
+  '第 1 条：条款编号不连续，建议统一编号', '第 2 条：用词「左右 / 大约」不精确，建议改为明确数字',
+  '第 3 条：未标注收款账户户名与账号', '第 4 条：空白处未划除，建议填写「无」或划线',
+  '第 5 条：未约定合同份数，建议注明双方各执一份', '第 6 条：签署日期格式不统一',
+  '第 7 条：缺少双方联系人姓名与电话', '第 8 条：未说明电子签章与手写签名同等效力',
+  '第 9 条：附件清单缺失，建议列明附后文件', '第 10 条：未约定争议文本效力（如中英文冲突以中文为准）',
+  '第 11 条：措辞「不得反悔」建议改为规范法律表述', '第 12 条：多页合同未注明加盖骑缝章'
+];
+
+var riskBuilt = false, lowBuilt = false;
+var currentFilter = 'all';
+
+/* 构建高 / 中风险卡片 */
+function buildRiskCards(){
+  if (riskBuilt) return;
+  var wrap = $('#riskList');
+  RISK.forEach(function(it, i){
+    var card = el('div', 'risk-card' + (it.level === 'high' && i === 0 ? ' open' : ''));
+    card.dataset.level = it.level;
+    var head = el('div', 'risk-head');
+    head.appendChild(el('span', 'sev-dot ' + it.level));
+    var tt = el('div', 'rh-t');
+    tt.appendChild(el('b', null, it.title));
+    tt.appendChild(el('span', null, it.level === 'high' ? '必须修改 · 涉及核心利益' : '建议修改 · 存在争议空间'));
+    head.appendChild(tt);
+    head.appendChild(el('span', 'sev-tag ' + it.level, it.level === 'high' ? '🔴 高风险' : '🟡 中风险'));
+    head.appendChild(el('span', 'caret', '▾'));
+    card.appendChild(head);
+    /* 风险原因 / 修改建议 / 法律依据 */
+    var body = el('div', 'risk-body');
+    body.appendChild(rRow('reason', '风险原因', it.reason));
+    body.appendChild(rRow('fix', '修改建议', it.fix));
+    body.appendChild(rRow('law', '法律依据', it.law));
+    card.appendChild(body);
+    head.addEventListener('click', function(){ card.classList.toggle('open'); });
+    wrap.appendChild(card);
+  });
+  riskBuilt = true;
+}
+function rRow(type, label, text){
+  var row = el('div', 'r-row ' + type);
+  var ico = { reason: '❗', fix: '✏️', law: '⚖️' }[type];
+  row.appendChild(el('span', 'r-ico', ico));
+  var b = el('div', 'r-body');
+  b.appendChild(el('b', null, label));
+  b.appendChild(el('span', null, text));
+  row.appendChild(b);
+  return row;
+}
+
+/* 低风险 12 条 */
+function buildLowList(){
+  if (lowBuilt) return;
+  var wrap = $('#lowList');
+  LOW_TIPS.forEach(function(t){ wrap.appendChild(el('div', 'low-item', t)); });
+  lowBuilt = true;
+}
+$('#lowHead').addEventListener('click', function(){
+  $('#lowBlock').classList.toggle('open');
+});
+
+/* 风险筛选 */
+function applyFilter(f){
+  currentFilter = f;
+  $$('.f-btn').forEach(function(b){ b.classList.toggle('on', b.dataset.f === f); });
+  var cards = $$('#riskList .risk-card');
+  cards.forEach(function(c){
+    var show = (f === 'all') || (c.dataset.level === f);
+    c.classList.toggle('hide', !show);
+  });
+  var lb = $('#lowBlock');
+  if (f === 'low'){ cards.forEach(function(c){ c.classList.add('hide'); }); lb.style.display = ''; $('#lowBlock').classList.add('open'); }
+  else if (f === 'all'){ lb.style.display = ''; }
+  else { lb.style.display = 'none'; }
+}
+$$('.f-btn').forEach(function(b){
+  b.addEventListener('click', function(){ applyFilter(b.dataset.f); });
+});/* =========================================================
+   合同审查：上传 / 扫描 / 报告交互
+   ========================================================= */
+var ACCEPT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
+var fileData = null, scanTimers = [];
+
+function setFile(f){
+  fileData = f;
+  $('#fileName').textContent = f.name;
+  $('#fileMeta').textContent = '大小 ' + f.size + ' · 已就绪，可开始扫描';
+  $('#fileChip').classList.add('on');
+  $('#scanBtn').disabled = false;
+}
+function clearFile(){
+  fileData = null;
+  $('#fileChip').classList.remove('on');
+  $('#fileInput').value = '';
+  $('#scanBtn').disabled = true;
+}
+function pickFiles(files){
+  var f = files && files[0];
+  if (!f) return;
+  var ext = (f.name.split('.').pop() || '').toLowerCase();
+  if (ACCEPT.indexOf(ext) === -1){ toast('暂不支持该格式，请上传 PDF / Word / 图片', false); return; }
+  setFile({ name: f.name, size: fmtSize(f.size) });
+  toast('文件已载入（演示解析）', true);
+}
+function fmtSize(b){
+  if (b > 1024 * 1024) return (b / 1024 / 1024).toFixed(1) + ' MB';
+  return Math.max(1, Math.round(b / 1024)) + ' KB';
+}
+
+/* 上传区交互 */
+var zone = $('#uploadZone');
+zone.addEventListener('click', function(){ $('#fileInput').click(); });
+zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', function(){ zone.classList.remove('drag'); });
+zone.addEventListener('drop', function(e){
+  e.preventDefault(); zone.classList.remove('drag');
+  pickFiles(e.dataTransfer.files);
+});
+$('#fileInput').addEventListener('change', function(){ pickFiles(this.files); });
+$('#fileRemove').addEventListener('click', clearFile);
+$('#scanDemoBtn').addEventListener('click', function(){
+  setFile({ name: '房屋租赁合同（示例）.pdf', size: '286 KB' });
+  startScan();
+});
+$('#scanBtn').addEventListener('click', startScan);
+
+/* ---------- 扫描动画 ---------- */
+var stepEls = [];
+function prepSteps(){
+  stepEls = $$('#scanSteps .scan-step');
+  stepEls.forEach(function(s){
+    s.classList.remove('doing', 'done');
+    s.querySelector('.st-ico').textContent = '•';
+  });
+}
+function setStep(i, state){
+  var s = stepEls[i];
+  if (!s) return;
+  s.classList.remove('doing', 'done');
+  if (state === 'doing'){ s.classList.add('doing'); s.querySelector('.st-ico').textContent = '⟳'; }
+  else if (state === 'done'){ s.classList.add('done'); s.querySelector('.st-ico').textContent = '✓'; }
+}
+function setBar(pct){
+  $('#scanBar').style.width = pct + '%';
+  $('#scanPct').textContent = pct + '%';
+}
+
+function startScan(){
+  if (!fileData){ toast('请先选择要审查的合同文件', false); return; }
+  scanTimers.forEach(clearTimeout); scanTimers = [];
+  $('#stage-upload').style.display = 'none';
+  $('#stage-report').classList.remove('on');
+  $('#stage-scan').classList.add('on');
+  prepSteps();
+  setBar(0);
+
+  var per = [14, 34, 58, 80, 100];
+  per.forEach(function(p, i){
+    scanTimers.push(setTimeout(function(){
+      if (i > 0) setStep(i - 1, 'done');
+      setStep(i, 'doing');
+      setBar(p);
+      if (i === per.length - 1){
+        scanTimers.push(setTimeout(showReport, 620));
+      }
+    }, 500 + i * 640));
+  });
+}
+
+/* ---------- 展示报告 ---------- */
+function showReport(){
+  $('#stage-scan').classList.remove('on');
+  $('#stage-report').classList.add('on');
+  buildRiskCards();
+  buildLowList();
+  applyFilter('all');
+  /* 得分圆环动画：72 / 100 */
+  var bar = $('#gaugeBar');
+  var len = 2 * Math.PI * 54; /* ≈339.3 */
+  bar.style.strokeDasharray = len;
+  bar.style.strokeDashoffset = len;
+  bar.style.stroke = '#f59e0b';
+  var num = $('#scoreNum'); num.textContent = '0';
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      bar.style.strokeDashoffset = len * (1 - 72 / 100);
+    });
+  });
+  var cur = 0;
+  var t = setInterval(function(){
+    cur += 2;
+    if (cur >= 72){ cur = 72; clearInterval(t); }
+    num.textContent = cur;
+  }, 18);
+  $('#stage-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* 报告操作 */
+$('#exportBtn').addEventListener('click', function(){ toast('审查报告已导出（演示）', true); });
+$('#rescanBtn').addEventListener('click', function(){
+  $('#stage-report').classList.remove('on');
+  $('#stage-scan').classList.remove('on');
+  $('#stage-upload').style.display = '';
+  clearFile();
+  toast('已回到上传页，可重新扫描', false);
+});
+$('#reportAiBtn').addEventListener('click', function(){
+  askAI('我刚用 AI 合同审查扫了一份合同，高风险条款应该怎么改？');
+});
+
+/* =========================================================
+   我的权益：上传证据 / 法援通道（模拟）
+   ========================================================= */
+var EV_POOL = [
+  { i: '🧾', n: '押金收据', m: '刚刚上传 · 图片' },
+  { i: '🖼️', n: '现场截图', m: '刚刚上传 · JPG' },
+  { i: '✉️', n: '邮件往来', m: '刚刚上传 · PDF' },
+  { i: '📱', n: '录音文件', m: '刚刚上传 · MP3' }
+];
+var evPoolIdx = 0;
+$('#evAddBtn').addEventListener('click', function(){
+  var it = EV_POOL[evPoolIdx % EV_POOL.length]; evPoolIdx++;
+  var card = el('div', 'ev-card');
+  card.appendChild(el('span', 'e-ico', it.i));
+  var c = el('div', 'e-copy');
+  c.appendChild(el('b', null, it.n));
+  c.appendChild(el('span', null, it.m));
+  card.appendChild(c);
+  card.appendChild(el('span', 'e-st', '已存证'));
+  $('#evGrid').appendChild(card);
+  toast('证据材料已加密存证（演示）', true);
+});
+$('#callBtn').addEventListener('click', function(){ toast('正在呼叫 12348 …（演示环境不真实拨打）', false); });
+$('#clinicBtn').addEventListener('click', function(){ toast('已定位最近的「高校法律援助中心」（演示）', true); });
+
+/* 默认回到首页 / 初始化报告区默认状态 */
+showPage('page-home');
+clearFile();
+
+/* 优化：从底部导航进入 AI 页时，回到问题列表（演示更清晰）；
+   若通过快捷入口/搜索进入，openChat 会在其后自动打开对应对话 */
+function showPage(id){
+  $$('.page').forEach(function(p){ p.classList.remove('active'); });
+  $('#' + id).classList.add('active');
+  $$('.nav-item').forEach(function(n){ n.classList.toggle('active', n.dataset.page === id); });
+  if (id === 'page-ai'){ $('#qaList').style.display = ''; $('#chatView').classList.remove('on'); clearSuggests(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   风险地图（功能演示版）—— MAP_DATA 即数据源
+   接入真实数据时：仅需替换 MAP_DATA / TYPE_META，其余逻辑不变
+   ========================================================= */
+var TYPE_META = {
+  rent:    { label: '租房',      emoji: '🏠', rgb: '239,68,68' },
+  job:     { label: '兼职/就业', emoji: '💼', rgb: '245,158,11' },
+  consume: { label: '消费/培训', emoji: '🧾', rgb: '16,185,129' },
+  person:  { label: '人身/其他', emoji: '👥', rgb: '139,92,246' }
+};
+var MAP_DATA = [
+  { id: 'ynu', name: '云南大学片区', zone: '呈贡大学城 · 云南大学（中心片区）', x: 46, y: 36, trend: +10,
+    counts: { rent: 170, job: 55, consume: 75, person: 28 },
+    samples: [ '毕业季退租，房东以「墙面有污渍」为由扣留全部押金 2,000 元', '校园周边租房合同违约金过高，提前退租被索要两个月租金' ],
+    aiQ: '房东扣押金、合同违约金太高，我该怎么办？' },
+  { id: 'kust', name: '昆明理工片区', zone: '呈贡大学城 · 昆明理工大学呈贡校区', x: 68, y: 24, trend: +18,
+    counts: { rent: 30, job: 130, consume: 40, person: 15 },
+    samples: [ '在某科技公司实习 2 个月，离职后 4,200 元报酬未结', '参与校外项目外包，口头约定报酬被以「没签合同」拒付' ],
+    aiQ: '实习 / 兼职被拖欠工资，我该怎么办？' },
+  { id: 'ynnu', name: '云南师大片区', zone: '呈贡大学城 · 云南师范大学', x: 18, y: 26, trend: +6,
+    counts: { rent: 35, job: 45, consume: 115, person: 12 },
+    samples: [ '报名教资培训 1.2 万元，机构停课后拒绝退费', '「包过班」宣传与实际不符，要求退款一直被拖延' ],
+    aiQ: '培训机构不退费合法吗？我该怎么办？' },
+  { id: 'ynmz', name: '民大 · 医大片区', zone: '呈贡大学城 · 云南民族大学 / 昆明医科大学', x: 55, y: 62, trend: -4,
+    counts: { rent: 45, job: 30, consume: 90, person: 20 },
+    samples: [ '被诱导办理美容分期，事后才发现是高息消费贷', '网上「刷单返利」兼职被骗 1,500 元' ],
+    aiQ: '我被诱导办理消费分期 / 刷单被骗，能追回吗？' },
+  { id: 'yx', name: '雨花校外公寓带', zone: '呈贡区雨花街道 · 校外公寓带', x: 82, y: 50, trend: +12,
+    counts: { rent: 150, job: 25, consume: 30, person: 25 },
+    samples: [ '二房东转租后失联，「押一付三」5,400 元难追回', '退租时被以「清洁费」名义扣 800 元，合同中并无依据' ],
+    aiQ: '二房东跑路、押金不退，我该怎么办？' },
+  { id: 'yart', name: '云艺 · 中医大片区', zone: '呈贡大学城 · 云南艺术学院 / 云南中医药大学', x: 26, y: 74, trend: +5,
+    counts: { rent: 25, job: 30, consume: 60, person: 55 },
+    samples: [ '参加商演兼职，主办方以「劳务关系」为由拖欠尾款', '画室培训中途退学，协商退费无果' ],
+    aiQ: '兼职劳务费被拖欠、培训退费难，怎么办？' }
+];
+
+var mapState = { activeType: 'all', heatOn: true, selId: null };
+var MAP_TOTAL_BASE = 1335; // 参考值，界面数字以数据实时求和为准
+
+function fmtN(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function two(n){ return (n < 10 ? '0' : '') + n; }
+function nowStr(){ var d = new Date(); return two(d.getHours()) + ':' + two(d.getMinutes()) + ':' + two(d.getSeconds()); }
+function hTotal(h){ return h.counts.rent + h.counts.job + h.counts.consume + h.counts.person; }
+function hTypeCount(h, t){ return t === 'all' ? hTotal(h) : (h.counts[t] || 0); }
+function topType(h){
+  var best = 'rent', bv = -1;
+  Object.keys(TYPE_META).forEach(function(k){
+    if (h.counts[k] > bv){ bv = h.counts[k]; best = k; }
+  });
+  return best;
+}
+function typeTotals(){
+  var t = { rent: 0, job: 0, consume: 0, person: 0 };
+  MAP_DATA.forEach(function(h){ Object.keys(t).forEach(function(k){ t[k] += h.counts[k]; }); });
+  return t;
+}
+
+/* ---------- 顶层指标 + 类型占比条 ---------- */
+function renderStatsAndBar(){
+  var tt = typeTotals();
+  var sum = tt.rent + tt.job + tt.consume + tt.person;
+  $('#stTotal').textContent = fmtN(sum);
+  var dom = Object.keys(tt).slice().sort(function(a, b){ return tt[b] - tt[a]; })[0];
+  $('#stTop').textContent = TYPE_META[dom].label + '纠纷';
+  $('#stTopSub').textContent = '高发类型 · 占比 ' + Math.round(tt[dom] / sum * 100) + '%';
+  /* 占比条 + 图例 */
+  var bar = $('#typeBar'); bar.innerHTML = '';
+  var leg = $('#tbLegend'); leg.innerHTML = '';
+  Object.keys(TYPE_META).forEach(function(k){
+    var pct = tt[k] / sum * 100;
+    var seg = el('i'); seg.style.width = pct + '%'; seg.style.background = 'rgb(' + TYPE_META[k].rgb + ')';
+    bar.appendChild(seg);
+    var s = el('span', null, '<i style="background:rgb(' + TYPE_META[k].rgb + ')"></i>' +
+      TYPE_META[k].label + ' ' + Math.round(pct) + '%');
+    leg.appendChild(s);
+  });
+  $('#tbCap').textContent = mapState.activeType === 'all'
+    ? '本月类型占比（总计 ' + fmtN(sum) + ' 起）'
+    : '正在查看：' + TYPE_META[mapState.activeType].label + '纠纷';
+}
+
+/* ---------- 地图热点 + 热力 ---------- */
+function renderHeat(){
+  var layer = $('#heatLayer'); layer.innerHTML = '';
+  layer.classList.toggle('off', !mapState.heatOn);
+  MAP_DATA.forEach(function(h){
+    var cnt = hTypeCount(h, mapState.activeType);
+    if (cnt <= 0) return;
+    var dom = mapState.activeType === 'all' ? topType(h) : mapState.activeType;
+    var size = 90 + cnt * 0.6;
+    var b = el('div', 'blob');
+    b.style.left = h.x + '%'; b.style.top = h.y + '%';
+    b.style.width = size + 'px'; b.style.height = size + 'px';
+    b.style.background = 'radial-gradient(circle, rgba(' + TYPE_META[dom].rgb + ',.38) 0%, rgba(' +
+      TYPE_META[dom].rgb + ',.14) 52%, transparent 72%)';
+    layer.appendChild(b);
+  });
+}
+function renderPins(){
+  var layer = $('#pinLayer'); layer.innerHTML = '';
+  var shown = 0, sumCnt = 0;
+  MAP_DATA.forEach(function(h){
+    var cnt = hTypeCount(h, mapState.activeType);
+    if (cnt <= 0) return;
+    shown++; sumCnt += cnt;
+    var dom = mapState.activeType === 'all' ? topType(h) : mapState.activeType;
+    var node = el('div', 'pin-node' + (mapState.selId === h.id ? ' sel' : ''));
+    node.style.left = h.x + '%'; node.style.top = h.y + '%';
+    var orb = el('div', 'pin-orb c-' + dom, TYPE_META[dom].emoji);
+    node.appendChild(orb);
+    node.appendChild(el('span', 'pin-cnt', fmtN(cnt)));
+    node.title = h.name + ' · ' + TYPE_META[dom].label + ' ' + fmtN(cnt) + ' 起';
+    node.addEventListener('click', function(){ selectPin(h.id); });
+    layer.appendChild(node);
+  });
+  $('#mapEmpty').style.display = shown ? 'none' : 'flex';
+  return shown;
+}
+
+/* ---------- 右侧面板 ---------- */
+function renderBars(rows){
+  var box = el('div');
+  rows.forEach(function(r){
+    var row = el('div', 'mbar');
+    row.appendChild(el('span', 'mb-lbl', r.label));
+    var tr = el('div', 'mb-track'); var i = el('i');
+    i.style.width = r.pct + '%'; i.style.background = r.color;
+    tr.appendChild(i); row.appendChild(tr);
+    row.appendChild(el('span', 'mb-num', r.num));
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderOverview(){
+  var panel = $('#detailPanel'); panel.innerHTML = '';
+  panel.appendChild(el('div', 'dp-back', '← 返回片区总览')).style.display = 'none';
+  var head = el('div', 'dp-head');
+  head.appendChild(el('span', 'dp-ico', '📊'));
+  var hh = el('div'); hh.appendChild(el('h4', null, '片区总览'));
+  hh.appendChild(el('div', 'dp-sub', '高校周边纠纷驾驶舱 · 更新时间 ' + nowStr()));
+  head.appendChild(hh);
+  panel.appendChild(head);
+
+  var tt = typeTotals(); var sum = tt.rent + tt.job + tt.consume + tt.person;
+  if (mapState.activeType === 'all'){
+    var b1 = el('div', 'dp-block');
+    b1.appendChild(el('h5', null, '📌 本月纠纷类型分布'));
+    b1.appendChild(renderBars(Object.keys(TYPE_META).map(function(k){
+      return { label: TYPE_META[k].label, num: fmtN(tt[k]), pct: Math.round(tt[k] / sum * 100),
+        color: 'rgb(' + TYPE_META[k].rgb + ')' };
+    })));
+    panel.appendChild(b1);
+    var b2 = el('div', 'dp-block');
+    b2.appendChild(el('h5', null, '🏆 纠纷高发片区 Top3'));
+    b2.appendChild(renderRank(TYPE_META, 'all', 'total'));
+    panel.appendChild(b2);
+  } else {
+    var k = mapState.activeType;
+    var tsum = tt[k];
+    var b1 = el('div', 'dp-block');
+    b1.appendChild(el('h5', null, TYPE_META[k].emoji + ' 「' + TYPE_META[k].label + '」纠纷 · Top3 片区'));
+    b1.appendChild(renderRank(TYPE_META, k, k));
+    panel.appendChild(b1);
+    panel.appendChild(el('div', 'dp-block',
+      '<h5>💡 维权提示</h5><div class="guide-li">签约 / 缴费前先核验对方主体资质，保留宣传与承诺截图</div>' +
+      '<div class="guide-li">发生纠纷先固定证据，再通过平台、12315 / 12333 或 12348 逐级投诉</div>' +
+      '<div class="dp-note" style="margin-top:8px">当前筛选命中 ' + tsum + ' 起（演示数据）</div>'));
+  }
+  panel.appendChild(el('div', 'dp-note', '💡 点击左侧地图热点，可查看该片区的典型案例、类型构成与维权指引（演示）。'));
+}
+function renderRank(meta, key, countKey){
+  var wrap = el('div');
+  var sorted = MAP_DATA.slice().sort(function(a, b){
+    return hTypeCount(b, countKey) - hTypeCount(a, countKey);
+  });
+  sorted.slice(0, 3).forEach(function(h, idx){
+    var row = el('div', 'rank-row');
+    row.appendChild(el('span', 'rk', String(idx + 1)));
+    row.appendChild(el('span', 'rk-name', h.name));
+    row.appendChild(el('span', 'rk-num', fmtN(hTypeCount(h, countKey)) + ' 起'));
+    row.addEventListener('click', function(){ selectPin(h.id); });
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+function riskPill(h){
+  var t = hTotal(h);
+  if (t >= 220) return { txt: '🔴 高发片区', cls: 'hot' };
+  if (t >= 150) return { txt: '🟠 关注片区', cls: 'watch' };
+  return { txt: '🟢 相对平稳', cls: 'ok' };
+}
+function renderPinDetail(id){
+  var h = MAP_DATA.filter(function(x){ return x.id === id; })[0];
+  if (!h){ renderOverview(); return; }
+  var panel = $('#detailPanel'); panel.innerHTML = '';
+  var back = el('button', 'dp-back', '← 返回片区总览');
+  back.addEventListener('click', function(){ mapState.selId = null; renderOverview(); });
+  panel.appendChild(back);
+  var head = el('div', 'dp-head');
+  head.appendChild(el('span', 'dp-ico', '📍'));
+  var hh = el('div');
+  hh.appendChild(el('h4', null, h.name));
+  hh.appendChild(el('div', 'dp-sub', h.zone + ' · 更新 ' + nowStr()));
+  head.appendChild(hh);
+  panel.appendChild(head);
+
+  var rp = riskPill(h);
+  var sub2 = el('div', 'dp-sub');
+  sub2.appendChild(el('span', 'risk-pill ' + rp.cls, rp.txt));
+  sub2.appendChild(el('span', null, ' 环比 ' + (h.trend > 0 ? '▲ +' + h.trend : '▼ ' + h.trend) + '%'));
+  panel.appendChild(sub2);
+
+  var tot = hTotal(h);
+  var dom = topType(h);
+  var tt = typeTotals(); var sumAll = tt.rent + tt.job + tt.consume + tt.person;
+  var b0 = el('div', 'dp-block');
+  var grid = el('div', 'dp-grid');
+  grid.appendChild(el('div', 'dp-cell', '<b>' + fmtN(tot) + '</b><span>本月纠纷（起）</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + (h.trend > 0 ? '+' + h.trend : h.trend) + '%</b><span>环比变化</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + TYPE_META[dom].label + '</b><span>主要类型</span>'));
+  grid.appendChild(el('div', 'dp-cell', '<b>' + Math.round(h.counts[dom] / tot * 100) + '%</b><span>占本片区纠纷</span>'));
+  b0.appendChild(grid);
+  panel.appendChild(b0);
+
+  /* 类型构成 */
+  var b1 = el('div', 'dp-block');
+  b1.appendChild(el('h5', null, '📊 本片区类型构成'));
+  b1.appendChild(renderBars(Object.keys(TYPE_META).map(function(k){
+    return { label: TYPE_META[k].label, num: h.counts[k],
+      pct: Math.round(h.counts[k] / tot * 100), color: 'rgb(' + TYPE_META[k].rgb + ')' };
+  })));
+  panel.appendChild(b1);
+
+  /* 典型案例 */
+  var b2 = el('div', 'dp-block');
+  b2.appendChild(el('h5', null, '📝 典型案例（脱敏演示）'));
+  h.samples.forEach(function(s){ b2.appendChild(el('div', 'case-li', s)); });
+  panel.appendChild(b2);
+
+  /* 维权指引 */
+  var b3 = el('div', 'dp-block');
+  b3.appendChild(el('h5', null, '🧭 维权指引'));
+  [
+    '固定证据：合同 / 转账 / 聊天记录 / 现场照片',
+    '先书面协商，明确诉求金额与期限',
+    '协商不成 → 平台投诉、12315 / 12333、属地调解',
+    '仍无法解决 → 12348 法律援助或仲裁 / 小额诉讼'
+  ].forEach(function(s){ b3.appendChild(el('div', 'guide-li', s)); });
+  panel.appendChild(b3);
+
+  /* 操作 */
+  var act = el('div', 'dp-actions');
+  var ai = el('button', 'btn sm', '💬 咨询 AI 助手');
+  ai.addEventListener('click', function(){ askAI(h.aiQ); });
+  var law = el('button', 'btn ghost sm', '📍 附近法援点');
+  law.addEventListener('click', function(){ toast('已定位「' + h.zone.split(' · ')[0] + '」最近的高校法律援助中心（演示）', true); });
+  act.appendChild(ai); act.appendChild(law);
+  panel.appendChild(act);
+
+  panel.appendChild(el('div', 'dp-note', '（总榜中本片区约占 ' + Math.round(tot / sumAll * 100) + '%，演示数据）'));
+}
+
+/* ---------- 刷新 & 事件绑定 ---------- */
+function refreshData(){
+  MAP_DATA.forEach(function(h){
+    Object.keys(h.counts).forEach(function(k){
+      h.counts[k] = Math.max(8, Math.round(h.counts[k] * (0.95 + Math.random() * 0.1)));
+    });
+    h.trend = Math.max(-12, Math.min(26, h.trend + Math.round(Math.random() * 6 - 3)));
+  });
+  var live = $('#mtLive');
+  live.textContent = '● 实时演示 · 刚刚更新 ' + nowStr();
+  live.classList.add('flash');
+  setTimeout(function(){ live.classList.remove('flash'); }, 700);
+  renderMapAll();
+  toast('数据已模拟刷新（演示）', true);
+}
+function renderMapAll(){
+  renderStatsAndBar();
+  renderHeat();
+  renderPins();
+  if (mapState.selId){
+    var h = MAP_DATA.filter(function(x){ return x.id === mapState.selId; })[0];
+    if (h && hTypeCount(h, mapState.activeType) > 0){ renderPinDetail(mapState.selId); }
+    else { mapState.selId = null; renderOverview(); }
+  } else { renderOverview(); }
+}
+function selectPin(id){ mapState.selId = id; renderHeat(); renderPins(); renderPinDetail(id); }
+
+/* 类型筛选 */
+$$('#typeChips .t-chip').forEach(function(ch){
+  ch.addEventListener('click', function(){
+    mapState.activeType = ch.dataset.t; mapState.selId = null;
+    $$('#typeChips .t-chip').forEach(function(x){ x.classList.toggle('on', x === ch); });
+    renderMapAll();
+  });
+});
+/* 热力开关 */
+$('#heatBtn').addEventListener('click', function(){
+  mapState.heatOn = !mapState.heatOn;
+  $('#heatBtn').textContent = '🔥 热力：' + (mapState.heatOn ? '开' : '关');
+  $('#heatBtn').classList.toggle('off', !mapState.heatOn);
+  renderHeat();
+});
+/* 模拟刷新 */
+$('#refreshBtn').addEventListener('click', refreshData);
+
+/* 页面初始化 */
+renderMapAll();
+</script>
+</body>
+</html>
