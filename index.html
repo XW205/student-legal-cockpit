@@ -3,82 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>法护启航 · 大学生法律安全驾驶舱</title>
+<meta name="description" content="法护启航——AI 赋能大学生全周期法律风险防护平台，面向昆明呈贡大学城大学生，提供 AI 风险测评、AI 合同审查、维权导航、证据急救与线下法律服务地图。">
+<title>法护启航 · AI 赋能大学生全周期法律风险防护平台</title>
 <link rel="stylesheet" href="./styles.css">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body><!-- ================= 顶部应用栏 ================= -->
-<header class="topbar">
-  <div class="logo">
-    <div class="logo-badge">🛡️</div>
-    <div>
-      <div class="logo-name">法护启航</div>
-      <div class="logo-sub">大学生法律安全驾驶舱 · PROTOTYPE</div>
+<body>
+<!-- ======= 全站线性图标库（内联 SVG Sprite，离线可用） ======= -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5.5v5.2c0 5 3.4 9.3 8 10.8 4.6-1.5 8-5.8 8-10.8V5.5L12 2Z"/><path d="m8.8 11.8 2.3 2.4 4.2-4.6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1V10Z"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21M5.6 5.6l3.2 3.2M15.2 15.2l3.2 3.2M18.4 5.6l-3.2 3.2M8.8 15.2l-3.2 3.2"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2-3.5A8 8 0 1 1 21 12Z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1.2"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.4-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 3h4l1.5 5L8 10a13 13 0 0 0 6 6l2-2.5 5 1.5v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M12 6 4 9l8 3 8-3-8-3Z"/><path d="M4 15a3.5 3.5 0 0 0 7 0L8.5 9.5 4 15ZM13 15a3.5 3.5 0 0 0 7 0l-2.5-5.5L13 15Z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 10v4M12 17.2h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m3 11 18-8-8 18-2.5-7.5L3 11Z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2.1 2.1M16.9 16.9 19 19M19 5l-2.1 2.1M7.1 16.9 5 19"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v11M7 10l5 5 5-5M4 19h16"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 9l5-5 5 5M4 19h16"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14Z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6.5 7 7.5 21h9l1-14M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 22c4.4 0 7-2.8 7-6.6 0-2.4-1.2-4.4-2.6-6-.4 1-.9 1.8-1.6 2.4.2-3-1.4-6-3.8-7.8.1 2.2-.8 3.6-2.5 5C6.6 10.4 5 12.4 5 15.4 5 19.2 7.6 22 12 22Z"/><path d="M9 17.5a3 3 0 0 0 3 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+</svg>
+
+<!-- ================= 顶部导航（桌面） ================= -->
+
+<header class="site-head">
+  <div class="wrap head-in">
+    <a class="brand" role="button" tabindex="0" data-nav="page-home" aria-label="法护启航首页">
+      <span class="brand-mark"><svg><use href="#i-shield"/></svg></span>
+      <span class="brand-txt">
+        <b>法护启航</b>
+        <small>大学生法律风险防护平台</small>
+      </span>
+    </a>
+    <nav class="topnav" id="topNav" aria-label="主导航">
+      <button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg>首页</button>
+      <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg>AI风险测评</button>
+      <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg>AI合同审查</button>
+      <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg>维权导航</button>
+      <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg>服务地图</button>
+      <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg>证据急救</button>
+      <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg>关于我们</button>
+    </nav>
+    <div class="head-right">
+      <span class="gov-chip">公益演示 · v2.2</span>
+      <button class="menu-btn" id="navToggle" aria-label="打开菜单"><svg><use href="#i-menu"/></svg></button>
     </div>
-  </div>
-  <div class="topbar-right">
-    <span class="chip-pill">AI 演示版 v1.0</span>
   </div>
 </header>
 
-<div class="app">
+<!-- ================= 移动端抽屉菜单 ================= -->
+<div class="mnav-mask" id="mnavMask"></div>
+<aside class="mnav" id="mnav" aria-label="移动端导航">
+  <div class="mnav-head">
+    <b>功能导航</b>
+    <button class="menu-btn" id="mnavClose" aria-label="关闭菜单"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg><span>首页</span></button>
+  <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg><span>AI 风险测评</span></button>
+  <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg><span>AI 合同审查</span></button>
+  <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg><span>维权导航（AI 咨询）</span></button>
+  <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg><span>线下法律服务地图</span></button>
+  <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg><span>证据急救</span></button>
+  <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg><span>关于我们</span></button>
+  <div class="mnav-foot">公益项目原型 · 回答不构成法律意见<br>紧急法律问题请拨打 12348</div>
+</aside>
 
-  <!-- ================= 页面1：首页 ================= -->
+
+<main class="wrap page-body">
+  <!-- ================= 首页 ================= -->
   <section class="page active" id="page-home">
+    <!-- 首页 Hero -->
     <div class="hero">
-      <span class="hero-badge">🎓 面向大学生的 AI 法律安全驾驶舱</span>
-      <h1>法护启航</h1>
-      <div class="sub">让每一次<b>签约</b>，都多一份<b>底气</b></div>
-      <div class="flow">租房安全 <span>·</span> 兼职就业 <span>·</span> 合同纠纷 <span>·</span> 证据管理</div>
-    </div>
-
-    <!-- 核心搜索区 -->
-    <div class="card search-card">
-      <div class="sc-title">🔍 我遇到什么问题？</div>
-      <form class="search-box" id="homeSearch">
-        <input id="homeInput" type="text" placeholder="房东不退押金怎么办？" autocomplete="off">
-        <button class="btn" type="submit">立即咨询</button>
-      </form>
-      <div class="hot-words">
-        <span class="lbl">大家都在问：</span>
-        <button type="button" class="hot-tag" data-q="房东不退押金怎么办？">押金不退</button>
-        <button type="button" class="hot-tag" data-q="试用期被辞退有补偿吗？">试用期被辞退</button>
-        <button type="button" class="hot-tag" data-q="兼职公司拖欠工资怎么办？">兼职欠薪</button>
-        <button type="button" class="hot-tag" data-q="培训机构不退费合法吗？">培训退费</button>
-      </div>
-    </div>
-
-    <!-- 快捷功能入口 -->
-    <div class="quick-grid">
-      <div class="quick-card" data-nav="page-ai" data-q="房东扣押金，我该怎么办？">
-        <div class="q-ico">🏠</div>
-        <h4>租房安全</h4>
-        <p>押金被扣 · 退租纠纷<br>中介套路 · 合同陷阱</p>
-        <span class="go">→</span>
-      </div>
-      <div class="quick-card" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？">
-        <div class="q-ico">💼</div>
-        <h4>兼职 / 就业</h4>
-        <p>兼职欠薪 · 虚假招聘<br>试用期辞退 · 三方协议</p>
-        <span class="go">→</span>
-      </div>
-      <div class="quick-card" data-nav="page-review">
-        <div class="q-ico">📄</div>
-        <h4>AI 合同审查</h4>
-        <p>上传合同 · 秒级扫描<br>风险雷达 · 逐条给建议</p>
-        <span class="go">→</span>
-      </div>
-    </div>
-
-    <!-- 法律风险测试 -->
-    <div class="card">
-      <div class="quiz-wrap">
-        <div class="quiz-icon">🧪</div>
-        <div class="quiz-copy">
-          <h4>测测你的法律风险</h4>
-          <p>20 道题覆盖租房 / 兼职就业 / 合同消费 / 网络资金 / 纠纷维权，测完给出风险等级与分领域建议。</p>
+      <div class="hero-grid"></div>
+      <div class="hero-in rv-wrap">
+        <span class="eyebrow"><svg><use href="#i-scale"/></svg>昆明呈贡大学城 · 大学生法律风险防护公益平台</span>
+        <h1>法护启航</h1>
+        <p class="hero-lead">以 AI 之力，守护每一次<b>签约</b>与<b>维权</b>——让大学生在租房、兼职、就业与消费中，<br class="pc-br">多一份底气，少一份风险。</p>
+        <form class="search-box" id="homeSearch">
+          <svg class="sb-ico"><use href="#i-search"/></svg>
+          <input id="homeInput" type="text" placeholder="输入问题，例如：房东不退押金怎么办？" autocomplete="off" aria-label="法律问题咨询">
+          <button class="btn" type="submit">立即咨询</button>
+        </form>
+        <div class="hot-words">
+          <span class="lbl">大家都在问：</span>
+          <button type="button" class="hot-tag" data-q="房东不退押金怎么办？">押金不退</button>
+          <button type="button" class="hot-tag" data-q="试用期被辞退有补偿吗？">试用期被辞退</button>
+          <button type="button" class="hot-tag" data-q="兼职公司拖欠工资怎么办？">兼职欠薪</button>
+          <button type="button" class="hot-tag" data-q="培训机构不退费合法吗？">培训退费</button>
         </div>
-        <button class="btn" id="quizStart">开始测试 ⚡</button>
+        <div class="hero-cta">
+          <button class="btn" data-nav="page-quiz">开始 AI 风险测评</button>
+          <button class="btn ghost" data-nav="page-review">上传合同审查</button>
+        </div>
+      </div>
+      <div class="hero-metrics rv-wrap">
+        <div class="hm"><b>7×24</b><span>AI 在线应答</span></div>
+        <div class="hm"><b>20</b><span>测评题 · 5 大领域</span></div>
+        <div class="hm"><b>6+</b><span>高校片区覆盖</span></div>
+        <div class="hm"><b>12348</b><span>法律援助热线</span></div>
+      </div>
+    </div>
+
+    <!-- 项目简介 -->
+    <div class="intro-grid">
+      <div class="intro-copy">
+        <div class="sec-title"><span class="bar"></span><div><h2>项目简介</h2><p>AI 赋能大学生全周期法律风险防护平台</p></div></div>
+        <p>面向呈贡大学城大学生群体，聚焦租房、兼职就业、合同消费、网络资金与纠纷维权五大高频风险场景，构建「<b>预防—审查—咨询—取证—救济</b>」的全周期防护链路。平台将 AI 问答、合同智能审查、证据急救与线下法律服务地图整合于一体，帮助学生「签约前看得懂、签约时有底气、纠纷后找得到人、维权时拿得出证据」。</p>
+        <p class="intro-note"><svg><use href="#i-info"/></svg>本项目为公益方向的前端原型：AI 回答与地图数据用于演示与交互验证，不构成法律意见；正式服务需接入权威数据源并完成合规审查。</p>
+      </div>
+      <div class="intro-facts rv-wrap">
+        <div class="fact"><span class="f-no">01</span><div><b>预防</b><p>AI 风险测评 + 风险科普，签约前识别陷阱</p></div></div>
+        <div class="fact"><span class="f-no">02</span><div><b>审查</b><p>合同文本 / 文件上传，逐条风险扫描与建议</p></div></div>
+        <div class="fact"><span class="f-no">03</span><div><b>取证</b><p>证据清单 + 时间轴，一键生成证据链</p></div></div>
+        <div class="fact"><span class="f-no">04</span><div><b>救济</b><p>维权路径引导 + 线下法律服务地图</p></div></div>
+      </div>
+    </div>
+
+    <!-- 核心功能入口 -->
+    <div class="sec-title"><span class="bar"></span><div><h2>核心功能</h2><p>全周期防护，从签约前到维权后</p></div></div>
+    <div class="mod-grid rv-wrap">
+      <button class="mod-card" data-nav="page-quiz">
+        <span class="mc-ico c1"><svg><use href="#i-radar"/></svg></span>
+        <h3>AI 风险测评</h3>
+        <p>20 题快速自测，生成 5 大领域风险画像与等级建议</p>
+        <span class="mc-go">进入测评 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="mod-card" data-nav="page-review">
+        <span class="mc-ico c2"><svg><use href="#i-doc"/></svg></span>
+        <h3>AI 合同审查</h3>
+        <p>上传或粘贴合同，逐条扫描风险条款并附法律依据</p>
+        <span class="mc-go">审查合同 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="mod-card" data-nav="page-rights">
+        <span class="mc-ico c3"><svg><use href="#i-archive"/></svg></span>
+        <h3>证据急救</h3>
+        <p>证据清单分类管理、时间轴梳理，一键生成证据链</p>
+        <span class="mc-go">管理证据 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="mod-card" data-nav="page-map">
+        <span class="mc-ico c4"><svg><use href="#i-pin"/></svg></span>
+        <h3>线下法律服务地图</h3>
+        <p>呈贡大学城片区纠纷热力与服务指引，交互式地图</p>
+        <span class="mc-go">查看地图 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="mod-card" data-nav="page-ai" data-q="我遇到一个法律问题，想咨询一下">
+        <span class="mc-ico c5"><svg><use href="#i-chat"/></svg></span>
+        <h3>维权导航 · AI 咨询</h3>
+        <p>7×24 在线问答，分步骤给出建议、证据清单与法条依据</p>
+        <span class="mc-go">开始咨询 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="mod-card" data-nav="page-about">
+        <span class="mc-ico c6"><svg><use href="#i-info"/></svg></span>
+        <h3>关于我们</h3>
+        <p>了解项目调研背景、服务模式与团队信息</p>
+        <span class="mc-go">了解更多 <svg><use href="#i-arrow"/></svg></span>
+      </button>
+    </div>
+
+    <!-- 高频场景直达 -->
+    <div class="scene-panel rv-wrap">
+      <div class="scene-copy">
+        <h3><svg><use href="#i-chat"/></svg>高频场景 · 直接问法小航</h3>
+        <p>选择你正在经历的典型场景，AI 助手将按「先做什么—留什么证据—找哪里维权」给出结构化指引。</p>
+      </div>
+      <div class="scene-btns">
+        <button class="scene-btn" data-nav="page-ai" data-q="房东扣押金，我该怎么办？"><span>🏠</span>房东扣押金</button>
+        <button class="scene-btn" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？"><span>💼</span>兼职 / 实习欠薪</button>
+        <button class="scene-btn" data-nav="page-ai" data-q="试用期被辞退有补偿吗？"><span>👔</span>试用期被辞退</button>
+        <button class="scene-btn" data-nav="page-ai" data-q="遇到虚假招聘、收费入职怎么办？"><span>🔎</span>虚假招聘</button>
+        <button class="scene-btn" data-nav="page-ai" data-q="培训机构不退费合法吗？"><span>📚</span>培训退费</button>
+      </div>
+    </div>
+
+    <!-- 风险科普卡片 -->
+    <div class="sec-title"><span class="bar"></span><div><h2>法律风险科普</h2><p>三步看懂「怎么防、怎么留、怎么救」</p></div></div>
+    <div class="know-grid rv-wrap">
+      <article class="know-card">
+        <div class="kc-top"><span class="kc-ico k1"><svg><use href="#i-book"/></svg></span><span class="kc-phase">签约前 · 预防</span></div>
+        <h3>签约前：先看清这 5 处再落笔</h3>
+        <ul>
+          <li>金额与支付方式、押金 / 保证金退还条件</li>
+          <li>违约金是否畸高、有无空白与「另行协商」</li>
+          <li>解除与违约条款、争议解决方式（仲裁 / 法院）</li>
+          <li>招聘收费一律拒绝：押金、培训费、服装费</li>
+          <li>核实公司主体：国家企业信用信息公示系统</li>
+        </ul>
+        <a class="kc-link" data-nav="page-review">用 AI 合同审查把关 <svg><use href="#i-arrow"/></svg></a>
+      </article>
+      <article class="know-card">
+        <div class="kc-top"><span class="kc-ico k2"><svg><use href="#i-archive"/></svg></span><span class="kc-phase">履约中 · 取证</span></div>
+        <h3>履约中：关键证据随手留</h3>
+        <ul>
+          <li>合同原件 + 付款记录（备注款项用途）</li>
+          <li>聊天记录、邮件、书面承诺与宣传截图</li>
+          <li>现场照片 / 视频、录音（注意合法性）</li>
+          <li>书面变更优于口头约定，重要事项落到文字</li>
+        </ul>
+        <a class="kc-link" data-nav="page-rights">整理证据链 <svg><use href="#i-arrow"/></svg></a>
+      </article>
+      <article class="know-card">
+        <div class="kc-top"><span class="kc-ico k3"><svg><use href="#i-phone"/></svg></span><span class="kc-phase">纠纷后 · 救济</span></div>
+        <h3>纠纷后：按顺序找对渠道</h3>
+        <ul>
+          <li>先书面协商，明确诉求金额与期限</li>
+          <li>消费投诉 12315 · 劳动监察 12333</li>
+          <li>属地人民调解、高校法律援助中心</li>
+          <li>拿不准先打 <b>12348</b> 法律援助热线</li>
+        </ul>
+        <a class="kc-link" data-nav="page-ai" data-q="维权有哪些正规渠道和步骤？">问维权路径 <svg><use href="#i-arrow"/></svg></a>
+      </article>
+    </div>
+
+    <div class="disclaimer"><svg><use href="#i-alert"/></svg><span><b>重要提示：</b>本站 AI 回答、测评与地图数据仅用于公益演示与交互验证，不构成法律意见；紧急或重大法律问题请拨打 12348 法律援助热线或咨询执业律师。</span></div>
+  </section>
+
+  <!-- ================= AI 风险测评 ================= -->
+  <section class="page" id="page-quiz">
+    <div class="page-head">
+      <div>
+        <span class="ph-tag"><svg><use href="#i-radar"/></svg>AI 风险测评</span>
+        <h2>测测你的法律风险</h2>
+        <p>20 道题覆盖租房 / 兼职就业 / 合同消费 / 网络资金 / 纠纷维权，完成即生成风险等级与分领域风险画像，并给出针对性建议。</p>
+      </div>
+      <div class="ph-aside rv-wrap">
+        <div class="pa-num"><b>20</b><span>道题目</span></div>
+        <div class="pa-num"><b>5</b><span>大风险领域</span></div>
+        <div class="pa-num"><b>3</b><span>级风险画像</span></div>
+      </div>
+    </div>
+
+    <div class="card quiz-card">
+      <div class="quiz-start" id="quizStartWrap">
+        <div class="qs-ico"><svg><use href="#i-radar"/></svg></div>
+        <div class="qs-copy">
+          <h3>开始前，请按真实习惯作答</h3>
+          <p>测评结果仅用于风险提示，帮助你在签约与维权前提前补漏；不会上传任何个人信息。</p>
+        </div>
+        <button class="btn" id="quizStart">开始测评</button>
       </div>
 
       <!-- 测试主体 -->
@@ -95,115 +272,129 @@
         <h4 id="qrTitle">风险较低</h4>
         <p id="qrText"></p>
         <div class="quiz-dim" id="qrDim"></div>
-        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button class="btn sm" id="qrAi">去咨询 AI 助手</button>
-          <button class="btn ghost sm" id="qrAgain">重新测试</button>
+        <div class="qr-actions">
+          <button class="btn" id="qrAi">去咨询 AI 助手</button>
+          <button class="btn ghost" id="qrAgain">重新测试</button>
         </div>
       </div>
     </div>
 
-    <div class="section-note">⚠️ 本原型为演示用途，模拟数据与 AI 回答不构成法律意见；紧急法律问题请拨打 12348 法律援助热线。</div>
-  </section>  <!-- ================= 页面2：AI 助手 ================= -->
+    <div class="level-legend rv-wrap">
+      <div class="lv"><span class="lv-dot g"></span><div><b>风险较低</b><p>保持「先读条款、再留证据」的好习惯</p></div></div>
+      <div class="lv"><span class="lv-dot y"></span><div><b>存在一定风险</b><p>重点合同先审查，纠纷第一时间固定证据</p></div></div>
+      <div class="lv"><span class="lv-dot r"></span><div><b>风险较高</b><p>签约前务必逐条审查，必要时求助 12348 / 律师</p></div></div>
+    </div>
+  </section>
+
+  <!-- ================= 维权导航（AI 问答） ================= -->
   <section class="page" id="page-ai">
-    <div class="ai-hero">
-      <div class="ai-avatar">🤖</div>
-      <div>
-        <h3>AI 法律助手 · 法小航</h3>
-        <p>7×24 在线，陪你先把问题理清楚、证据备齐全</p>
+    <div class="guide-hero">
+      <div class="gh-main">
+        <div class="gh-avatar"><svg><use href="#i-chat"/></svg><i></i></div>
+        <div>
+          <h2>维权导航 · AI 法律助手「法小航」</h2>
+          <p>先帮你把问题理清楚、证据备齐全、渠道找明白；支持离线演示与 DeepSeek 云端大模型双模式。</p>
+        </div>
       </div>
-      <div class="status">
-        <div><span class="dot" id="aiModeDot"></span><b id="aiModeLabel">离线演示模式</b></div>
-        <span id="aiModeSub">模拟回答 · 仅供参考</span><button class="ai-setbtn" id="aiSetBtn" title="AI 模型接入设置">⚙️</button>
+      <div class="gh-status">
+        <div class="gh-line"><span class="dot" id="aiModeDot"></span><b id="aiModeLabel">离线演示模式</b></div>
+        <span id="aiModeSub">模拟回答 · 仅供参考</span>
+        <button class="ai-setbtn" id="aiSetBtn" title="AI 模型接入设置" aria-label="AI 模型接入设置"><svg><use href="#i-gear"/></svg></button>
+      </div>
+      <div class="gh-steps">
+        <span><b>1</b>描述情况</span><i></i>
+        <span><b>2</b>整理证据</span><i></i>
+        <span><b>3</b>选择渠道</span><i></i>
+        <span><b>4</b>启动维权</span>
       </div>
     </div>
 
     <!-- 快捷问题列表视图 -->
     <div id="qaList">
-      <div class="page-title">
-        <div class="line"></div>
-        <h2>遇到什么问题？</h2>
-        <span class="desc">点击下方常见场景，即可开始对话（演示为模拟回答）</span>
+      <div class="qa-intro">
+        <div class="sec-title"><span class="bar"></span><div><h2>遇到什么问题？</h2><p>点击下方常见场景开始对话；也支持在首页输入框自由提问</p></div></div>
       </div>
-      <div class="quick-grid2">
-        <button class="qa-card" data-key="housing"><span class="e">🏠</span>
-          <span><h5>房东扣押金</h5><p>押金不退 / 扣款理由不明</p></span></button>
-        <button class="qa-card" data-key="parttime"><span class="e">💼</span>
-          <span><h5>兼职欠薪</h5><p>实习/兼职工资被拖欠</p></span></button>
-        <button class="qa-card" data-key="contract"><span class="e">📄</span>
-          <span><h5>合同问题</h5><p>条款看不懂 / 怕被坑</p></span></button>
-        <button class="qa-card" data-key="probation"><span class="e">👔</span>
-          <span><h5>试用期辞退</h5><p>试用期被辞退 / 无补偿</p></span></button>
-        <button class="qa-card" data-key="fakejob"><span class="e">🔎</span>
-          <span><h5>虚假招聘</h5><p>收费入职 / 货不对板</p></span></button>
-        <button class="qa-card" data-key="other"><span class="e">⚖️</span>
-          <span><h5>其他法律问题</h5><p>培训退费 / 校园贷等</p></span></button>
+      <div class="quick-grid2 rv-wrap">
+        <button class="qa-card" data-key="housing"><span class="e">🏠</span><span><h5>房东扣押金</h5><p>押金不退 / 扣款理由不明</p></span></button>
+        <button class="qa-card" data-key="parttime"><span class="e">💼</span><span><h5>兼职欠薪</h5><p>实习 / 兼职工资被拖欠</p></span></button>
+        <button class="qa-card" data-key="contract"><span class="e">📄</span><span><h5>合同问题</h5><p>条款看不懂 / 怕被坑</p></span></button>
+        <button class="qa-card" data-key="probation"><span class="e">👔</span><span><h5>试用期辞退</h5><p>试用期被辞退 / 无补偿</p></span></button>
+        <button class="qa-card" data-key="fakejob"><span class="e">🔎</span><span><h5>虚假招聘</h5><p>收费入职 / 货不对板</p></span></button>
+        <button class="qa-card" data-key="other"><span class="e">⚖️</span><span><h5>其他法律问题</h5><p>培训退费 / 校园贷等</p></span></button>
       </div>
+      <div class="qa-tip"><svg><use href="#i-info"/></svg>回答由 DeepSeek 大模型或离线演示生成，仅供参考；紧急情况请拨打 12348 法律援助热线。</div>
     </div>
 
     <!-- 对话视图 -->
     <div class="chat-view" id="chatView">
       <div class="chat-head">
-        <button class="chat-back" id="chatBack">←</button>
-        <div style="flex:1">
-          <h4 id="chatTitle">法律咨询</h4>
-        </div>
-        <button class="chat-back" id="chatClear" title="清空对话">🗑️</button><span class="tag" id="chatModeTag">● 法小航在线</span>
+        <button class="chat-back" id="chatBack" aria-label="返回问题列表"><svg><use href="#i-arrow"/></svg></button>
+        <div class="ch-title"><h4 id="chatTitle">法律咨询</h4><span class="tag" id="chatModeTag">● 法小航在线</span></div>
+        <button class="chat-back" id="chatClear" title="清空对话" aria-label="清空对话"><svg><use href="#i-trash"/></svg></button>
       </div>
       <div class="chat-scroll" id="chatScroll"></div>
       <div class="chat-suggests" id="chatSuggests"></div>
       <form class="chat-input" id="chatForm">
-        <input id="chatInput" type="text" placeholder="继续描述你的问题…" autocomplete="off">
-        <button class="btn" type="submit">发送 ➤</button>
+        <input id="chatInput" type="text" placeholder="继续描述你的问题…" autocomplete="off" aria-label="继续描述问题">
+        <button class="btn" type="submit">发送 <svg><use href="#i-send"/></svg></button>
       </form>
-      <div class="chat-footnote">⚠️ 回答由「DeepSeek」大模型或离线演示生成，仅供参考，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
+      <div class="chat-footnote">⚠️ 回答由 DeepSeek 大模型或离线演示生成，仅供参考，不构成法律意见；紧急情况请拨打 12348 法律援助热线</div>
     </div>
   </section>
-
-  <!-- ================= 页面3：合同审查（答辩爆点） ================= -->
+  <!-- ================= AI 合同审查 ================= -->
   <section class="page" id="page-review">
-    <div class="review-hero">
-      <h2><span class="radar-ico">📡</span>AI 合同风险雷达</h2>
-      <p>上传合同 / 协议，AI 逐条扫描风险条款并给出修改建议与法律依据</p>
-      <div class="flow2">
-        <span>① 上传文件</span><span>② 风险扫描</span><span>③ 逐条报告</span><span>④ 下载建议</span>
+    <div class="tool-hero">
+      <div>
+        <span class="ph-tag light"><svg><use href="#i-doc"/></svg>AI 合同审查</span>
+        <h2>AI 合同风险雷达</h2>
+        <p>上传合同 / 协议或粘贴全文，AI 逐条扫描风险条款，输出风险评分、风险明细与修改建议、法律依据。</p>
+      </div>
+      <div class="th-flow">
+        <span class="on">① 上传 / 粘贴</span><i></i>
+        <span>② 风险扫描</span><i></i>
+        <span>③ 逐条报告</span><i></i>
+        <span>④ 下载建议</span>
       </div>
     </div>
 
     <!-- 阶段1：上传 -->
     <div id="stage-upload">
-      <div class="upload-zone" id="uploadZone">
-        <span class="up-ico">📂</span>
-        <h4>拖拽文件到这里，或点击选择文件</h4>
-        <p>支持 PDF / Word / 图片 / TXT，浏览器本地抽取文字后交给 DeepSeek 分析</p>
-        <span class="formats">PDF · DOCX · JPG · PNG · WEBP · TXT（≤20MB）</span>
-        <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,.md">
-      </div>
-      <div class="file-chip" id="fileChip">
-        <span class="f-ico">📄</span>
-        <div style="min-width:0">
-          <div class="f-name" id="fileName"></div>
-          <div class="f-meta" id="fileMeta"></div>
+      <div class="split-2">
+        <div class="up-col">
+          <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="上传合同文件">
+            <svg class="uz-ico"><use href="#i-upload"/></svg>
+            <h4>拖拽文件到这里，或点击选择文件</h4>
+            <p>浏览器本地抽取文字后交给 AI 分析，文件不会上传服务器（演示环境由本机处理）</p>
+            <span class="formats">PDF · DOCX · JPG · PNG · WEBP · TXT（≤20MB）</span>
+            <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,.md">
+          </div>
+          <div class="file-chip" id="fileChip">
+            <span class="f-ico"><svg><use href="#i-doc"/></svg></span>
+            <div class="f-main">
+              <div class="f-name" id="fileName"></div>
+              <div class="f-meta" id="fileMeta"></div>
+            </div>
+            <button class="f-rm" id="fileRemove" aria-label="移除文件"><svg><use href="#i-close"/></svg></button>
+          </div>
+          <button class="btn big" id="scanBtn" disabled>开始风险扫描</button>
+          <div class="hint"><svg><use href="#i-info"/></svg>PDF / Word / 图片 / TXT 均可由浏览器本地抽取文字后调用 AI 分析（首次需联网加载解析库）；未配置 AI 或解析失败时可查看「离线演示报告」体验完整流程。</div>
         </div>
-        <button class="f-rm" id="fileRemove">✕</button>
-      </div>
-      <div class="scan-actions">
-        <button class="btn" id="scanBtn">🚀 开始风险扫描</button>
-      </div>
-      <div class="paste-panel">
-        <div class="pp-head">或粘贴合同全文（DeepSeek 云端分析，输出风险评分 + 风险条款明细）</div>
-        <textarea id="contractText" spellcheck="false" placeholder="把合同条款全文粘贴到这里，例如《房屋租赁合同》逐条内容……"></textarea>
-        <div class="pp-row">
-          <button class="btn" id="txtScanBtn">🚀 AI 文本审查</button>
-          <button class="btn ghost" id="fillSampleBtn">📋 填入示例租房合同</button>
-          <span class="ds-status" id="dsStatusLine">检查中…</span>
+        <div class="paste-col">
+          <div class="pp-head">或粘贴合同全文 <small>AI 云端分析 · 输出评分 + 风险明细</small></div>
+          <textarea id="contractText" spellcheck="false" placeholder="把合同条款全文粘贴到这里，例如《房屋租赁合同》逐条内容……"></textarea>
+          <div class="pp-row">
+            <button class="btn" id="txtScanBtn">AI 文本审查</button>
+            <button class="btn ghost" id="fillSampleBtn">填入示例租房合同</button>
+            <span class="ds-status" id="dsStatusLine">检查中…</span>
+          </div>
         </div>
       </div>
-      <div class="scan-note">💡 说明：PDF / Word / 图片 / TXT 均可由浏览器本地抽取文字后再调用 DeepSeek 分析（需联网加载解析库，旧版 .doc 除外）；DeepSeek 未配置或审查失败时会显示「审查失败」提示，可手动查看离线演示报告。</div>
     </div>
 
     <!-- 阶段2：扫描动画 -->
     <div class="scan-panel" id="stage-scan">
       <div class="radar">
+        <div class="radar-core"><svg><use href="#i-shield"/></svg></div>
         <div class="radar-x"></div><div class="radar-y"></div>
       </div>
       <div class="scan-title">风险扫描中……</div>
@@ -222,13 +413,13 @@
     <!-- 阶段2.5：审查失败提示 -->
     <div class="review-fail" id="stage-fail">
       <div class="rf-box">
-        <div class="rf-ico">😥</div>
+        <div class="rf-ico"><svg><use href="#i-alert"/></svg></div>
         <h3>AI 审查失败</h3>
         <p class="rf-reason" id="failReason">DeepSeek 未能完成本次合同审查，请稍后重试。</p>
         <div class="rf-actions">
           <button class="btn" id="failRetryBtn">↻ 重新审查</button>
           <button class="btn ghost" id="failEditBtn">✏️ 返回修改文本</button>
-          <button class="btn ghost sm" id="failDemoBtn">🧪 查看离线演示报告</button>
+          <button class="btn ghost sm" id="failDemoBtn">查看离线演示报告</button>
         </div>
         <div class="rf-note">若持续失败：请检查网络连接、DeepSeek API Key 与账户余额，或将模型改用「deepseek-chat」后重试。<br>「离线演示报告」仅为效果展示，不代表本次审查结果。</div>
       </div>
@@ -236,10 +427,12 @@
 
     <!-- 阶段3：风险报告 -->
     <div class="report-panel" id="stage-report">
-      <div class="page-title">
-        <div class="line"></div>
-        <h2>审查报告</h2>
-        <span class="desc" id="reportMeta">已完成扫描 · 报告生成于 2026-09-08（演示数据）</span>
+      <div class="page-head compact">
+        <div>
+          <span class="ph-tag ok"><svg><use href="#i-check"/></svg>审查完成</span>
+          <h2>审查报告</h2>
+          <p id="reportMeta">已完成扫描 · 报告生成于演示环境</p>
+        </div>
         <span class="tag" id="reportTag">✅ 审查完成</span>
       </div>
 
@@ -253,21 +446,15 @@
             <div class="num"><b id="scoreNum">72</b><span>/ 100</span></div>
           </div>
           <div class="sb-copy">
-            <h3>合同综合风险得分</h3>
+            <span class="sb-label">合同综合风险得分</span>
+            <h3 id="scoreVerdict">🟠 建议：修改后再签约</h3>
             <p id="scoreCopy">合同存在一定风险，建议优先修改高、中风险条款后再签署</p>
-            <span class="verdict" id="scoreVerdict">🟠 建议：修改后再签约</span>
           </div>
         </div>
         <div class="stat-chips">
-          <div class="stat-chip high"><span class="s-ico">🔴</span>
-            <div><b>高风险</b></div>
-            <div class="s-num"><b id="highCnt">3</b><span class="s-lbl">处 · 必须修改</span></div></div>
-          <div class="stat-chip mid"><span class="s-ico">🟡</span>
-            <div><b>中风险</b></div>
-            <div class="s-num"><b id="midCnt">5</b><span class="s-lbl">处 · 建议修改</span></div></div>
-          <div class="stat-chip low"><span class="s-ico">🟢</span>
-            <div><b>低风险</b></div>
-            <div class="s-num"><b id="lowCnt">12</b><span class="s-lbl">处 · 优化建议</span></div></div>
+          <div class="stat-chip high"><span class="s-ico">🔴</span><div class="sc-t"><b>高风险</b><span>必须修改</span></div><div class="s-num"><b id="highCnt">3</b><span class="s-lbl">处</span></div></div>
+          <div class="stat-chip mid"><span class="s-ico">🟡</span><div class="sc-t"><b>中风险</b><span>建议修改</span></div><div class="s-num"><b id="midCnt">5</b><span class="s-lbl">处</span></div></div>
+          <div class="stat-chip low"><span class="s-ico">🟢</span><div class="sc-t"><b>低风险</b><span>优化建议</span></div><div class="s-num"><b id="lowCnt">12</b><span class="s-lbl">处</span></div></div>
         </div>
       </div>
 
@@ -296,91 +483,78 @@
 
       <div class="report-note" id="reportNote">* 演示报告基于示例租房合同模拟生成，仅展示关键条目；完整报告含全部 20 处提示。</div>
       <div class="report-actions">
-        <button class="btn" id="exportBtn">📥 导出审查报告</button>
+        <button class="btn" id="exportBtn"><svg><use href="#i-download"/></svg>导出审查报告</button>
         <button class="btn ghost" id="rescanBtn">↻ 重新扫描</button>
         <button class="btn ghost" id="reportAiBtn">💬 咨询 AI 助手</button>
       </div>
     </div>
-  </section>  
-  <!-- ================= 页面4：风险地图（功能演示版） ================= -->
+  </section>
+  <!-- ================= 线下法律服务地图 ================= -->
   <section class="page" id="page-map">
-    <div class="page-title">
-      <div class="line"></div>
-      <h2>🗺️ 法律风险地图</h2>
-      <span class="tag ok-tag">● 实时演示数据</span>
-      <span class="desc">高校周边法律纠纷热力驾驶舱：类型筛选 · 热点钻取 · 热力图 · 模拟实时刷新（演示环境为前端模拟数据）</span>
+    <div class="page-head">
+      <div>
+        <span class="ph-tag"><svg><use href="#i-pin"/></svg>线下法律服务地图</span>
+        <h2>呈贡大学城 · 法律服务与风险地图</h2>
+        <p>以高校片区为点位展示线下法律服务的分布与纠纷热点：类型筛选 · 点位钻取 · 热力分布 · 维权指引（演示环境为前端模拟数据，接入真实数据只需替换 JS 中的 MAP_DATA）。</p>
+      </div>
+      <span class="tag live" id="mtLive">● 演示数据 · 刚刚更新</span>
     </div>
 
     <!-- 顶部指标条 -->
-    <div class="stat-strip">
-      <div class="stat-mini"><span class="sm-ico">🗂️</span>
-        <div><b id="stTotal">1,284</b><span>本月收录纠纷（起）</span></div></div>
-      <div class="stat-mini"><span class="sm-ico">🔥</span>
-        <div><b id="stTop">租房纠纷</b><span id="stTopSub">高发类型 · 占比 36%</span></div></div>
-      <div class="stat-mini"><span class="sm-ico">🏫</span>
-        <div><b>6</b><span>覆盖高校片区</span></div></div>
-      <div class="stat-mini"><span class="sm-ico">📉</span>
-        <div><b id="stIdx">62</b><span>周风险指数（较上周 ↓8）</span></div></div>
+    <div class="stat-strip rv-wrap">
+      <div class="stat-mini"><span class="sm-ico">🗂️</span><div><b id="stTotal">1,284</b><span>本月收录纠纷（起）</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🔥</span><div><b id="stTop">租房纠纷</b><span id="stTopSub">高发类型 · 占比 36%</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">🏫</span><div><b>6</b><span>覆盖高校片区</span></div></div>
+      <div class="stat-mini"><span class="sm-ico">📉</span><div><b id="stIdx">62</b><span>周风险指数（较上周 ↓8）</span></div></div>
     </div>
 
     <!-- 地图 + 详情面板 -->
     <div class="card map-layout">
-      <!-- 左：地图画布 -->
       <div class="map-stage">
         <div class="map-toolbar2">
-          <span class="mt-title">📍 昆明呈贡大学城 · 高校纠纷分布</span>
-          <span class="mt-live2" id="mtLive">● 实时演示 · 刚刚更新</span>
+          <span class="mt-title">📍 昆明呈贡大学城 · 高校片区法律服务 / 纠纷分布</span>
         </div>
         <div class="map-canvas2" id="mapCanvas">
-          <!-- 装饰底图（道路/水域/绿地） -->
+          <!-- 装饰底图（道路/水域/绿地，占位示意） -->
           <svg class="map-bg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
             <defs>
               <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#7dd3fc"/>
+                <stop offset="0" stop-color="#c7d2fe"/><stop offset="1" stop-color="#a5b4fc"/>
               </linearGradient>
             </defs>
-            <!-- 水域 -->
-            <ellipse cx="150" cy="500" rx="180" ry="90" fill="#dbeafe" opacity=".9"/>
-            <path d="M -20 470 C 220 380 420 520 700 430 C 820 390 900 330 1030 300"
-              stroke="url(#river)" stroke-width="34" fill="none" stroke-linecap="round" opacity=".55"/>
-            <!-- 绿地 -->
-            <ellipse cx="860" cy="120" rx="150" ry="80" fill="#dcfce7" opacity=".9"/>
-            <ellipse cx="330" cy="120" rx="120" ry="70" fill="#e6f7ec" opacity=".8"/>
-            <!-- 主干道 -->
+            <ellipse cx="150" cy="500" rx="180" ry="90" fill="#eef2ff" opacity=".9"/>
+            <path d="M -20 470 C 220 380 420 520 700 430 C 820 390 900 330 1030 300" stroke="url(#river)" stroke-width="34" fill="none" stroke-linecap="round" opacity=".5"/>
+            <ellipse cx="860" cy="120" rx="150" ry="80" fill="#ecfdf5" opacity=".9"/>
+            <ellipse cx="330" cy="120" rx="120" ry="70" fill="#f0fdf4" opacity=".8"/>
             <path d="M 0 300 H 1030" stroke="#ffffff" stroke-width="16"/>
-            <path d="M 0 300 H 1030" stroke="#e9eef6" stroke-width="12"/>
+            <path d="M 0 300 H 1030" stroke="#eef1f8" stroke-width="12"/>
             <path d="M 500 0 V 640" stroke="#ffffff" stroke-width="16"/>
-            <path d="M 500 0 V 640" stroke="#e9eef6" stroke-width="12"/>
-            <path d="M 120 0 V 640" stroke="#f1f5fb" stroke-width="9"/>
-            <path d="M 0 120 H 1030" stroke="#f1f5fb" stroke-width="9"/>
-            <path d="M 0 470 H 1030" stroke="#f1f5fb" stroke-width="9"/>
-            <!-- 行政片区名 -->
-            <text x="78" y="96" font-size="17" fill="#b3c0d6">吴家营街道</text>
-            <text x="600" y="96" font-size="17" fill="#b3c0d6">雨花街道</text>
-            <text x="150" y="600" font-size="17" fill="#b3c0d6">斗南片区</text>
-            <text x="640" y="600" font-size="17" fill="#b3c0d6">昆明南站</text>
+            <path d="M 500 0 V 640" stroke="#eef1f8" stroke-width="12"/>
+            <path d="M 120 0 V 640" stroke="#f5f6fb" stroke-width="9"/>
+            <path d="M 0 120 H 1030" stroke="#f5f6fb" stroke-width="9"/>
+            <path d="M 0 470 H 1030" stroke="#f5f6fb" stroke-width="9"/>
+            <text x="78" y="96" font-size="17" fill="#aab4d0">吴家营街道</text>
+            <text x="600" y="96" font-size="17" fill="#aab4d0">雨花街道</text>
+            <text x="150" y="600" font-size="17" fill="#aab4d0">斗南片区</text>
+            <text x="640" y="600" font-size="17" fill="#aab4d0">昆明南站</text>
           </svg>
-          <!-- 热力光晕层 -->
           <div class="heat-layer" id="heatLayer"></div>
-          <!-- 片区热点层（JS 渲染） -->
           <div class="pin-layer" id="pinLayer"></div>
           <div class="map-empty" id="mapEmpty" style="display:none">😕 当前筛选无命中片区，试试其他类型</div>
         </div>
-        <!-- 地图底部：类型筛选 + 工具 -->
         <div class="map-foot">
           <div class="type-chips" id="typeChips">
             <button class="t-chip on" data-t="all">全部</button>
             <button class="t-chip rent" data-t="rent"><i class="dot" style="background:#ef4444"></i>租房</button>
-            <button class="t-chip job" data-t="job"><i class="dot" style="background:#f59e0b"></i>兼职/就业</button>
-            <button class="t-chip consume" data-t="consume"><i class="dot" style="background:#10b981"></i>消费/培训</button>
-            <button class="t-chip person" data-t="person"><i class="dot" style="background:#8b5cf6"></i>人身/其他</button>
+            <button class="t-chip job" data-t="job"><i class="dot" style="background:#d97706"></i>兼职 / 就业</button>
+            <button class="t-chip consume" data-t="consume"><i class="dot" style="background:#059669"></i>消费 / 培训</button>
+            <button class="t-chip person" data-t="person"><i class="dot" style="background:#7c3aed"></i>人身 / 其他</button>
           </div>
           <div class="map-tools">
             <button class="mt-btn" id="heatBtn">🔥 热力：开</button>
             <button class="mt-btn" id="refreshBtn">⟳ 模拟刷新</button>
           </div>
         </div>
-        <!-- 类型占比条 -->
         <div class="type-bar-wrap">
           <span class="tb-cap" id="tbCap">本月类型占比</span>
           <div class="type-bar" id="typeBar"></div>
@@ -388,26 +562,33 @@
         </div>
       </div>
 
-      <!-- 右：片区总览 / 热点详情面板（JS 渲染） -->
-      <aside class="detail-panel" id="detailPanel"></aside>
+      <!-- 右侧：片区总览 / 点位详情（JS 渲染） -->
+      <aside class="detail-panel" id="detailPanel" aria-label="地图详情面板"></aside>
     </div>
 
-    <div class="section-note">🧪 本页为「功能演示版」：以昆明呈贡大学城为背景、云南大学为中心片区，地图与纠纷统计均为前端模拟数据，用于展示交互与信息架构；接入真实数据时只需替换 JS 中的 MAP_DATA（详见代码注释）。</div>
+    <div class="disclaimer soft"><svg><use href="#i-info"/></svg><span>本页为「功能演示版」：以昆明呈贡大学城为背景、云南大学为中心片区，点位与纠纷统计均为前端模拟数据，用于演示交互与信息架构；点击地图点位可查看该片区的类型构成、典型案例与维权指引。</span></div>
   </section>
-<!-- ================= 页面5：我的权益 ================= -->
+
+  <!-- ================= 证据急救 ================= -->
   <section class="page" id="page-rights">
-    <div class="page-title">
-      <div class="line"></div>
-      <h2>我的法律安全档案</h2>
-      <span class="desc">集中管理你的风险标签、证据材料与维权进度（证据材料已支持在本机真实上传保存）</span>
+    <div class="page-head">
+      <div>
+        <span class="ph-tag"><svg><use href="#i-archive"/></svg>证据急救</span>
+        <h2>证据清单 · 时间轴 · 一键证据链</h2>
+        <p>集中管理你的本机法律档案：风险标签、证据材料清单与维权进度；上传材料按时间轴自动串联，一键生成「时间—事项—材料」完整证据链。</p>
+      </div>
+      <div class="ph-aside rv-wrap">
+        <div class="pa-num"><b>6</b><span>类关键证据</span></div>
+        <div class="pa-num"><b>本机</b><span>加密本地保存</span></div>
+      </div>
     </div>
 
     <!-- 真实信息登录 -->
-    <div class="rights-login" id="rightsLogin">
+    <div class="rights-login card" id="rightsLogin">
       <div class="rl-hero">
-        <div class="rl-ico">🔐</div>
-        <div><b>我的法律档案 · 真实信息登录</b>
-          <span>仅保存在当前浏览器本机，不联网上传；登录后管理风险标签、证据材料与证据链</span></div>
+        <div class="rl-ico"><svg><use href="#i-user"/></svg></div>
+        <div><b>我的法律档案 · 本机登录</b>
+          <span>档案仅保存在当前浏览器本机（localStorage），不联网上传；登录后可管理风险标签、证据材料并生成证据链。请勿在公共设备填写真实敏感信息。</span></div>
       </div>
       <div class="rl-tabs">
         <button id="rlTabLogin">🔑 登录</button>
@@ -438,146 +619,227 @@
         <div class="rl-secure">🔒 说明：此为演示原型，档案仅保存在当前浏览器本机（localStorage），请勿在公共设备上填写真实敏感信息；正式产品应采用加密存储与实名认证。</div>
       </div>
     </div>
+
     <div id="rightsContent" style="display:none">
-    <!-- 身份卡片 -->
-    <div class="profile-card">
-      <div class="pf-avatar">🎓</div>
-      <div class="pf-copy">
-        <div class="pf-name" id="pfName">同学，你好 👋</div>
-        <div class="pf-role">
-          当前身份：<span class="role-tag" id="pfRoleTag">应届毕业生</span>
-          <span id="pfExtra">毕业城市：昆明 · 档案最近更新：今天</span>
+      <!-- 身份卡片 -->
+      <div class="profile-card">
+        <div class="pf-avatar"><svg><use href="#i-user"/></svg></div>
+        <div class="pf-copy">
+          <div class="pf-name" id="pfName">同学，你好 👋</div>
+          <div class="pf-role">当前身份：<span class="role-tag" id="pfRoleTag">应届毕业生</span><span id="pfExtra">毕业城市：昆明 · 档案最近更新：今天</span></div>
+          <div class="pf-tags">
+            <span class="pf-tag">🏫 <span id="pfSchool">—</span></span>
+            <span class="pf-tag">🎓 <span id="pfSid">—</span></span>
+            <button class="pf-logout" id="pfLogoutBtn">退出登录</button>
+          </div>
         </div>
-        <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <span class="pf-tag">🏫 <span id="pfSchool">—</span></span>
-          <span class="pf-tag">🎓 <span id="pfSid">—</span></span>
-          <button class="pf-logout" id="pfLogoutBtn">退出登录</button>
+        <div class="pf-score">
+          <b>68<small>%</small></b>
+          <span>档案完整度</span>
+          <div class="pf-bar"><i></i></div>
+          <span class="pf-tip">补齐证据材料可提升</span>
         </div>
       </div>
-      <div class="pf-score">
-        <b>68<small style="font-size:16px">%</small></b>
-        <span>档案完整度</span>
-        <div class="pf-bar"><i></i></div>
-        <span style="font-size:11px">补齐证据材料可提升</span>
-      </div>
-    </div>
 
-    <!-- 风险标签 -->
-    <div class="card">
-      <div class="card-title">🏷️ 我的风险标签 <small>按关注度排序 · 点击可跳转处理</small></div>
-      <div class="risk-tags">
-        <button class="risk-tag red" data-nav="page-review">
-          <span class="rt-dot"></span>🔴 就业合同 <small>试用期/违约金 待审查</small><span class="go2">→</span>
-        </button>
-        <button class="risk-tag yellow" data-nav="page-ai" data-q="房东扣押金，我该怎么办？">
-          <span class="rt-dot"></span>🟡 租房 <small>押金条款 重点关注</small><span class="go2">→</span>
-        </button>
-        <button class="risk-tag green" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？">
-          <span class="rt-dot"></span>🟢 兼职 <small>证据已整理 保持关注</small><span class="go2">→</span>
-        </button>
+      <!-- 风险标签 -->
+      <div class="card">
+        <div class="card-title">🏷️ 我的风险标签 <small>按关注度排序 · 点击可跳转处理</small></div>
+        <div class="risk-tags rv-wrap">
+          <button class="risk-tag red" data-nav="page-review"><span class="rt-dot"></span>🔴 就业合同 <small>试用期 / 违约金 待审查</small><span class="go2">→</span></button>
+          <button class="risk-tag yellow" data-nav="page-ai" data-q="房东扣押金，我该怎么办？"><span class="rt-dot"></span>🟡 租房 <small>押金条款 重点关注</small><span class="go2">→</span></button>
+          <button class="risk-tag green" data-nav="page-ai" data-q="兼职/实习欠薪，我该怎么办？"><span class="rt-dot"></span>🟢 兼职 <small>证据已整理 保持关注</small><span class="go2">→</span></button>
+        </div>
       </div>
-    </div>
 
-        <!-- 证据材料 -->
-    <div class="card">
-      <div class="card-title">📁 我的证据材料 <small>保存在本机浏览器 · 共 <b id="evCount">0</b> 份</small></div>
-      <div class="ev-empty" id="evEmpty" style="display:none">
-        <div class="ev-empty-ico">🗂️</div>
-        <p>还没有证据材料<br>上传后保存在本机浏览器，刷新页面不丢失</p>
-      </div>
-      <div class="evidence-grid" id="evGrid"></div>
-      <div class="ev-uploadbar">
-        <input type="file" id="evFiles" hidden multiple
-               accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.zip,.rar,.7z,.jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.mp4,.mov">
-        <button class="upload-new" id="evAddBtn">＋ 选择文件上传证据材料</button>
-      </div>
-      <div class="ev-form" id="evForm" style="display:none">
-        <div class="ev-form-head">确认保存 <span id="evPendingCount">0</span> 份材料</div>
-        <div class="ev-form-row">
-          <select id="evCat">
-            <option value="合同">📄 合同 / 协议</option>
-            <option value="聊天记录">💬 聊天记录</option>
-            <option value="转账/工资">💰 转账 / 工资流水</option>
-            <option value="照片/视频">📸 照片 / 视频</option>
-            <option value="录音">🎙️ 录音</option>
-            <option value="其他">🗂️ 其他</option>
-          </select>
-          <input id="evNote" type="text" placeholder="备注（可选），如：2026-08 押金转账截图" maxlength="80">
+      <!-- 证据清单 -->
+      <div class="card">
+        <div class="card-title">📁 证据清单 <small>保存在本机浏览器 · 共 <b id="evCount">0</b> 份</small></div>
+        <div class="ev-empty" id="evEmpty" style="display:none">
+          <div class="ev-empty-ico"><svg><use href="#i-archive"/></svg></div>
+          <p>还没有证据材料<br>上传后保存在本机浏览器，刷新页面不丢失</p>
         </div>
-        <div class="ev-pending" id="evPending"></div>
-        <div class="ev-form-actions">
-          <button class="btn sm" id="evSaveBtn">💾 保存到本机</button>
-          <button class="btn ghost sm" id="evCancelBtn">取消</button>
+        <div class="evidence-grid" id="evGrid"></div>
+        <div class="ev-uploadbar">
+          <input type="file" id="evFiles" hidden multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.zip,.rar,.7z,.jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.mp4,.mov">
+          <button class="upload-new" id="evAddBtn"><svg><use href="#i-plus"/></svg>选择文件上传证据材料</button>
         </div>
-        <div class="ev-secure">🔒 仅保存在当前浏览器本机（localStorage），不会上传到任何服务器；演示版单份 ≤ 2MB、总量约 ≤ 4MB，超出请压缩或只传关键截图。请勿在公共设备上传敏感材料，并保留原件。</div>
+        <div class="ev-form" id="evForm" style="display:none">
+          <div class="ev-form-head">确认保存 <span id="evPendingCount">0</span> 份材料</div>
+          <div class="ev-form-row">
+            <select id="evCat">
+              <option value="合同">📄 合同 / 协议</option>
+              <option value="聊天记录">💬 聊天记录</option>
+              <option value="转账/工资">💰 转账 / 工资流水</option>
+              <option value="照片/视频">📸 照片 / 视频</option>
+              <option value="录音">🎙️ 录音</option>
+              <option value="其他">🗂️ 其他</option>
+            </select>
+            <input id="evNote" type="text" placeholder="备注（可选），如：2026-08 押金转账截图" maxlength="80">
+          </div>
+          <div class="ev-pending" id="evPending"></div>
+          <div class="ev-form-actions">
+            <button class="btn sm" id="evSaveBtn">💾 保存到本机</button>
+            <button class="btn ghost sm" id="evCancelBtn">取消</button>
+          </div>
+          <div class="ev-secure">🔒 仅保存在当前浏览器本机（localStorage），不会上传到任何服务器；演示版单份 ≤ 2MB、总量约 ≤ 4MB，超出请压缩或只传关键截图。请勿在公共设备上传敏感材料，并保留原件。</div>
+        </div>
       </div>
-    </div>
 
-    <!-- 证据链汇总 -->
-    <div class="card">
-      <div class="card-title">🔗 证据链汇总 <small>汇总已上传证据，一键生成完整证据链</small></div>
-      <p class="chain-desc">根据你本机已保存的证据，自动生成“时间—事项—材料”衔接完整的证据链，并提示待补充的关键材料。</p>
-      <div class="ev-chainbar">
-        <button class="btn" id="evChainBtn">🔗 汇总并生成证据链</button>
-        <button class="btn ghost" id="evExportTxtBtn">📄 导出证据链文本</button>
-      </div>
-      <div class="ev-chain-panel" id="evChainPanel" style="display:none">
-        <div class="chain-head">
-          <div><b id="chainStat">—</b><span>材料与环节</span></div>
-          <div><b id="chainScore">0%</b><span>证据链完整度</span></div>
-          <div><b id="chainSpan">—</b><span>时间跨度</span></div>
+      <!-- 时间轴 / 证据链汇总 -->
+      <div class="card">
+        <div class="card-title">🕐 时间轴 · 证据链汇总 <small>汇总已上传证据，一键生成完整证据链</small></div>
+        <p class="chain-desc">根据你本机已保存的证据，自动生成「时间—事项—材料」衔接完整的证据链与时间轴，并提示待补充的关键材料。</p>
+        <div class="ev-chainbar">
+          <button class="btn" id="evChainBtn">🔗 汇总并生成证据链</button>
+          <button class="btn ghost" id="evExportTxtBtn">📄 导出证据链文本</button>
         </div>
-        <div class="chain-cov">
-          <div class="chain-cov-t">关键材料覆盖 <span id="chainCovTxt">0 / 6</span></div>
-          <div class="chain-cov-bar"><i id="chainCovBar"></i></div>
-          <div class="chain-cov-tags" id="chainCovTags"></div>
+        <div class="ev-chain-panel" id="evChainPanel" style="display:none">
+          <div class="chain-head">
+            <div><b id="chainStat">—</b><span>材料与环节</span></div>
+            <div><b id="chainScore">0%</b><span>证据链完整度</span></div>
+            <div><b id="chainSpan">—</b><span>时间跨度</span></div>
+          </div>
+          <div class="chain-cov">
+            <div class="chain-cov-t">关键材料覆盖 <span id="chainCovTxt">0 / 6</span></div>
+            <div class="chain-cov-bar"><i id="chainCovBar"></i></div>
+            <div class="chain-cov-tags" id="chainCovTags"></div>
+          </div>
+          <div class="chain-timeline" id="chainTimeline"></div>
+          <div class="chain-narrative" id="chainNarrative"></div>
+          <div class="chain-missing" id="chainMissing" style="display:none"></div>
+          <div class="chain-foot">🔒 证据链仅基于本机已保存材料生成，用于梳理与演示；正式维权请保留原件，并在需要时咨询 12348 法律援助热线。</div>
         </div>
-        <div class="chain-timeline" id="chainTimeline"></div>
-        <div class="chain-narrative" id="chainNarrative"></div>
-        <div class="chain-missing" id="chainMissing" style="display:none"></div>
-        <div class="chain-foot">🔒 证据链仅基于本机已保存材料生成，用于梳理与演示；正式维权请保留原件，并在需要时咨询 12348 法律援助热线。</div>
       </div>
-    </div>
-<!-- 法援通道 -->
-    <div class="card">
-      <div class="card-title">🆘 法援通道 <small>关键时刻，找对地方</small></div>
-      <div class="legal-line">
-        <span class="ll-ico">📞</span>
-        <b>12348 法律援助热线</b>
-        <span>全国法律援助咨询热线，遇到拿不准的问题先打这个电话（演示环境不真实拨打）</span>
-        <button class="btn sm" id="callBtn">拨打电话</button>
+
+      <!-- 法援通道 -->
+      <div class="card">
+        <div class="card-title">🆘 法援通道 <small>关键时刻，找对地方</small></div>
+        <div class="legal-line">
+          <span class="ll-ico"><svg><use href="#i-phone"/></svg></span>
+          <div class="ll-copy"><b>12348 法律援助热线</b><span>全国法律援助咨询热线，遇到拿不准的问题先打这个电话（演示环境不真实拨打）</span></div>
+          <button class="btn sm" id="callBtn">拨打电话</button>
+        </div>
+        <div class="legal-line">
+          <span class="ll-ico"><svg><use href="#i-pin"/></svg></span>
+          <div class="ll-copy"><b>高校法律援助中心 / 调解站点</b><span>多数高校设有法律援助中心 / 法援社团，可预约免费咨询；也可前往服务地图查看附近点位</span></div>
+          <button class="btn ghost sm" id="clinicBtn" data-nav="page-map">查找最近站点</button>
+        </div>
+        <div class="section-note">提示：证据材料仅保存在当前浏览器本机（localStorage），建议保留原件并定期导出备份；法援通道为演示指引。</div>
       </div>
-      <div class="legal-line">
-        <span class="ll-ico">🏛️</span>
-        <b>高校法律援助中心</b>
-        <span>多数高校设有法律援助中心 / 法援社团，可预约免费咨询（演示）</span>
-        <button class="btn ghost sm" id="clinicBtn">查找最近站点</button>
-      </div>
-      <div class="section-note">提示：证据材料仅保存在当前浏览器本机（localStorage），建议保留原件并定期导出备份；法援通道为演示指引。</div>
-    </div>
     </div>
   </section>
+  <!-- ================= 关于我们 ================= -->
+  <section class="page" id="page-about">
+    <div class="page-head center">
+      <span class="ph-tag"><svg><use href="#i-info"/></svg>关于我们</span>
+      <h2>让法律守护，与大学生的成长同行</h2>
+      <p>法护启航（AI 赋能大学生全周期法律风险防护平台）——源自呈贡大学城的一次公益探索。</p>
+    </div>
 
-</div><!-- /app -->
+    <!-- 背景与调研 -->
+    <div class="about-grid rv-wrap">
+      <article class="about-card">
+        <div class="ac-head"><span class="ac-ico c1"><svg><use href="#i-book"/></svg></span><h3>项目背景</h3></div>
+        <p>大学生在租房、兼职、实习、消费与网络生活中高频暴露于法律风险，却普遍面临「不知道风险在哪、不知道证据怎么留、不知道找谁帮忙」的困境。呈贡大学城聚集多所高校、数万名学生，群体需求集中且典型。</p>
+        <p>「法护启航」以公益为出发点，尝试用 AI 降低法律服务的获取门槛：把专业法律知识转化为可自测、可问答、可审查、可操作的数字化工具，陪伴学生走完「签约前—履约中—纠纷后」的完整周期。</p>
+      </article>
+      <article class="about-card">
+        <div class="ac-head"><span class="ac-ico c2"><svg><use href="#i-search"/></svg></span><h3>项目调研</h3></div>
+        <p>前期围绕呈贡大学城大学生开展问卷与访谈（示例样本：在校本科生、研究生及应届毕业生），初步了解到的痛点包括：</p>
+        <ul class="about-list">
+          <li>近半数受访者在租房 / 兼职中「没细看就签了字」</li>
+          <li>多数人遭遇纠纷时「不知道去哪维权、先找谁」</li>
+          <li>「怕麻烦、怕花钱、怕被报复」是放弃维权的主因</li>
+          <li>对 12348、高校法援中心等免费渠道知晓度不足</li>
+        </ul>
+        <p class="mini-note">（上述为原型示例数据，正式版以实际调研报告为准，已在产品内标注「演示数据」。）</p>
+      </article>
+    </div>
 
-<!-- ================= 底部固定导航（5 个按钮） ================= -->
-<nav class="bottomnav">
-  <button class="nav-item active" data-page="page-home"><span class="ico">🏠</span>首页</button>
-  <button class="nav-item" data-page="page-ai"><span class="ico">🤖</span>AI助手</button>
-  <button class="nav-item" data-page="page-review"><span class="ico">🛡️</span>合同审查</button>
-  <button class="nav-item" data-page="page-map"><span class="ico">🗺️</span>风险地图</button>
-  <button class="nav-item" data-page="page-rights"><span class="ico">👤</span>我的权益</button>
+    <!-- 服务模式 -->
+    <div class="card">
+      <div class="card-title">🧭 服务模式：全周期四步防护</div>
+      <div class="mode-steps rv-wrap">
+        <div class="ms"><span class="ms-no">01</span><b>预防</b><p>AI 风险测评与科普，签约前识别陷阱</p></div>
+        <div class="ms"><span class="ms-no">02</span><b>审查</b><p>合同智能审查，逐条风险提示与修改建议</p></div>
+        <div class="ms"><span class="ms-no">03</span><b>取证</b><p>证据清单与时间轴，生成完整证据链</p></div>
+        <div class="ms"><span class="ms-no">04</span><b>救济</b><p>维权路径导航 + 线下法律服务地图 + 12348</p></div>
+      </div>
+    </div>
+
+    <!-- 团队信息 -->
+    <div class="sec-title"><span class="bar"></span><div><h2>团队信息</h2><p>跨专业协作 · 法律 + 技术 + 设计 + 公益运营</p></div></div>
+    <div class="team-grid rv-wrap">
+      <div class="team-card"><span class="tc-role">项目统筹</span><h4>项目负责人</h4><p>整体规划、进度管理、调研组织与对外协调</p></div>
+      <div class="team-card"><span class="tc-role">法律内容</span><h4>法务组</h4><p>场景梳理、法条校对、回答口径与合规把关</p></div>
+      <div class="team-card"><span class="tc-role">产品与技术</span><h4>研发组</h4><p>AI 接入、前端开发、交互原型与数据可视化</p></div>
+      <div class="team-card"><span class="tc-role">视觉与传播</span><h4>设计组</h4><p>UI / 品牌设计、文案与校园公益推广</p></div>
+    </div>
+
+    <!-- 合规声明 -->
+    <div class="disclaimer"><svg><use href="#i-alert"/></svg><span><b>合规与免责声明：</b>本项目为高校公益方向的前端原型，不提供收费法律服务；站内 AI 回答、测评结果、合同审查报告与地图数据仅用于学习与演示，不构成法律意见或对具体案件的处理承诺。正式使用前须完成数据合规、内容审核与专业机构背书；重大事项请拨打 12348 或咨询执业律师。</span></div>
+  </section>
+
+</main>
+
+
+<!-- ================= 移动端底部导航 ================= -->
+<nav class="mbottom" id="mbottom" aria-label="移动端底部导航">
+  <button class="nav-item active" data-page="page-home"><svg class="mb-ic"><use href="#i-home"/></svg><span>首页</span></button>
+  <button class="nav-item" data-page="page-quiz"><svg class="mb-ic"><use href="#i-radar"/></svg><span>AI测评</span></button>
+  <button class="nav-item" data-page="page-review"><svg class="mb-ic"><use href="#i-doc"/></svg><span>AI审查</span></button>
+  <button class="nav-item" data-page="page-ai"><svg class="mb-ic"><use href="#i-chat"/></svg><span>咨询</span></button>
+  <button class="mb-more" id="moreBtn" aria-label="全部功能"><svg class="mb-ic"><use href="#i-grid"/></svg><span>更多</span></button>
 </nav>
+<div class="sheet-mask" id="sheetMask"></div>
+<aside class="sheet" id="sheet" aria-label="全部功能">
+  <div class="sheet-head">
+    <b>全部功能</b>
+    <button class="sheet-close" id="sheetClose" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <div class="sheet-list">
+    <button class="nav-item" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg><span>首页</span></button>
+    <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg><span>AI 风险测评</span></button>
+    <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg><span>AI 合同审查</span></button>
+    <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg><span>维权导航</span></button>
+    <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg><span>线下法律服务地图</span></button>
+    <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg><span>证据急救</span></button>
+    <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg><span>关于我们</span></button>
+  </div>
+  <div class="sheet-foot">公益演示原型 · AI 回答不构成法律意见<br>紧急法律问题请拨打 <b>12348</b></div>
+</aside>
+
+<!-- ================= 页脚 ================= -->
+<footer class="site-foot">
+  <div class="wrap foot-in">
+    <div class="foot-brand">
+      <span class="brand-mark small"><svg><use href="#i-shield"/></svg></span>
+      <div><b>法护启航</b><p>AI 赋能大学生全周期法律风险防护平台 · 面向呈贡大学城</p></div>
+    </div>
+    <div class="foot-links">
+<button class="nav-item" data-page="page-quiz">AI 风险测评</button>
+<button class="nav-item" data-page="page-review">AI 合同审查</button>
+<button class="nav-item" data-page="page-ai">维权导航</button>
+<button class="nav-item" data-page="page-map">服务地图</button>
+<button class="nav-item" data-page="page-rights">证据急救</button>
+</div>
+    <div class="foot-note">
+      <p>⚠️ 本站为公益演示原型，AI 回答与数据不构成法律意见。</p>
+      <p>紧急法律问题请拨打 <b>12348</b> 法律援助热线 · 消费投诉 <b>12315</b> · 劳动监察 <b>12333</b></p>
+      <p>© 2026 法护启航项目组 · 仅用于学习交流</p>
+    </div>
+  </div>
+</footer>
 
 <!-- ===== AI 模型接入设置（DeepSeek） ===== -->
 <div class="modal-mask" id="aiModal">
   <div class="ai-modal">
     <div class="am-head">
       <div>
-        <h3>⚙️ AI 模型接入设置</h3>
-        <p>将 AI 法律助手接入 DeepSeek 大模型（OpenAI 兼容接口）</p>
+        <h3>AI 模型接入设置</h3>
+        <p>将 AI 法律助手与合同审查接入 DeepSeek 大模型（OpenAI 兼容接口）</p>
       </div>
-      <button class="am-close" id="aiModalClose">✕</button>
+      <button class="am-close" id="aiModalClose" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
     </div>
     <div class="mode-seg" id="modeSeg">
       <button class="seg-btn" data-mode="demo">🧪 离线演示模式</button>
@@ -606,8 +868,67 @@
     </div>
   </div>
 </div>
+
 <!-- Toast -->
 <div class="toast-wrap" id="toastWrap"></div>
 <script src="./app.js"></script>
+<script>
+/* 移动端导航（纯 UI，不影响 app.js 页面切换逻辑） */
+(function(){
+  var mask = document.getElementById('mnavMask');
+  var nav = document.getElementById('mnav');
+  var open = document.getElementById('navToggle');
+  var close = document.getElementById('mnavClose');
+  function setNav(on){
+    nav.classList.toggle('on', on);
+    mask.classList.toggle('on', on);
+    document.body.classList.toggle('menu-open', on);
+  }
+  if (open) open.addEventListener('click', function(){ setNav(true); });
+  if (close) close.addEventListener('click', function(){ setNav(false); });
+  if (mask) mask.addEventListener('click', function(){ setNav(false); });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.nav-item');
+    if (t && nav.classList.contains('on')) setNav(false);
+  });
+})();
+/* 滚动显现：容器进入视口后触发交错入场 */
+(function(){
+  var wraps = document.querySelectorAll('.rv-wrap');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    wraps.forEach(function(w){ io.observe(w); });
+  } else {
+    wraps.forEach(function(w){ w.classList.add('in'); });
+  }
+})();
+</script>
+
+<script>
+/* 移动端“全部功能”底部弹层（纯 UI） */
+(function(){
+  var more = document.getElementById('moreBtn');
+  var mask = document.getElementById('sheetMask');
+  var sheet = document.getElementById('sheet');
+  var close = document.getElementById('sheetClose');
+  function setSheet(on){
+    if (!sheet || !mask) return;
+    sheet.classList.toggle('on', on);
+    mask.classList.toggle('on', on);
+    document.body.classList.toggle('sheet-open', on);
+  }
+  if (more) more.addEventListener('click', function(){ setSheet(true); });
+  if (close) close.addEventListener('click', function(){ setSheet(false); });
+  if (mask) mask.addEventListener('click', function(){ setSheet(false); });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.nav-item');
+    if (t && sheet && sheet.classList.contains('on')) setSheet(false);
+  });
+})();
+</script>
 </body>
 </html>
