@@ -617,6 +617,27 @@ input{font-family:inherit}
 .chain-missing{background:#fff;border:1px dashed #fecaca;border-radius:12px;padding:9px 13px;margin-top:10px;
   font-size:12.5px;color:#7f1d1d;line-height:1.8}
 .chain-foot{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7}
+/* ============ 我的权益：真实信息登录 ============ */
+.rights-login{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.rl-hero{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.rl-hero .rl-ico{font-size:38px;width:64px;height:64px;border-radius:18px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#eef4ff,#e0f7ff)}
+.rl-hero b{font-size:18px;font-weight:900;display:block}
+.rl-hero span{font-size:12.5px;color:var(--muted)}
+.rl-tabs{display:flex;gap:8px;margin-bottom:16px}
+.rl-tabs button{flex:1;padding:10px;border-radius:11px;border:1.5px solid var(--line);background:#f8fafc;color:var(--slate);font-weight:700;font-size:13.5px;transition:.2s}
+.rl-tabs button.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.25)}
+.rl-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rl-form .full{grid-column:1/-1}
+.rl-field label{display:block;font-size:12px;font-weight:700;color:#475569;margin-bottom:5px}
+.rl-field input,.rl-field select{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;font-size:14px;background:#fff}
+.rl-field input:focus,.rl-field select:focus{border-color:#7ea4ff;outline:none}
+.rl-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.rl-secure{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.7}
+.pf-tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:2px 10px;border-radius:99px;font-size:11.5px;font-weight:600}
+.pf-logout{margin-left:auto;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:#fff;font-weight:700;
+  padding:4px 13px;border-radius:99px;font-size:12px;transition:.2s}
+.pf-logout:hover{background:#fff;color:#b91c1c}
 .legal-line{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#eef4ff,#f0f9ff);
   border:1px solid #d5e3ff;border-radius:16px;padding:15px 18px;margin-bottom:10px;flex-wrap:wrap}
 .legal-line .ll-ico{font-size:26px}
@@ -1229,14 +1250,56 @@ input{font-family:inherit}
       <span class="desc">集中管理你的风险标签、证据材料与维权进度（证据材料已支持在本机真实上传保存）</span>
     </div>
 
+    <!-- 真实信息登录 -->
+    <div class="rights-login" id="rightsLogin">
+      <div class="rl-hero">
+        <div class="rl-ico">🔐</div>
+        <div><b>我的法律档案 · 真实信息登录</b>
+          <span>仅保存在当前浏览器本机，不联网上传；登录后管理风险标签、证据材料与证据链</span></div>
+      </div>
+      <div class="rl-tabs">
+        <button id="rlTabLogin">🔑 登录</button>
+        <button id="rlTabReg">📝 首次录入 / 注册</button>
+      </div>
+      <div class="rl-form" id="rlLoginView">
+        <div class="rl-field full"><label>学号 / 工号</label><input id="rlSidLogin" autocomplete="username" placeholder="请输入注册时的学号"></div>
+        <div class="rl-field full"><label>登录密码</label><input id="rlPwdLogin" type="password" autocomplete="current-password" placeholder="请输入登录密码（≥6 位）"></div>
+        <div class="rl-actions">
+          <button class="btn" id="rlLoginBtn">🔑 登录</button>
+          <span class="rl-secure">还没有档案？切换到「首次录入 / 注册」，填写真实信息并设置密码。</span>
+        </div>
+      </div>
+      <div class="rl-form" id="rlRegView" style="display:none">
+        <div class="rl-field"><label>真实姓名</label><input id="rlName" placeholder="如：张三"></div>
+        <div class="rl-field"><label>所在高校</label><input id="rlSchool" placeholder="如：云南大学"></div>
+        <div class="rl-field"><label>学号 / 工号</label><input id="rlSid" autocomplete="username" placeholder="请输入学号"></div>
+        <div class="rl-field"><label>当前身份</label>
+          <select id="rlRole">
+            <option>应届毕业生</option><option>在校本科生</option><option>在校研究生</option><option>在职学生助理</option><option>其他</option>
+          </select></div>
+        <div class="rl-field"><label>设置登录密码（≥6 位）</label><input id="rlPwd" type="password" autocomplete="new-password" placeholder="设置密码"></div>
+        <div class="rl-field"><label>确认密码</label><input id="rlPwd2" type="password" autocomplete="new-password" placeholder="再次输入密码"></div>
+        <div class="rl-actions">
+          <button class="btn" id="rlRegBtn">✅ 录入并登录</button>
+          <button class="btn ghost" id="rlRegReset">清空重填</button>
+        </div>
+        <div class="rl-secure">🔒 说明：此为演示原型，档案仅保存在当前浏览器本机（localStorage），请勿在公共设备上填写真实敏感信息；正式产品应采用加密存储与实名认证。</div>
+      </div>
+    </div>
+    <div id="rightsContent" style="display:none">
     <!-- 身份卡片 -->
     <div class="profile-card">
       <div class="pf-avatar">🎓</div>
       <div class="pf-copy">
-        <div class="pf-name">同学，你好 👋</div>
+        <div class="pf-name" id="pfName">同学，你好 👋</div>
         <div class="pf-role">
-          当前身份：<span class="role-tag">应届毕业生</span>
-          <span>毕业城市：昆明 · 档案最近更新：今天</span>
+          当前身份：<span class="role-tag" id="pfRoleTag">应届毕业生</span>
+          <span id="pfExtra">毕业城市：昆明 · 档案最近更新：今天</span>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="pf-tag">🏫 <span id="pfSchool">—</span></span>
+          <span class="pf-tag">🎓 <span id="pfSid">—</span></span>
+          <button class="pf-logout" id="pfLogoutBtn">退出登录</button>
         </div>
       </div>
       <div class="pf-score">
@@ -1339,6 +1402,7 @@ input{font-family:inherit}
         <button class="btn ghost sm" id="clinicBtn">查找最近站点</button>
       </div>
       <div class="section-note">提示：证据材料仅保存在当前浏览器本机（localStorage），建议保留原件并定期导出备份；法援通道为演示指引。</div>
+    </div>
     </div>
   </section>
 
@@ -2940,6 +3004,99 @@ function evChainDownload(){
 }
 $('#evChainBtn').addEventListener('click', evChainRender);
 $('#evExportTxtBtn').addEventListener('click', evChainDownload);
+/* =========================================================
+   我的权益：真实信息登录（档案存于本机 localStorage）
+   ========================================================= */
+var PROFILE_KEY = 'fahq_profile_v1';
+var SESSION_KEY = 'fahq_session_v1';
+function rlHash(t){
+  var h = 5381, i, c = String(t == null ? '' : t);
+  for (i = 0; i < c.length; i++){ h = (((h << 5) + h) ^ c.charCodeAt(i)) & 0x7fffffff; }
+  return 'h' + h.toString(16);
+}
+function rlGetProfile(){ try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null'); } catch (e){ return null; } }
+function rlSaveProfile(p){ localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+function rlGetSession(){ try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e){ return null; } }
+function rlSetSession(s){ localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+function rlClearSession(){ localStorage.removeItem(SESSION_KEY); }
+function rlLoggedIn(){
+  var p = rlGetProfile(), s = rlGetSession();
+  return !!(p && s && p.sid === s.sid);
+}
+function rlFillProfile(){
+  var p = rlGetProfile();
+  if (!p) return;
+  var nm = $('#pfName'); if (nm) nm.textContent = p.name + '，你好 👋';
+  var rt = $('#pfRoleTag'); if (rt) rt.textContent = p.role || '应届毕业生';
+  var sd = $('#pfSid'); if (sd) sd.textContent = p.sid || '—';
+  var sc = $('#pfSchool'); if (sc) sc.textContent = p.school || '—';
+  var d = new Date();
+  var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var ex = $('#pfExtra'); if (ex) ex.textContent = '毕业城市：昆明 · 档案最近更新：' + today;
+}
+function rlApplyState(){
+  var ok = rlLoggedIn();
+  var lg = $('#rightsLogin'), ct = $('#rightsContent');
+  if (lg) lg.style.display = ok ? 'none' : 'block';
+  if (ct) ct.style.display = ok ? 'block' : 'none';
+  if (ok) rlFillProfile();
+  var tabs = $$('.rl-tabs button');
+  tabs.forEach(function(b){ b.classList.remove('on'); });
+  var hasProfile = !!rlGetProfile();
+  rlSetMode(hasProfile ? 'login' : 'reg');
+}
+function rlSetMode(view){
+  var lgTab = $('#rlTabLogin'), rgTab = $('#rlTabReg');
+  var lv = $('#rlLoginView'), rv = $('#rlRegView');
+  if (!lgTab || !lv) return;
+  lgTab.classList.toggle('on', view === 'login');
+  rgTab.classList.toggle('on', view === 'reg');
+  lv.style.display = view === 'login' ? 'grid' : 'none';
+  rv.style.display = view === 'reg' ? 'grid' : 'none';
+}
+$('#rlTabLogin').addEventListener('click', function(){ rlSetMode('login'); });
+$('#rlTabReg').addEventListener('click', function(){ rlSetMode('reg'); });
+$('#rlRegReset').addEventListener('click', function(){
+  ['rlName', 'rlSchool', 'rlSid', 'rlPwd', 'rlPwd2'].forEach(function(id){ $('#' + id).value = ''; });
+  $('#rlRole').selectedIndex = 0;
+});
+$('#rlRegBtn').addEventListener('click', function(){
+  var name = $('#rlName').value.trim();
+  var school = $('#rlSchool').value.trim();
+  var sid = $('#rlSid').value.trim();
+  var role = $('#rlRole').value;
+  var pwd = $('#rlPwd').value;
+  var pwd2 = $('#rlPwd2').value;
+  if (rlGetProfile()){ toast('本浏览器已存在真实档案，请使用「🔑 登录」；如需更换请先清除本机档案', false); rlSetMode('login'); return; }
+  if (name.length < 2){ toast('请填写真实姓名（至少 2 个字）', false); return; }
+  if (!school){ toast('请填写所在高校', false); return; }
+  if (!/^[A-Za-z0-9_-]{4,}$/.test(sid)){ toast('请填写有效的学号 / 工号（字母数字 4 位以上）', false); return; }
+  if (pwd.length < 6){ toast('密码至少 6 位', false); return; }
+  if (pwd !== pwd2){ toast('两次输入的密码不一致', false); return; }
+  var p = { name: name, school: school, sid: sid, role: role, pwdHash: rlHash(pwd), createdAt: new Date().toISOString() };
+  try { rlSaveProfile(p); } catch (e){ toast('本机存储失败：' + e.message, false); return; }
+  rlSetSession({ sid: sid, name: name, at: new Date().toISOString() });
+  rlApplyState();
+  toast('录入成功，已登录：' + name, true);
+});
+$('#rlLoginBtn').addEventListener('click', function(){
+  var p = rlGetProfile();
+  if (!p){ toast('还没有档案，请切换到「首次录入 / 注册」', false); return; }
+  var sid = $('#rlSidLogin').value.trim();
+  var pwd = $('#rlPwdLogin').value;
+  if (sid !== p.sid){ toast('学号不存在或输入有误', false); return; }
+  if (rlHash(pwd) !== p.pwdHash){ toast('密码错误，请重试', false); return; }
+  rlSetSession({ sid: p.sid, name: p.name, at: new Date().toISOString() });
+  rlApplyState();
+  toast('登录成功，欢迎回来：' + p.name, true);
+});
+$('#pfLogoutBtn').addEventListener('click', function(){
+  if (!confirm('确定退出登录吗？档案仍保存在本机，可再次用学号 + 密码登录。')) return;
+  rlClearSession();
+  rlApplyState();
+  toast('已退出登录', false);
+});
+rlApplyState();
 
 
 
