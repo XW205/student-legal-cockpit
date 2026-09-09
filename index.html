@@ -238,6 +238,8 @@ input{font-family:inherit}
 }
 .quiz-opt:hover{border-color:#7ea4ff;background:#f3f7ff;transform:translateX(3px)}
 .quiz-opt .m{color:#b9c6dc;font-weight:700}
+.quiz-dim{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:2px 0 16px}
+.qd-chip{font-size:12px;font-weight:700;padding:5px 12px;border-radius:99px;border:1.5px solid;background:#fff}
 .quiz-result{display:none;text-align:center;padding:12px 4px}
 .quiz-result.on{display:block}
 .quiz-result .r-emoji{font-size:56px;display:block;margin-bottom:6px}
@@ -925,7 +927,7 @@ input{font-family:inherit}
         <div class="quiz-icon">🧪</div>
         <div class="quiz-copy">
           <h4>30 秒测测你的法律风险</h4>
-          <p>4 道题快速定位你的签约风险等级，测完给出针对性建议（演示模拟）。</p>
+          <p>20 道题覆盖租房 / 兼职就业 / 合同消费 / 网络资金 / 纠纷维权，测完给出风险等级与分领域建议。</p>
         </div>
         <button class="btn" id="quizStart">开始测试 ⚡</button>
       </div>
@@ -933,7 +935,7 @@ input{font-family:inherit}
       <!-- 测试主体 -->
       <div class="quiz-body" id="quizBody">
         <div class="quiz-progress"><i id="quizBar"></i></div>
-        <div class="quiz-step" id="quizStep">题目 1 / 4</div>
+        <div class="quiz-step" id="quizStep">题目 1 / 20</div>
         <div class="quiz-q" id="quizQ"></div>
         <div class="quiz-opts" id="quizOpts"></div>
       </div>
@@ -943,6 +945,7 @@ input{font-family:inherit}
         <span class="r-emoji" id="qrEmoji">🟢</span>
         <h4 id="qrTitle">风险较低</h4>
         <p id="qrText"></p>
+        <div class="quiz-dim" id="qrDim"></div>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <button class="btn sm" id="qrAi">去咨询 AI 助手</button>
           <button class="btn ghost sm" id="qrAgain">重新测试</button>
@@ -1544,21 +1547,65 @@ $$('.hot-tag').forEach(function(b){
   });
 });
 
-/* ---------- 30 秒风险测试 ---------- */
+/* ---------- 20 题法律风险测评（更全面、按风险指数分级） ---------- */
+var QUIZ_DIMS = {
+  rent:     '🏠 租房',
+  job:      '💼 兼职 / 就业',
+  contract: '📄 合同 / 消费',
+  online:   '🔐 网络 / 资金安全',
+  rights:   '🛡️ 纠纷应对 / 证据'
+};
 var QUIZ = [
-  { q: '你最近一次签约的场景是？',
-    opts: [ { t: '🏠 租房（押金 / 退租）', p: 1 }, { t: '💼 实习 / 兼职劳动合同', p: 1 }, { t: '🛒 网购 / 培训等消费合同', p: 0 }, { t: '🙅 暂时还没签过', p: 0 } ] },
-  { q: '签约之前，你会认真看合同条款吗？',
-    opts: [ { t: '会，逐条读并保留备份', p: 0 }, { t: '大概扫一遍重点条款', p: 2 }, { t: '基本不看，直接签', p: 4 } ] },
-  { q: '合同里有“高额违约金 / 押金不退 / 可单方解除”这类条款时，你通常会？',
-    opts: [ { t: '没注意过，也不清楚', p: 2 }, { t: '看到了，但觉得只能接受', p: 3 }, { t: '会主动提出修改或要求解释', p: 0 } ] },
-  { q: '真遇到纠纷，你的第一反应是？',
-    opts: [ { t: '先查法规、固定证据再协商', p: 0 }, { t: '找老师 / 法援 / 12348 咨询', p: 0 }, { t: '先在网上发帖吐槽', p: 2 }, { t: '忍一忍算了，怕麻烦', p: 3 } ] }
+  { q: '租房时，你会怎么确认「押金退还条件」？', dim: 'rent',
+    opts: [ { t: '要求写进合同，并保留转账与聊天记录', p: 0 }, { t: '口头问清楚就行', p: 2 }, { t: '没提过，想着退房时再说', p: 3 } ] },
+  { q: '签租房合同时，关于「违约金 / 提前解约」条款你通常：', dim: 'rent',
+    opts: [ { t: '逐条阅读并争取双方对等', p: 0 }, { t: '看到了，但觉得只能接受', p: 2 }, { t: '没细看就签了', p: 3 } ] },
+  { q: '入住后发现房屋设施损坏，你会：', dim: 'rent',
+    opts: [ { t: '先拍照录像，再书面报修留痕', p: 0 }, { t: '口头告诉房东一声', p: 1 }, { t: '自己找人修，之后再扯皮', p: 3 } ] },
+  { q: '你对「中介 / 转租 / 二房东」的风险了解程度：', dim: 'rent',
+    opts: [ { t: '会核实产权与授权，只签正规合同', p: 0 }, { t: '知道要谨慎，但真正签约时较少核实', p: 2 }, { t: '不太了解，觉得没那么多坑', p: 3 } ] },
+  { q: '找兼职 / 实习前，你会核实招聘公司吗？', dim: 'job',
+    opts: [ { t: '用国家企业信用系统 / 企查查等核实主体', p: 0 }, { t: '基本相信招聘信息', p: 2 }, { t: '从不核实', p: 3 } ] },
+  { q: '遇到「先交押金 / 培训费 / 服装费再入职」，你会：', dim: 'job',
+    opts: [ { t: '直接拒绝，并怀疑是收费骗局', p: 0 }, { t: '金额不大就交了试试', p: 2 }, { t: '会按要求交钱', p: 3 } ] },
+  { q: '关于「试用期时长、试用期工资」的规定，你了解吗？', dim: 'job',
+    opts: [ { t: '清楚（有上限，且不得低于约定工资的 80%）', p: 0 }, { t: '大概知道一些', p: 1 }, { t: '不太了解', p: 3 } ] },
+  { q: '老板让你「先干着，合同以后再补」，你会：', dim: 'job',
+    opts: [ { t: '坚持签订书面合同，并保留工作记录', p: 0 }, { t: '先干着，之后再说', p: 2 }, { t: '无所谓，不签也没关系', p: 3 } ] },
+  { q: '签约前，你会重点查看哪些条款？', dim: 'contract',
+    opts: [ { t: '金额、违约金、退款、押金、单方解除与管辖', p: 0 }, { t: '只扫一遍金额和期限', p: 2 }, { t: '基本不看就直接签', p: 3 } ] },
+  { q: '合同里出现「高额违约金 / 押金不退 / 可单方解除」时，你会：', dim: 'contract',
+    opts: [ { t: '主动提出修改或要求对方解释', p: 0 }, { t: '看到了，但觉得只能接受', p: 2 }, { t: '从没留意过这类条款', p: 3 } ] },
+  { q: '面对网购 / 健身房 / 培训班「预付充值」，你会：', dim: 'contract',
+    opts: [ { t: '金额小、退费条款清楚才付', p: 0 }, { t: '优惠力度大就会多充', p: 2 }, { t: '金额再大也敢直接充', p: 3 } ] },
+  { q: '购物后想要退货退款却被拒绝，你通常：', dim: 'contract',
+    opts: [ { t: '先看平台规则并保留凭证再投诉', p: 0 }, { t: '口头争取一下，不行就算了', p: 2 }, { t: '直接放弃或去网上发泄', p: 3 } ] },
+  { q: '收到「刷单返利 / 中奖 / 注销校园贷」类消息，你会：', dim: 'online',
+    opts: [ { t: '直接不理会，必要时举报', p: 0 }, { t: '会点开看看再说', p: 2 }, { t: '有时会相信并按提示操作', p: 3 } ] },
+  { q: '关于验证码与支付密码，你的习惯是：', dim: 'online',
+    opts: [ { t: '绝不外泄，涉及转账先官方渠道核实', p: 0 }, { t: '看对方说得很急就可能给', p: 2 }, { t: '对方要就给', p: 3 } ] },
+  { q: '你会把身份证 / 银行卡照片随意发给他人吗？', dim: 'online',
+    opts: [ { t: '不会，个人信息只走正规渠道', p: 0 }, { t: '对方催得急时会给', p: 2 }, { t: '会给', p: 3 } ] },
+  { q: '关于「砍头息 / 高利贷 / 网贷套路」，你的了解程度：', dim: 'online',
+    opts: [ { t: '了解特征并能识别', p: 0 }, { t: '知道一点，但不深', p: 1 }, { t: '不太了解', p: 3 } ] },
+  { q: '真的发生纠纷时，你的第一反应是：', dim: 'rights',
+    opts: [ { t: '先固定证据，再协商或咨询', p: 0 }, { t: '先在网上发帖吐槽', p: 2 }, { t: '忍一忍算了，怕麻烦', p: 3 } ] },
+  { q: '发生纠纷后，你会保存哪些材料？', dim: 'rights',
+    opts: [ { t: '合同、转账、聊天、照片都留并整理时间线', p: 0 }, { t: '可能保留一部分', p: 1 }, { t: '基本不保留', p: 3 } ] },
+  { q: '你知道维权渠道的大致顺序吗？', dim: 'rights',
+    opts: [ { t: '清楚：协商 → 平台 / 12315 / 12333 → 12348 → 仲裁 / 诉讼', p: 0 }, { t: '大概知道', p: 2 }, { t: '不太清楚', p: 3 } ] },
+  { q: '你会给重要材料定期备份并保留原件吗？', dim: 'rights',
+    opts: [ { t: '会，重要文件都有备份', p: 0 }, { t: '偶尔会', p: 1 }, { t: '不会', p: 3 } ] }
 ];
 var quizScore = 0, quizIdx = 0;
-
+var quizDimScore = {};
+function quizTotalMax(){
+  return QUIZ.reduce(function(sum, it){
+    return sum + it.opts.reduce(function(m, o){ return Math.max(m, o.p); }, 0);
+  }, 0);
+}
 function quizReset(){
-  quizScore = 0; quizIdx = 0;
+  quizScore = 0; quizIdx = 0; quizDimScore = {};
   $('#quizResult').classList.remove('on');
   $('#quizBody').classList.add('on');
   $('#quizStart').textContent = '重新测试 ⚡';
@@ -1566,14 +1613,15 @@ function quizReset(){
 }
 function renderQuizQ(){
   var it = QUIZ[quizIdx];
-  $('#quizStep').textContent = '题目 ' + (quizIdx + 1) + ' / ' + QUIZ.length;
-  $('#quizBar').style.width = ((quizIdx) / QUIZ.length * 100) + '%';
+  $('#quizStep').textContent = '题目 ' + (quizIdx + 1) + ' / ' + QUIZ.length + ' · ' + (QUIZ_DIMS[it.dim] || it.dim);
+  $('#quizBar').style.width = (quizIdx / QUIZ.length * 100) + '%';
   $('#quizQ').textContent = it.q;
   var box = $('#quizOpts'); box.innerHTML = '';
   it.opts.forEach(function(o, i){
     var b = el('button', 'quiz-opt', '<span class="m">' + String.fromCharCode(65 + i) + '</span><span>' + o.t + '</span>');
     b.addEventListener('click', function(){
       quizScore += o.p;
+      quizDimScore[it.dim] = (quizDimScore[it.dim] || 0) + o.p;
       quizIdx++;
       if (quizIdx < QUIZ.length){ renderQuizQ(); }
       else { showQuizResult(); }
@@ -1581,25 +1629,44 @@ function renderQuizQ(){
     box.appendChild(b);
   });
 }
+function quizRiskColor(pct){
+  return pct <= 25 ? '#059669' : (pct <= 55 ? '#b45309' : '#dc2626');
+}
 function showQuizResult(){
   $('#quizBody').classList.remove('on');
   var r = $('#quizResult');
-  var level = quizScore <= 2 ? 0 : (quizScore <= 7 ? 1 : 2);
+  var maxScore = quizTotalMax();
+  var pct = maxScore ? Math.round(quizScore / maxScore * 100) : 0;
+  var level = pct <= 25 ? 0 : (pct <= 55 ? 1 : 2);
   var map = [
-    { e: '🟢', t: '风险较低', c: '#059669', txt: '你的签约习惯比较安全。继续保持「先读条款、再留证据」的好习惯；遇到金额较大的合同，可再用 AI 合同审查把把关。' },
-    { e: '🟡', t: '存在一定风险', c: '#b45309', txt: '建议签约前先用「AI 合同审查」扫一遍；重点核对押金、违约金、解除条款；一旦发生纠纷，第一时间固定证据再协商。' },
-    { e: '🔴', t: '风险较高，签约需谨慎', c: '#dc2626', txt: '强烈建议先咨询 AI 助手或拨打 12348，重要合同务必逐条审查后再签；不要因为「怕麻烦」就忽略条款里的坑。' }
+    { e: '🟢', t: '风险较低', c: '#059669', txt: '你的签约与维权习惯比较安全，法律风险意识良好。继续保持「先读条款、再留证据」的习惯；金额较大的合同仍建议用「AI 合同审查」二次把关。' },
+    { e: '🟡', t: '存在一定风险', c: '#b45309', txt: '部分环节存在风险隐患。建议：1) 重点合同先用「AI 合同审查」扫描；2) 涉及押金、违约金、退款等务必落实到书面；3) 发生纠纷第一时间固定证据，再通过 12315 / 12333 / 12348 逐级处理。' },
+    { e: '🔴', t: '风险较高，签约需谨慎', c: '#dc2626', txt: '你的习惯容易踩坑。强烈建议：1) 重要合同先逐条审查，拿不准就咨询 AI 助手或拨打 12348；2) 停止一切先交钱的招聘 / 刷单 / 预付；3) 从现在开始为每一笔交易保留凭证；重大事项请咨询执业律师。' }
   ][level];
   $('#qrEmoji').textContent = map.e;
   $('#qrTitle').textContent = map.t;
   $('#qrTitle').style.color = map.c;
-  $('#qrText').textContent = map.txt + '（测试结果：得分 ' + quizScore + '，演示模拟）';
+  $('#qrText').textContent = map.txt + '（本次得分 ' + quizScore + ' / ' + maxScore + ' · 风险指数 ' + pct + '%）';
+  /* 分领域风险明细 */
+  var dimBox = $('#qrDim'); dimBox.innerHTML = '';
+  Object.keys(QUIZ_DIMS).forEach(function(k){
+    var dScore = quizDimScore[k] || 0;
+    var dMax = QUIZ.filter(function(it){ return it.dim === k; }).reduce(function(sum, it){
+      return sum + it.opts.reduce(function(m, o){ return Math.max(m, o.p); }, 0);
+    }, 0);
+    var dPct = dMax ? Math.round(dScore / dMax * 100) : 0;
+    var c = quizRiskColor(dPct);
+    var chip = el('span', 'qd-chip', (QUIZ_DIMS[k]) + ' 风险 ' + (dPct <= 25 ? '低' : (dPct <= 55 ? '中' : '高')) + ' ' + dPct + '%');
+    chip.style.borderColor = c; chip.style.color = c; chip.style.background = c + '14';
+    dimBox.appendChild(chip);
+  });
   r.classList.add('on');
   r.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 $('#quizStart').addEventListener('click', quizReset);
 $('#qrAgain').addEventListener('click', quizReset);
-$('#qrAi').addEventListener('click', function(){ showPage('page-ai'); });/* =========================================================
+$('#qrAi').addEventListener('click', function(){ showPage('page-ai'); });
+/* =========================================================
    AI 助手：场景数据 + 模拟对话
    ========================================================= */
 var SCEN = {
