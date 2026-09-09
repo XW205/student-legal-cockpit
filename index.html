@@ -40,6 +40,7 @@
 </svg>
 
 <!-- ================= 顶部导航（桌面） ================= -->
+
 <header class="site-head">
   <div class="wrap head-in">
     <a class="brand" role="button" tabindex="0" data-nav="page-home" aria-label="法护启航首页">
@@ -49,15 +50,15 @@
         <small>大学生法律风险防护平台</small>
       </span>
     </a>
-    <nav class="topnav"
-<button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg>首页</button>
-<button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg>AI风险测评</button>
-<button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg>AI合同审查</button>
-<button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg>维权导航</button>
-<button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg>服务地图</button>
-<button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg>证据急救</button>
-<button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg>关于我们</button>
-</nav>
+    <nav class="topnav" id="topNav" aria-label="主导航">
+      <button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg>首页</button>
+      <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg>AI风险测评</button>
+      <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg>AI合同审查</button>
+      <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg>维权导航</button>
+      <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg>服务地图</button>
+      <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg>证据急救</button>
+      <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg>关于我们</button>
+    </nav>
     <div class="head-right">
       <span class="gov-chip">公益演示 · v2.1</span>
       <button class="menu-btn" id="navToggle" aria-label="打开菜单"><svg><use href="#i-menu"/></svg></button>
@@ -67,16 +68,21 @@
 
 <!-- ================= 移动端抽屉菜单 ================= -->
 <div class="mnav-mask" id="mnavMask"></div>
-<aside class="mnav"
-<button class="menu-btn" id="mnavClose" aria-label="关闭菜单"><svg><use href="#i-close"/></svg></button>
-<button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg><span>首页</span></button>
-<button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg><span>AI 风险测评</span></button>
-<button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg><span>AI 合同审查</span></button>
-<button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg><span>维权导航（AI 咨询）</span></button>
-<button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg><span>线下法律服务地图</span></button>
-<button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg><span>证据急救</span></button>
-<button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg><span>关于我们</span></button>
+<aside class="mnav" id="mnav" aria-label="移动端导航">
+  <div class="mnav-head">
+    <b>功能导航</b>
+    <button class="menu-btn" id="mnavClose" aria-label="关闭菜单"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <button class="nav-item active" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg><span>首页</span></button>
+  <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg><span>AI 风险测评</span></button>
+  <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg><span>AI 合同审查</span></button>
+  <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg><span>维权导航（AI 咨询）</span></button>
+  <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg><span>线下法律服务地图</span></button>
+  <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg><span>证据急救</span></button>
+  <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg><span>关于我们</span></button>
+  <div class="mnav-foot">公益项目原型 · 回答不构成法律意见<br>紧急法律问题请拨打 12348</div>
 </aside>
+
 
 <main class="wrap page-body">
   <!-- ================= 首页 ================= -->
