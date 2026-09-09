@@ -1045,3 +1045,39 @@ body.menu-open{overflow:hidden}
 /* 报告结论文本（app.js 会将 #scoreVerdict 的 className 重置为 .verdict） */
 .sb-copy .verdict{display:block;font-size:20px;font-weight:900;line-height:1.4;margin-top:5px;color:#fff;word-break:break-word}
 .tag.live.flash{transform:scale(1.04)}
+/* ================= UI 微动效（专业·克制） ================= */
+/* 滚动显现：父容器进入视口后，子元素按顺序淡入上移（fill:backwards，动画结束后不覆盖 hover） */
+.rv-wrap > *{opacity:0}
+.rv-wrap.in > *{opacity:1;animation:rvIn .6s cubic-bezier(.22,.61,.36,1) backwards}
+.rv-wrap.in > *:nth-child(2){animation-delay:.08s}
+.rv-wrap.in > *:nth-child(3){animation-delay:.16s}
+.rv-wrap.in > *:nth-child(4){animation-delay:.24s}
+.rv-wrap.in > *:nth-child(5){animation-delay:.32s}
+.rv-wrap.in > *:nth-child(6){animation-delay:.40s}
+.rv-wrap.in > *:nth-child(7){animation-delay:.48s}
+.rv-wrap.in > *:nth-child(8){animation-delay:.56s}
+@keyframes rvIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* 顶部导航：激活/悬停下划线生长 */
+.topnav .nav-item{position:relative}
+.topnav .nav-item::after{content:"";position:absolute;left:13px;right:13px;bottom:3px;height:2px;border-radius:2px;
+  background:var(--grad);transform:scaleX(0);transform-origin:left center;transition:transform .25s ease}
+.topnav .nav-item:hover::after,.topnav .nav-item.active::after{transform:scaleX(1)}
+
+/* 主按钮：扫光 + 上浮（已保留现有上浮，仅加克制光泽） */
+.btn:not(.ghost){position:relative;overflow:hidden}
+.btn:not(.ghost)::before{content:"";position:absolute;top:0;left:-75%;width:45%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.32),transparent);
+  transform:skewX(-20deg);transition:left .55s ease;pointer-events:none}
+.btn:not(.ghost):hover::before{left:125%}
+
+/* 测评选项：逐条淡入 */
+.quiz-opt{animation:optIn .3s ease backwards}
+@keyframes optIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* 链接箭头微位移统一 */
+.kc-link svg,.mc-go svg{transition:transform .22s ease}
+.kc-link:hover svg,.mod-card:hover .mc-go svg{transform:translateX(3px)}
+
+/* 键盘可访问性焦点环 */
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
