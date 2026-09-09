@@ -552,6 +552,37 @@ input{font-family:inherit}
   align-items:center;justify-content:center;gap:8px}
 .upload-new:hover{background:#eef4ff;border-color:#2f6bff}
 
+
+/* ============ 我的权益：真实证据上传（本机 localStorage） ============ */
+.ev-empty{text-align:center;padding:26px 12px;color:var(--muted)}
+.ev-empty-ico{font-size:40px;margin-bottom:8px;opacity:.7}
+.ev-empty p{font-size:13px;line-height:1.8}
+.ev-uploadbar{margin-top:13px}
+.ev-card{position:relative}
+.ev-card .e-actions{display:flex;gap:6px;flex:none}
+.ev-actions{display:flex;gap:6px}
+.ev-mini{font-size:11px;color:#1d4ed8;background:#eef4ff;border:1px solid #d5e3ff;padding:4px 9px;border-radius:8px;font-weight:700;transition:.2s}
+.ev-mini:hover{background:#1d4ed8;color:#fff}
+.ev-mini.danger{color:#dc2626;background:#fef2f2;border-color:#fecaca}
+.ev-mini.danger:hover{background:#dc2626;color:#fff}
+.ev-note-line{font-size:11px;color:var(--slate);background:#f6f8fc;border-radius:7px;padding:2px 8px;margin-top:2px;display:inline-block}
+.ev-form{margin-top:14px;background:#f6faff;border:1px solid #cfdfff;border-radius:15px;padding:14px 16px}
+.ev-form-head{font-weight:800;font-size:14px;color:var(--brand-deep);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ev-form-head::before{content:"📦"}
+.ev-form-row{display:flex;gap:10px;flex-wrap:wrap}
+.ev-form-row select,.ev-form-row input{flex:1 1 220px;min-width:0;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;font-size:13.5px;background:#fff;color:var(--ink)}
+.ev-form-row select:focus,.ev-form-row input:focus{border-color:#7ea4ff;outline:none}
+.ev-pending{margin:12px 0 4px;display:flex;flex-direction:column;gap:8px}
+.ev-pi{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 12px}
+.ev-pi .pi-ico{font-size:19px;flex:none}
+.ev-pi .pi-copy{flex:1;min-width:0}
+.ev-pi .pi-copy b{font-size:13px;display:block;word-break:break-all}
+.ev-pi .pi-copy span{font-size:11px;color:var(--muted)}
+.ev-pi .pi-x{color:#dc2626;font-size:16px;width:26px;height:26px;border-radius:8px;flex:none}
+.ev-pi .pi-x:hover{background:#fee2e2}
+.ev-form-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.ev-secure{font-size:11.5px;color:#7a4a12;background:#fff8ed;border:1px solid #fde0a9;border-radius:9px;padding:7px 11px;margin-top:10px;line-height:1.7}
+
 .legal-line{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#eef4ff,#f0f9ff);
   border:1px solid #d5e3ff;border-radius:16px;padding:15px 18px;margin-bottom:10px;flex-wrap:wrap}
 .legal-line .ll-ico{font-size:26px}
@@ -1161,7 +1192,7 @@ input{font-family:inherit}
     <div class="page-title">
       <div class="line"></div>
       <h2>我的法律安全档案</h2>
-      <span class="desc">集中管理你的风险标签、证据材料与维权进度（演示数据）</span>
+      <span class="desc">集中管理你的风险标签、证据材料与维权进度（证据材料已支持在本机真实上传保存）</span>
     </div>
 
     <!-- 身份卡片 -->
@@ -1198,27 +1229,42 @@ input{font-family:inherit}
       </div>
     </div>
 
-    <!-- 证据材料 -->
+        <!-- 证据材料 -->
     <div class="card">
-      <div class="card-title">📁 我的证据材料 <small>本地加密存证（演示） · 共 4 份</small></div>
-      <div class="evidence-grid" id="evGrid">
-        <div class="ev-card"><span class="e-ico">📄</span>
-          <div class="e-copy"><b>租房合同</b><span>2026-08-01 上传 · PDF</span></div>
-          <span class="e-st">已存证</span></div>
-        <div class="ev-card"><span class="e-ico">📸</span>
-          <div class="e-copy"><b>房屋照片</b><span>2026-08-03 上传 · JPG×6</span></div>
-          <span class="e-st">已存证</span></div>
-        <div class="ev-card"><span class="e-ico">💬</span>
-          <div class="e-copy"><b>聊天记录</b><span>2026-08-05 上传 · 截图</span></div>
-          <span class="e-st">已存证</span></div>
-        <div class="ev-card"><span class="e-ico">💰</span>
-          <div class="e-copy"><b>工资记录</b><span>2026-08-07 上传 · 银行流水</span></div>
-          <span class="e-st">已存证</span></div>
+      <div class="card-title">📁 我的证据材料 <small>保存在本机浏览器 · 共 <b id="evCount">0</b> 份</small></div>
+      <div class="ev-empty" id="evEmpty" style="display:none">
+        <div class="ev-empty-ico">🗂️</div>
+        <p>还没有证据材料<br>上传后保存在本机浏览器，刷新页面不丢失</p>
       </div>
-      <button class="upload-new" id="evAddBtn">＋ 上传新证据材料（演示）</button>
+      <div class="evidence-grid" id="evGrid"></div>
+      <div class="ev-uploadbar">
+        <input type="file" id="evFiles" hidden multiple
+               accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.zip,.rar,.7z,.jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.mp4,.mov">
+        <button class="upload-new" id="evAddBtn">＋ 选择文件上传证据材料</button>
+      </div>
+      <div class="ev-form" id="evForm" style="display:none">
+        <div class="ev-form-head">确认保存 <span id="evPendingCount">0</span> 份材料</div>
+        <div class="ev-form-row">
+          <select id="evCat">
+            <option value="合同">📄 合同 / 协议</option>
+            <option value="聊天记录">💬 聊天记录</option>
+            <option value="转账/工资">💰 转账 / 工资流水</option>
+            <option value="照片/视频">📸 照片 / 视频</option>
+            <option value="录音">🎙️ 录音</option>
+            <option value="其他">🗂️ 其他</option>
+          </select>
+          <input id="evNote" type="text" placeholder="备注（可选），如：2026-08 押金转账截图" maxlength="80">
+        </div>
+        <div class="ev-pending" id="evPending"></div>
+        <div class="ev-form-actions">
+          <button class="btn sm" id="evSaveBtn">💾 保存到本机</button>
+          <button class="btn ghost sm" id="evCancelBtn">取消</button>
+        </div>
+        <div class="ev-secure">🔒 仅保存在当前浏览器本机（localStorage），不会上传到任何服务器；演示版单份 ≤ 2MB、总量约 ≤ 4MB，超出请压缩或只传关键截图。请勿在公共设备上传敏感材料，并保留原件。</div>
+      </div>
     </div>
 
-    <!-- 法援通道 -->
+<!-- 法援通道 -->
     <div class="card">
       <div class="card-title">🆘 法援通道 <small>关键时刻，找对地方</small></div>
       <div class="legal-line">
@@ -1233,7 +1279,7 @@ input{font-family:inherit}
         <span>多数高校设有法律援助中心 / 法援社团，可预约免费咨询（演示）</span>
         <button class="btn ghost sm" id="clinicBtn">查找最近站点</button>
       </div>
-      <div class="section-note">提示：证据材料建议定期备份并保留原件；本页内容为演示模拟数据。</div>
+      <div class="section-note">提示：证据材料仅保存在当前浏览器本机（localStorage），建议保留原件并定期导出备份；法援通道为演示指引。</div>
     </div>
   </section>
 
@@ -2522,29 +2568,204 @@ $$('.nav-item').forEach(function(n){
     if (n.dataset.page === 'page-review') setTimeout(updateReviewStatus, 30);
   });
 });/* =========================================================
-   我的权益：上传证据 / 法援通道（模拟）
+   我的权益：证据材料真实上传并保存（浏览器 localStorage）
+   ---------------------------------------------------------
+   - 文件以 Base64 保存在浏览器 localStorage，刷新/重开不丢失
+   - 不上传任何服务器；列表支持 打开/下载 与 删除
+   - 演示级容量：单份 ≤ 2MB、总量约 ≤ 4MB（超出请压缩或只传关键截图）
    ========================================================= */
-var EV_POOL = [
-  { i: '🧾', n: '押金收据', m: '刚刚上传 · 图片' },
-  { i: '🖼️', n: '现场截图', m: '刚刚上传 · JPG' },
-  { i: '✉️', n: '邮件往来', m: '刚刚上传 · PDF' },
-  { i: '📱', n: '录音文件', m: '刚刚上传 · MP3' }
-];
-var evPoolIdx = 0;
-$('#evAddBtn').addEventListener('click', function(){
-  var it = EV_POOL[evPoolIdx % EV_POOL.length]; evPoolIdx++;
-  var card = el('div', 'ev-card');
-  card.appendChild(el('span', 'e-ico', it.i));
-  var c = el('div', 'e-copy');
-  c.appendChild(el('b', null, it.n));
-  c.appendChild(el('span', null, it.m));
-  card.appendChild(c);
-  card.appendChild(el('span', 'e-st', '已存证'));
-  $('#evGrid').appendChild(card);
-  toast('证据材料已加密存证（演示）', true);
+var EV_KEY = 'fahq_evidence_v1';
+var EV_MAX_FILE = 2 * 1024 * 1024;
+function evReadAll(){
+  try { var a = JSON.parse(localStorage.getItem(EV_KEY) || '[]'); return Array.isArray(a) ? a : []; }
+  catch (e){ return []; }
+}
+function evWriteAll(list){ localStorage.setItem(EV_KEY, JSON.stringify(list)); }
+function evFileToDataUrl(file){
+  return new Promise(function(res, rej){
+    var rd = new FileReader();
+    rd.onload = function(){ res(String(rd.result || '')); };
+    rd.onerror = function(){ rej(rd.error); };
+    rd.readAsDataURL(file);
+  });
+}
+function evUsedBytes(){ return evReadAll().reduce(function(s, x){ return s + String(x.data || '').length; }, 0); }
+function evIcon(rec){
+  var cat = rec.category || '';
+  if (/聊天/.test(cat)) return '💬';
+  if (/转账|工资|流水/.test(cat)) return '💰';
+  if (/合同|协议/.test(cat)) return '📄';
+  if (/照片|视频/.test(cat)) return '📸';
+  if (/录音/.test(cat)) return '🎙️';
+  var n = (rec.name || '').toLowerCase();
+  if (/\.(jpe?g|png|webp|gif)$/.test(n)) return '📸';
+  if (/\.pdf$/.test(n)) return '📄';
+  if (/\.(docx?|txt|md)$/.test(n)) return '📝';
+  if (/\.(xls[x]?|csv)$/.test(n)) return '🧮';
+  if (/\.(zip|rar|7z)$/.test(n)) return '🗜️';
+  if (/\.(mp3|m4a|wav)$/.test(n)) return '🎙️';
+  if (/\.(mp4|mov)$/.test(n)) return '🎬';
+  return '🗂️';
+}
+function evFmtSize(b){
+  if (b > 1024 * 1024) return (b / 1024 / 1024).toFixed(1) + ' MB';
+  if (b > 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b || 0) + ' B';
+}
+function evFmtDate(iso){
+  var d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function updateArchive(n){
+  var pct = Math.max(0, Math.min(100, 62 + n * 6));
+  var b = $('#page-rights .pf-score b');
+  var bar = $('#page-rights .pf-bar i');
+  if (b) b.innerHTML = pct + '<small style="font-size:16px">%</small>';
+  if (bar) bar.style.width = pct + '%';
+}
+function renderEvList(list){
+  var grid = $('#evGrid');
+  var empty = $('#evEmpty');
+  var cnt = $('#evCount');
+  grid.innerHTML = '';
+  list.sort(function(a, b){ return String(b.savedAt || '').localeCompare(String(a.savedAt || '')); });
+  if (cnt) cnt.textContent = list.length;
+  if (!list.length){ if (empty) empty.style.display = 'block'; updateArchive(0); return; }
+  if (empty) empty.style.display = 'none';
+  list.forEach(function(rec){
+    var card = el('div', 'ev-card');
+    card.appendChild(el('span', 'e-ico', evIcon(rec)));
+    var copy = el('div', 'e-copy');
+    copy.appendChild(el('b', null, rec.name || '未命名材料'));
+    var meta = (evFmtDate(rec.savedAt) || '刚刚') + ' 上传 · ' + (rec.category || '其他') + ' · ' + evFmtSize(rec.size);
+    copy.appendChild(el('span', null, meta));
+    if (rec.note) copy.appendChild(el('div', 'ev-note-line', '✏️ ' + rec.note));
+    card.appendChild(copy);
+    card.appendChild(el('span', 'e-st', '已保存'));
+    var acts = el('div', 'ev-actions');
+    var openB = el('button', 'ev-mini', '👁 打开');
+    openB.addEventListener('click', function(){ evOpenRec(rec); });
+    var delB = el('button', 'ev-mini danger', '🗑 删除');
+    delB.addEventListener('click', function(){ evAskDelete(rec); });
+    acts.appendChild(openB); acts.appendChild(delB);
+    card.appendChild(acts);
+    grid.appendChild(card);
+  });
+  updateArchive(list.length);
+}
+function evOpenRec(rec){
+  if (!rec || !rec.data){ toast('文件内容不可用', false); return; }
+  var n = (rec.name || '').toLowerCase();
+  var preview = /^data:image\//.test(rec.data) || /^data:application\/pdf/.test(rec.data);
+  if (preview){ window.open(rec.data, '_blank'); }
+  else {
+    var a = document.createElement('a');
+    a.href = rec.data; a.download = rec.name || 'evidence';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+}
+function evAskDelete(rec){
+  if (!confirm('删除「' + (rec.name || '该材料') + '」？删除后仅本机无法恢复。')) return;
+  var list = evReadAll().filter(function(x){ return x.id !== rec.id; });
+  try { evWriteAll(list); } catch (e){ toast('删除失败：' + e.message, false); return; }
+  renderEvList(list);
+  toast('已删除该份证据材料', true);
+}
+/* 待保存清单 UI */
+function showEvForm(){
+  $('#evForm').style.display = 'block';
+  $('#evAddBtn').style.display = 'none';
+  $('#evPendingCount').textContent = evPending.length;
+  var box = $('#evPending'); box.innerHTML = '';
+  evPending.forEach(function(p, i){
+    var row = el('div', 'ev-pi');
+    row.appendChild(el('span', 'pi-ico', evIcon({ name: p.file.name, category: $('#evCat').value })));
+    var c = el('div', 'pi-copy');
+    c.appendChild(el('b', null, p.file.name));
+    c.appendChild(el('span', null, evFmtSize(p.file.size)));
+    row.appendChild(c);
+    var x = el('button', 'pi-x', '✕');
+    x.addEventListener('click', function(){
+      evPending.splice(i, 1);
+      if (!evPending.length){ hideEvForm(); return; }
+      showEvForm();
+    });
+    row.appendChild(x);
+    box.appendChild(row);
+  });
+  $('#evForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideEvForm(){
+  evPending = [];
+  $('#evForm').style.display = 'none';
+  $('#evAddBtn').style.display = '';
+  $('#evPending').innerHTML = '';
+  $('#evFiles').value = '';
+}
+var evPending = [];
+
+$('#evAddBtn').addEventListener('click', function(){ $('#evFiles').click(); });
+$('#evFiles').addEventListener('change', function(){
+  var files = Array.prototype.slice.call(this.files || []);
+  if (!files.length) return;
+  var skipped = 0;
+  files.forEach(function(f){
+    if (f.size > EV_MAX_FILE){ skipped++; return; }
+    evPending.push({ file: f });
+  });
+  if (skipped) toast('已跳过 ' + skipped + ' 份超过 2MB 的文件（演示容量限制）', false);
+  if (!evPending.length){ $('#evFiles').value = ''; return; }
+  showEvForm();
 });
+$('#evSaveBtn').addEventListener('click', function(){
+  if (!evPending.length){ toast('还没有选择要保存的文件', false); return; }
+  var cat = $('#evCat').value;
+  var note = $('#evNote').value.trim();
+  var toSave = evPending.slice();
+  var dataUrls = [];
+  var chain = Promise.resolve();
+  toSave.forEach(function(p){
+    chain = chain.then(function(){ return evFileToDataUrl(p.file).then(function(d){ dataUrls.push(d); }); });
+  });
+  chain.then(function(){
+    if (evUsedBytes() + dataUrls.reduce(function(s, d){ return s + d.length; }, 0) > 6 * 1024 * 1024){
+      throw { quota: true };
+    }
+    var cur = evReadAll();
+    var base = Date.now();
+    toSave.forEach(function(p, i){
+      cur.push({
+        id: base + '-' + i + '-' + Math.random().toString(36).slice(2, 8),
+        name: p.file.name,
+        category: cat,
+        note: note,
+        mime: p.file.type || '',
+        size: p.file.size,
+        savedAt: new Date().toISOString(),
+        data: dataUrls[i]
+      });
+    });
+    try { evWriteAll(cur); } catch (e){ throw { quota: true }; }
+    hideEvForm();
+    toast('已保存 ' + toSave.length + ' 份证据材料到本机', true);
+    renderEvList(evReadAll());
+  }).catch(function(err){
+    if (err && err.quota){ toast('本机存储空间不足：总量请控制在约 4MB 内，或压缩/裁剪文件后重试', false); return; }
+    toast('保存失败：' + ((err && err.message) || err), false);
+  });
+});
+$('#evCancelBtn').addEventListener('click', hideEvForm);
+
+/* 法援通道（演示） */
 $('#callBtn').addEventListener('click', function(){ toast('正在呼叫 12348 …（演示环境不真实拨打）', false); });
 $('#clinicBtn').addEventListener('click', function(){ toast('已定位最近的「高校法律援助中心」（演示）', true); });
+
+/* 初始化：读取已保存证据 */
+renderEvList(evReadAll());
+
+
+
 
 /* 默认回到首页 / 初始化报告区默认状态（showPage 为全站唯一定义，见文件前部） */
 showPage('page-home');
