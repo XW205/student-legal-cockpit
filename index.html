@@ -850,6 +850,19 @@ input{font-family:inherit}
 .bubble.md th,.bubble.md td{border:1px solid #d5e3ff;padding:6px 10px;text-align:left}
 .bubble.md th{background:#eef4ff;font-weight:600}
 .bubble.md strong{font-weight:700}
+
+/* ============ 法律依据可折叠卡片（聊天内） ============ */
+.law-card{margin-top:12px;border:1px solid #d5e3ff;border-radius:12px;overflow:hidden;background:#f7faff}
+.law-card-head{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;user-select:none;background:#eef4ff;font-weight:700;font-size:13px;color:#1d4ed8}
+.law-card-head .chev{margin-left:auto;transition:transform .25s;font-size:13px}
+.law-card.on .law-card-head .chev{transform:rotate(180deg)}
+.law-card-body{display:none;border-top:1px solid #d5e3ff;padding:4px 12px}
+.law-card.on .law-card-body{display:block;animation:fadeUp .2s ease both}
+.law-item{padding:8px 0;border-bottom:1px dashed #dce6f5}
+.law-item:last-child{border-bottom:none}
+.law-item .li-head{font-weight:700;color:#1e3a8a;font-size:12.5px;margin-bottom:3px}
+.law-item .li-body{color:#475569;font-size:12.5px;line-height:1.7}
+.law-note{color:#94a3b8;font-size:11px;padding:8px 0 4px;line-height:1.6}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
@@ -1478,11 +1491,106 @@ function renderMd(bub, text){
     if (window.marked && typeof marked.parse === 'function'){
       bub.innerHTML = marked.parse(text || '');
       bub.classList.add('md');
+      appendLawCard(bub, text);
       return;
     }
   } catch (e) {}
   bub.textContent = text || '';
   bub.classList.remove('md');
+  appendLawCard(bub, text);
+}
+
+/* =========================================================
+   法条库 LAW_DB：收录项目场景中引用的高频法条原文，便于在
+   聊天内展开查看「法律依据」。条文要旨仅供学习参考，正式适
+   用请以官方最新公布文本为准。
+   ========================================================= */
+var LAW_DB = {
+  /* —— 中华人民共和国民法典 —— */
+  '民法典-680':  { law:'民法典', art:'第六百八十条', text:'禁止高利放贷，借款的利率不得违反国家有关规定。借款合同对支付利息没有约定的，视为没有利息。' },
+  '民法典-703':  { law:'民法典', art:'第七百零三条', text:'租赁合同是出租人将租赁物交付承租人使用、收益，承租人支付租金的合同。' },
+  '民法典-704':  { law:'民法典', art:'第七百零四条', text:'租赁合同的内容一般包括租赁物的名称、数量、用途、租赁期限、租金及其支付期限和方式、租赁维修等条款。' },
+  '民法典-705':  { law:'民法典', art:'第七百零五条', text:'租赁期限不得超过二十年。超过二十年的，超过部分无效。' },
+  '民法典-707':  { law:'民法典', art:'第七百零七条', text:'租赁期限六个月以上的，应当采用书面形式。未采用书面形式，无法确定租赁期限的，视为不定期租赁。' },
+  '民法典-709':  { law:'民法典', art:'第七百零九条', text:'承租人应当按照约定的方法使用租赁物。对租赁物的使用方法没有约定或者约定不明确，依据本法第五百一十条的规定仍不能确定的，应当根据租赁物的性质使用。' },
+  '民法典-710':  { law:'民法典', art:'第七百一十条', text:'承租人按照约定的方法或者根据租赁物的性质使用租赁物，致使租赁物受到损耗的，不承担赔偿责任。' },
+  '民法典-711':  { law:'民法典', art:'第七百一十一条', text:'承租人未按照约定的方法或者未根据租赁物的性质使用租赁物，致使租赁物受到损失的，出租人可以解除合同并请求赔偿损失。' },
+  '民法典-712':  { law:'民法典', art:'第七百一十二条', text:'出租人应当履行租赁物的维修义务，但是当事人另有约定的除外。' },
+  '民法典-713':  { law:'民法典', art:'第七百一十三条', text:'承租人在租赁物需要维修时可以请求出租人在合理期限内维修。出租人未履行维修义务的，承租人可以自行维修，维修费用由出租人负担；因承租人的过错需要维修的，由承租人承担维修费用。' },
+  '民法典-1024': { law:'民法典', art:'第一千零二十四条', text:'民事主体享有名誉权。任何组织或者个人不得以侮辱、诽谤等方式侵害他人的名誉权。' },
+  '民法典-1032': { law:'民法典', art:'第一千零三十二条', text:'自然人享有隐私权。任何组织或者个人不得以刺探、侵扰、泄露、公开等方式侵害他人的隐私权。' },
+  '民法典-1165': { law:'民法典', art:'第一千一百六十五条', text:'行为人因过错侵害他人民事权益造成损害的，应当承担侵权责任。' },
+  '民法典-1179': { law:'民法典', art:'第一千一百七十九条', text:'侵害他人造成人身损害的，应当赔偿医疗费、护理费、交通费、营养费、住院伙食补助费等为治疗和康复支出的合理费用，以及因误工减少的收入。造成残疾的，还应当赔偿辅助器具费和残疾赔偿金；造成死亡的，还应当赔偿丧葬费和死亡赔偿金。' },
+  '民法典-1183': { law:'民法典', art:'第一千一百八十三条', text:'侵害自然人人身权益造成严重精神损害的，被侵权人有权请求精神损害赔偿。' },
+  /* —— 中华人民共和国劳动合同法 —— */
+  '劳动合同法-9':  { law:'劳动合同法', art:'第九条', text:'用人单位招用劳动者，不得扣押劳动者的居民身份证和其他证件，不得要求劳动者提供担保或者以其他名义向劳动者收取财物。' },
+  '劳动合同法-19': { law:'劳动合同法', art:'第十九条', text:'劳动合同期限三个月以上不满一年的，试用期不得超过一个月；一年以上不满三年的，试用期不得超过二个月；三年以上固定期限和无固定期限的劳动合同，试用期不得超过六个月。同一用人单位与同一劳动者只能约定一次试用期。' },
+  '劳动合同法-20': { law:'劳动合同法', art:'第二十条', text:'劳动者在试用期的工资不得低于本单位相同岗位最低档工资或者劳动合同约定工资的百分之八十，并不得低于用人单位所在地的最低工资标准。' },
+  '劳动合同法-21': { law:'劳动合同法', art:'第二十一条', text:'在试用期中，除劳动者有本法第三十九条和第四十条第一项、第二项规定的情形外，用人单位不得解除劳动合同。用人单位在试用期解除劳动合同的，应当向劳动者说明理由。' },
+  '劳动合同法-30': { law:'劳动合同法', art:'第三十条', text:'用人单位应当按照劳动合同约定和国家规定，向劳动者及时足额支付劳动报酬。' },
+  '劳动合同法-38': { law:'劳动合同法', art:'第三十八条', text:'用人单位未及时足额支付劳动报酬、未依法为劳动者缴纳社会保险费等情形的，劳动者可以解除劳动合同。' },
+  '劳动合同法-39': { law:'劳动合同法', art:'第三十九条', text:'劳动者在试用期间被证明不符合录用条件的，用人单位可以解除劳动合同。用人单位据此解除的，应当说明理由并承担举证责任。' },
+  '劳动合同法-46': { law:'劳动合同法', art:'第四十六条', text:'有下列情形之一的，用人单位应当向劳动者支付经济补偿：（一）劳动者依照本法第三十八条规定解除劳动合同的；（二）用人单位向劳动者提出解除并与劳动者协商一致解除的；（三）用人单位依本法第四十条解除的；（四）用人单位依本法第四十一条第一款规定解除的；（五）除用人单位维持或提高条件续订，劳动者不同意续订的情形外，固定期限劳动合同期满终止的；（六）法律、行政法规规定的其他情形。' },
+  '劳动合同法-47': { law:'劳动合同法', art:'第四十七条', text:'经济补偿按劳动者在本单位工作的年限，每满一年支付一个月工资的标准向劳动者支付。六个月以上不满一年的，按一年计算；不满六个月的，向劳动者支付半个月工资的经济补偿。' },
+  '劳动合同法-87': { law:'劳动合同法', art:'第八十七条', text:'用人单位违反本法规定解除或者终止劳动合同的，应当依照本法第四十七条规定的经济补偿标准的二倍向劳动者支付赔偿金。' },
+  /* —— 中华人民共和国消费者权益保护法 —— */
+  '消费者权益保护法-24': { law:'消费者权益保护法', art:'第二十四条', text:'经营者提供的商品或者服务不符合质量要求的，消费者可以依照国家规定、当事人约定退货，或者要求经营者履行更换、修理等义务。' },
+  '消费者权益保护法-55': { law:'消费者权益保护法', art:'第五十五条', text:'经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍；增加赔偿的金额不足五百元的，为五百元。' },
+  /* —— 中华人民共和国治安管理处罚法 —— */
+  '治安管理处罚法-42': { law:'治安管理处罚法', art:'第四十二条', text:'有下列行为之一的，处五日以下拘留或者五百元以下罚款；情节较重的，处五日以上十日以下拘留，可以并处五百元以下罚款：（一）写恐吓信或者以其他方法威胁他人人身安全的；（二）公然侮辱他人或者捏造事实诽谤他人的；（三）捏造事实诬告陷害他人，企图使他人受到刑事追究或者受到治安管理处罚的；……' },
+  /* —— 中华人民共和国劳动法 —— */
+  '劳动法-50':  { law:'劳动法', art:'第五十条', text:'工资应当以货币形式按月支付给劳动者本人。不得克扣或者无故拖欠劳动者的工资。' },
+  '劳动法-91':  { law:'劳动法', art:'第九十一条', text:'用人单位有下列侵害劳动者合法权益情形之一的，由劳动行政部门责令支付劳动者的工资报酬、经济补偿，并可以责令支付赔偿金：（一）克扣或者无故拖欠劳动者工资的；……' }
+};
+
+/* 从回答文本中解析出已命中的法条 key 列表（去重，按出现顺序）。
+   匹配形如 《民法典》第 709、710 条 / 《劳动合同法》第 9 条 的引用 */
+function extractLaws(text){
+  if (!text) return [];
+  var names = ['民法典','劳动合同法','消费者权益保护法','治安管理处罚法','劳动法','著作权法'];
+  var re = new RegExp('《(' + names.join('|') + ')》\\s*第\\s*([\\d、，,\\s]+?)\\s*条', 'g');
+  var hits = [], seen = {}, m;
+  while ((m = re.exec(text))){
+    var name = m[1];
+    var nums = m[2].split(/[、，,\s]+/);
+    for (var i = 0; i < nums.length; i++){
+      var n = (nums[i] || '').trim();
+      if (!n) continue;
+      var k = name + '-' + n;
+      if (LAW_DB[k] && !seen[k]){ seen[k] = 1; hits.push(k); }
+    }
+  }
+  return hits;
+}
+
+/* 在 bot 气泡末尾追加可折叠「法律依据」卡片 */
+function appendLawCard(bub, text){
+  if (!bub) return;
+  var keys = extractLaws(text);
+  if (!keys.length) return;
+  var card = el('div', 'law-card');
+  var head = el('div', 'law-card-head');
+  var htxt = el('span'); htxt.textContent = '📖 法律依据（共 ' + keys.length + ' 条）';
+  var chev = el('span', 'chev'); chev.textContent = '▾';
+  head.appendChild(htxt); head.appendChild(chev);
+  card.appendChild(head);
+  var body = el('div', 'law-card-body');
+  keys.forEach(function(k){
+    var it = LAW_DB[k];
+    var item = el('div', 'law-item');
+    var h = el('div', 'li-head'); h.textContent = '⚖️ ' + it.law + ' · ' + it.art;
+    var b = el('div', 'li-body'); b.textContent = it.text;
+    item.appendChild(h); item.appendChild(b);
+    body.appendChild(item);
+  });
+  var note = el('div', 'law-note'); note.textContent = 'ⓘ 条文要旨仅供学习参考，请以官方最新公布文本为准；重大事项请咨询执业律师或拨打 12348。';
+  body.appendChild(note);
+  card.appendChild(body);
+  head.addEventListener('click', function(){
+    card.classList.toggle('on');
+    if (typeof scrollBottom === 'function') scrollBottom();
+  });
+  bub.appendChild(card);
 }
 function toast(msg, ok){
   var w = $('#toastWrap');
@@ -1699,7 +1807,8 @@ function fuziBase(){
 /* 系统提示：让模型按“法护启航”的要求回答各类法律问题 */
 var FUZI_SYS = '你是「法护启航」大学生法律安全驾驶舱内置的法律助手「法小航」，底层模型为 DeepSeek 大模型。' +
   '你面向在校大学生，擅长回答租房、兼职就业、合同纠纷、消费维权、人身权益、网络侵权等法律问题。' +
-  '回答要求：1) 优先引用具体法律名称与条款号；2) 分步骤给出可操作建议（固定证据、协商、投诉渠道、仲裁/诉讼路径）；' +
+  '回答要求：1) 优先引用具体法律名称与条款号，条号统一用阿拉伯数字，格式示例「《民法典》第 709 条」「《劳动合同法》第 19、47 条」；' +
+  '2) 分步骤给出可操作建议（固定证据、协商、投诉渠道、仲裁/诉讼路径）；' +
   '3) 案情信息不足时先追问关键事实，不要编造；4) 拿不准或涉及重大利益时，明确提示拨打 12348 法律援助热线或咨询执业律师；' +
   '5) 语言简洁友好、条理清晰。注意：你的回答仅供学习参考，不构成正式法律意见。';
 
