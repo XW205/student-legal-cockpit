@@ -595,6 +595,11 @@ function openChat(key, userText){
   if (chatAbort){ chatAbort.intentional = true; chatAbort.abort(); }
   $('#qaList').style.display = 'none';
   $('#chatView').classList.add('on');
+  /* 移动端友好：对话视图打开后滚动到视口顶部（scroll-margin-top 避开吸顶导航） */
+  requestAnimationFrame(function(){
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('#chatView').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  });
   chatTitle.textContent = SCEN[key].icon + ' ' + SCEN[key].title;
   chatScroll.innerHTML = '';
   clearSuggests();
