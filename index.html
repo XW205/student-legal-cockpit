@@ -583,6 +583,40 @@ input{font-family:inherit}
 .ev-form-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
 .ev-secure{font-size:11.5px;color:#7a4a12;background:#fff8ed;border:1px solid #fde0a9;border-radius:9px;padding:7px 11px;margin-top:10px;line-height:1.7}
 
+/* ============ 我的权益：证据链汇总 ============ */
+.chain-desc{font-size:12.5px;color:var(--slate);margin:-4px 0 10px;line-height:1.7}
+.ev-chainbar{display:flex;gap:10px;flex-wrap:wrap}
+.ev-chain-panel{margin-top:16px;background:#f7faff;border:1px solid #cfdfff;border-radius:16px;padding:16px}
+.chain-head{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.chain-head>div{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;text-align:center}
+.chain-head b{font-size:20px;font-weight:900;display:block;color:var(--brand-deep)}
+.chain-head span{font-size:11px;color:var(--muted)}
+.chain-cov{margin-bottom:12px}
+.chain-cov-t{font-size:12.5px;font-weight:800;color:#1e3a8a;margin-bottom:6px;display:flex;justify-content:space-between}
+.chain-cov-bar{height:9px;background:#e6edf9;border-radius:99px;overflow:hidden}
+.chain-cov-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#22d3ee);transition:.4s}
+.chain-cov-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.cc-tag{font-size:11.5px;padding:4px 10px;border-radius:99px;background:#eef3fc;color:#64748b;border:1px solid var(--line);font-weight:600}
+.cc-tag.on{background:#e7f9f1;color:#047857;border-color:#c3f0de}
+.cc-tag.off{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.chain-timeline{position:relative;margin:6px 0 4px;padding-left:22px}
+.chain-timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,#2563eb,#22d3ee)}
+.chain-step{position:relative;margin-bottom:13px;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 13px;display:flex;gap:10px;align-items:flex-start}
+.chain-step .cs-dot{position:absolute;left:-20px;top:15px;width:13px;height:13px;border-radius:50%;
+  background:var(--grad);border:2px solid #fff;box-shadow:0 0 0 2px #bcd0ff}
+.chain-step .cs-ico{font-size:20px;flex:none}
+.chain-step .cs-body{flex:1;min-width:0}
+.chain-step .cs-body b{font-size:13.5px;display:block}
+.chain-step .cs-body span{font-size:11.5px;color:var(--muted)}
+.chain-step .cs-no{font-size:11px;color:#fff;background:var(--grad);border-radius:99px;
+  padding:2px 9px;flex:none;font-weight:800;height:fit-content}
+.chain-narrative{background:#fff8ed;border:1px solid #fde0a9;border-radius:12px;padding:10px 13px;
+  font-size:12.5px;color:#7a4a12;line-height:1.9;white-space:pre-wrap}
+.chain-missing{background:#fff;border:1px dashed #fecaca;border-radius:12px;padding:9px 13px;margin-top:10px;
+  font-size:12.5px;color:#7f1d1d;line-height:1.8}
+.chain-foot{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7}
 .legal-line{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#eef4ff,#f0f9ff);
   border:1px solid #d5e3ff;border-radius:16px;padding:15px 18px;margin-bottom:10px;flex-wrap:wrap}
 .legal-line .ll-ico{font-size:26px}
@@ -1264,6 +1298,31 @@ input{font-family:inherit}
       </div>
     </div>
 
+    <!-- 证据链汇总 -->
+    <div class="card">
+      <div class="card-title">🔗 证据链汇总 <small>汇总已上传证据，一键生成完整证据链</small></div>
+      <p class="chain-desc">根据你本机已保存的证据，自动生成“时间—事项—材料”衔接完整的证据链，并提示待补充的关键材料。</p>
+      <div class="ev-chainbar">
+        <button class="btn" id="evChainBtn">🔗 汇总并生成证据链</button>
+        <button class="btn ghost" id="evExportTxtBtn">📄 导出证据链文本</button>
+      </div>
+      <div class="ev-chain-panel" id="evChainPanel" style="display:none">
+        <div class="chain-head">
+          <div><b id="chainStat">—</b><span>材料与环节</span></div>
+          <div><b id="chainScore">0%</b><span>证据链完整度</span></div>
+          <div><b id="chainSpan">—</b><span>时间跨度</span></div>
+        </div>
+        <div class="chain-cov">
+          <div class="chain-cov-t">关键材料覆盖 <span id="chainCovTxt">0 / 6</span></div>
+          <div class="chain-cov-bar"><i id="chainCovBar"></i></div>
+          <div class="chain-cov-tags" id="chainCovTags"></div>
+        </div>
+        <div class="chain-timeline" id="chainTimeline"></div>
+        <div class="chain-narrative" id="chainNarrative"></div>
+        <div class="chain-missing" id="chainMissing" style="display:none"></div>
+        <div class="chain-foot">🔒 证据链仅基于本机已保存材料生成，用于梳理与演示；正式维权请保留原件，并在需要时咨询 12348 法律援助热线。</div>
+      </div>
+    </div>
 <!-- 法援通道 -->
     <div class="card">
       <div class="card-title">🆘 法援通道 <small>关键时刻，找对地方</small></div>
@@ -2625,6 +2684,7 @@ function updateArchive(n){
   if (bar) bar.style.width = pct + '%';
 }
 function renderEvList(list){
+  hideEvChain();
   var grid = $('#evGrid');
   var empty = $('#evEmpty');
   var cnt = $('#evCount');
@@ -2763,6 +2823,123 @@ $('#clinicBtn').addEventListener('click', function(){ toast('已定位最近的�
 
 /* 初始化：读取已保存证据 */
 renderEvList(evReadAll());
+/* ---------- 证据链：汇总与生成 ---------- */
+var CHAIN_KEYS = [
+  { k: 'contract', label: '合同 / 协议', match: ['合同'], icon: '📄' },
+  { k: 'chat', label: '聊天记录', match: ['聊天记录'], icon: '💬' },
+  { k: 'pay', label: '转账 / 支付凭证', match: ['转账/工资'], icon: '💰' },
+  { k: 'photo', label: '现场照片 / 视频', match: ['照片/视频'], icon: '📸' },
+  { k: 'audio', label: '录音 / 沟通记录', match: ['录音'], icon: '🎙️' },
+  { k: 'other', label: '身份 / 其他补充', match: ['其他'], icon: '🗂️' }
+];
+function hideEvChain(){
+  var p = $('#evChainPanel');
+  if (p) p.style.display = 'none';
+}
+function evDtFmt(iso){
+  var d = new Date(iso);
+  if (isNaN(d)) return '';
+  var p = function(x){ return String(x).padStart(2, '0'); };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function evChainData(list){
+  var sorted = list.slice().sort(function(a, b){ return String(a.savedAt || '').localeCompare(String(b.savedAt || '')); });
+  var cov = CHAIN_KEYS.map(function(key){
+    var hit = sorted.some(function(rec){ return key.match.indexOf(rec.category || '') >= 0; });
+    return { key: key, hit: hit };
+  });
+  var covered = cov.filter(function(x){ return x.hit; }).length;
+  var span = '';
+  if (sorted.length === 1) span = '单份';
+  else if (sorted.length > 1){
+    var f = new Date(sorted[0].savedAt), l = new Date(sorted[sorted.length - 1].savedAt);
+    var days = Math.max(1, Math.round((l - f) / 86400000));
+    span = (evFmtDate(sorted[0].savedAt) || '') + ' → ' + (evFmtDate(sorted[sorted.length - 1].savedAt) || '') + '（' + days + ' 天）';
+  } else span = '暂无';
+  return { list: sorted, cov: cov, covered: covered, total: 6, score: Math.round(covered / CHAIN_KEYS.length * 100), span: span };
+}
+function evChainRender(){
+  var list = evReadAll();
+  var box = $('#evChainPanel');
+  if (!list.length){ toast('还没有证据材料，请先上传后再生成证据链', false); return; }
+  var d = evChainData(list);
+  $('#chainStat').textContent = list.length + ' 份 · ' + d.covered + ' 类';
+  $('#chainScore').textContent = d.score + '%';
+  $('#chainSpan').textContent = d.span;
+  $('#chainCovTxt').textContent = d.covered + ' / ' + d.total;
+  var bar = $('#chainCovBar'); bar.style.width = d.score + '%';
+  var tags = $('#chainCovTags'); tags.innerHTML = '';
+  d.cov.forEach(function(c){
+    var t = el('span', 'cc-tag ' + (c.hit ? 'on' : 'off'), c.key.icon + ' ' + c.key.label);
+    tags.appendChild(t);
+  });
+  /* 时间线 */
+  var tl = $('#chainTimeline'); tl.innerHTML = '';
+  d.list.forEach(function(rec, i){
+    var st = el('div', 'chain-step');
+    st.appendChild(el('span', 'cs-dot'));
+    st.appendChild(el('span', 'cs-no', String(i + 1).padStart(2, '0')));
+    st.appendChild(el('span', 'cs-ico', evIcon(rec)));
+    var b = el('div', 'cs-body');
+    b.appendChild(el('b', null, rec.name || '未命名材料'));
+    var meta = (evDtFmt(rec.savedAt) || '刚刚') + ' · ' + (rec.category || '其他') + ' · ' + evFmtSize(rec.size);
+    if (rec.note) meta += ' · 备注：' + rec.note;
+    b.appendChild(el('span', null, meta));
+    st.appendChild(b);
+    tl.appendChild(st);
+  });
+  /* 叙述 */
+  var narr = '基于你保存的 ' + list.length + ' 份材料，按时间先后整理出如下证据链：\n';
+  d.list.forEach(function(rec, i){
+    narr += (i + 1) + ') ' + (evDtFmt(rec.savedAt) || '时间待补') + '，上传「' + (rec.name || '材料') + '」（' + (rec.category || '其他') + '）' + (rec.note ? '，备注：' + rec.note : '') + '\n';
+  });
+  narr += '上述环节按时间连续衔接，共同指向同一纠纷事实；建议对照原件逐份核验，并保留平台原始记录，以增强证明力。';
+  $('#chainNarrative').textContent = narr;
+  /* 缺失项 */
+  var miss = d.cov.filter(function(c){ return !c.hit; }).map(function(c){ return c.key.icon + ' ' + c.key.label; });
+  var mBox = $('#chainMissing');
+  if (miss.length){
+    mBox.style.display = '';
+    mBox.textContent = '⚠️ 建议补充以下关键材料以闭合证据链：' + miss.join('、') + '。';
+  } else {
+    mBox.style.display = 'none';
+  }
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function evChainText(){
+  var list = evReadAll();
+  if (!list.length) return '';
+  var d = evChainData(list);
+  var lines = [];
+  lines.push('【法护启航 · 证据链汇总】');
+  lines.push('材料数量：' + list.length + ' 份 ｜ 覆盖类别：' + d.covered + '/' + d.total);
+  lines.push('证据链完整度：' + d.score + '% ｜ 时间跨度：' + d.span);
+  lines.push('');
+  lines.push('—— 时间线 ——');
+  d.list.forEach(function(rec, i){
+    lines.push((i + 1) + '. ' + (evDtFmt(rec.savedAt) || '时间待补') + '｜' + (rec.category || '其他') + '｜' + (rec.name || '未命名') + (rec.note ? '｜备注：' + rec.note : '') + '｜' + evFmtSize(rec.size));
+  });
+  lines.push('');
+  lines.push('—— 覆盖检查 ——');
+  d.cov.forEach(function(c){ lines.push((c.hit ? '[已覆盖] ' : '[缺失]   ') + c.key.icon + ' ' + c.key.label); });
+  lines.push('');
+  lines.push('注：证据链仅基于本机已保存材料生成，用于梳理与演示；正式维权请保留原件并咨询 12348。');
+  return lines.join('\n');
+}
+function evChainDownload(){
+  var txt = evChainText();
+  if (!txt){ toast('还没有证据材料，无法导出', false); return; }
+  var blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '法护启航-证据链汇总.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 20000);
+  toast('证据链文本已导出', true);
+}
+$('#evChainBtn').addEventListener('click', evChainRender);
+$('#evExportTxtBtn').addEventListener('click', evChainDownload);
 
 
 
