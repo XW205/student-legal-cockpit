@@ -19,20 +19,21 @@ function el(tag, cls, html){
   if (html != null) n.innerHTML = html;
   return n;
 }
-/* Markdown 渲染：优先用 marked.js，失败则回退纯文本 */
-function renderMd(bub, text){
+/* Markdown 渲染：优先用 marked.js，失败则回退纯文本；
+   noCard 为真时不追加法条卡片（流式输出过程中避免反复重建，结束后统一补） */
+function renderMd(bub, text, noCard){
   if (!bub) return;
   try {
     if (window.marked && typeof marked.parse === 'function'){
       bub.innerHTML = marked.parse(text || '');
       bub.classList.add('md');
-      appendLawCard(bub, text);
+      if (!noCard) appendLawCard(bub, text);
       return;
     }
   } catch (e) {}
   bub.textContent = text || '';
   bub.classList.remove('md');
-  appendLawCard(bub, text);
+  if (!noCard) appendLawCard(bub, text);
 }
 
 /* =========================================================
@@ -531,34 +532,88 @@ function askModel(text, done){
   msgs.unshift({ role: 'system', content: FUZI_SYS });
 
   var bub = botTyping();
+  /* 流式输出（SSE）：逐段接收 delta.content 增量渲染 Markdown，降低等待感 */
+  var acc = '';            // 已接收的完整回答文本
+  var started = false;     // 是否已收到首个片段（切换出 typing 状态）
+  var paintQueued = false; // 渲染节流：每帧最多重渲一次
+  function paint(final){
+    if (!acc) return;
+    if (!started){ bub.classList.remove('typing'); started = true; }
+    /* 用户若已向上翻阅（距底 > 80px）则不强行拉回底部 */
+    var stick = (chatScroll.scrollHeight - chatScroll.scrollTop - chatScroll.clientHeight) < 80;
+    renderMd(bub, acc, !final);   // 流式中暂不追加法条卡片，结束后统一补
+    if (final || stick) scrollBottom();
+  }
+  function schedulePaint(){
+    if (paintQueued) return;
+    paintQueued = true;
+    requestAnimationFrame(function(){ paintQueued = false; paint(false); });
+  }
+  function finish(){
+    if (!acc) throw new Error('模型返回内容为空：可能被内容安全策略拦截、余额不足或连接中断，请稍后重试');
+    paint(true);                  // 收尾：完整渲染并追加法条卡片
+    chatHistory.push({ role: 'assistant', content: acc });
+    if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
+    if (done) done();
+  }
+
   var payload = {
     model: FUZI_CFG.model || FUZI_DEFAULT.model,
     messages: msgs,
     temperature: 0.7, top_p: 0.9,
     max_tokens: 2048,
-    stream: false
+    stream: true
   };
   fetch(fuziBase() + '/chat/completions', {
     method: 'POST', headers: buildHeaders(), body: JSON.stringify(payload), signal: ac.signal
   }).then(function(r){
     if (!r.ok) return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ' ' + String(t).slice(0, 140)); });
-    return r.json();
-  }).then(function(j){
-    var content = dsContent(j);
-    if (!content) throw new Error(dsEmptyError(j));
-    bub.classList.remove('typing');
-    renderMd(bub, content);
-    chatHistory.push({ role: 'assistant', content: content });
-    if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
-    scrollBottom();
-    if (done) done();
+    /* 环境不支持流式读取时回退为一次性解析（老浏览器 / 特殊代理） */
+    if (!r.body || !r.body.getReader){
+      return r.json().then(function(j){
+        acc = dsContent(j);
+        if (!acc) throw new Error(dsEmptyError(j));
+        paint(true);
+        chatHistory.push({ role: 'assistant', content: acc });
+        if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
+        if (done) done();
+      });
+    }
+    var reader = r.body.getReader();
+    var decoder = new TextDecoder('utf-8');
+    var buf = '';
+    function pump(){
+      return reader.read().then(function(res){
+        if (res.done) return;
+        buf += decoder.decode(res.value, { stream: true });
+        var idx;
+        while ((idx = buf.indexOf('\n')) >= 0){
+          var line = buf.slice(0, idx).trim();
+          buf = buf.slice(idx + 1);
+          if (!line || line.charAt(0) === ':') continue;    // 空行 / SSE 注释
+          if (line.indexOf('data:') !== 0) continue;        // 非 data 行
+          var data = line.slice(5).trim();
+          if (data === '[DONE]') return;
+          try {
+            var j = JSON.parse(data);
+            var d = (j.choices && j.choices[0] && j.choices[0].delta) || {};
+            var piece = (d.content == null) ? '' : String(d.content);
+            if (piece){ acc += piece; schedulePaint(); }
+          } catch (e) {}
+        }
+        return pump();
+      });
+    }
+    return pump().then(finish);
   }).catch(function(err){
     if (ac.intentional){ if (bub.parentNode) bub.parentNode.remove(); return; }
-    /* 模型不可用：当前气泡只承载错误提示（完整句子，不悬空冒号）；
+    /* 模型不可用 / 传输中断：当前气泡只承载错误提示（完整句子，不悬空冒号）；
        离线答案由 botReply 以独立气泡给出，两个气泡各司其职、内容来源单一 */
     bub.classList.remove('typing');
     bub.classList.add('err');
-    bub.textContent = '⚠️ 暂时无法获取「DeepSeek」回答（' + err.message + '），已自动切换为离线演示回答。';
+    bub.textContent = (acc
+      ? '⚠️ 回答传输中断（' + err.message + '），已自动切换为离线演示回答。'
+      : '⚠️ 暂时无法获取「DeepSeek」回答（' + err.message + '），已自动切换为离线演示回答。');
     var k = detectScene(text);
     botReply(demoAnswerFor(text), function(){ syncSceneChips(k); });
   }).finally(function(){
