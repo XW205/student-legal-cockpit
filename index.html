@@ -37,6 +37,7 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6.5 7 7.5 21h9l1-14M10 11v6M14 11v6"/></symbol>
   <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 22c4.4 0 7-2.8 7-6.6 0-2.4-1.2-4.4-2.6-6-.4 1-.9 1.8-1.6 2.4.2-3-1.4-6-3.8-7.8.1 2.2-.8 3.6-2.5 5C6.6 10.4 5 12.4 5 15.4 5 19.2 7.6 22 12 22Z"/><path d="M9 17.5a3 3 0 0 0 3 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
 </svg>
 
 <!-- ================= 顶部导航（桌面） ================= -->
@@ -781,6 +782,33 @@
 
 </main>
 
+
+<!-- ================= 移动端底部导航 ================= -->
+<nav class="mbottom" id="mbottom" aria-label="移动端底部导航">
+  <button class="nav-item active" data-page="page-home"><svg class="mb-ic"><use href="#i-home"/></svg><span>首页</span></button>
+  <button class="nav-item" data-page="page-quiz"><svg class="mb-ic"><use href="#i-radar"/></svg><span>AI测评</span></button>
+  <button class="nav-item" data-page="page-review"><svg class="mb-ic"><use href="#i-doc"/></svg><span>AI审查</span></button>
+  <button class="nav-item" data-page="page-ai"><svg class="mb-ic"><use href="#i-chat"/></svg><span>咨询</span></button>
+  <button class="mb-more" id="moreBtn" aria-label="全部功能"><svg class="mb-ic"><use href="#i-grid"/></svg><span>更多</span></button>
+</nav>
+<div class="sheet-mask" id="sheetMask"></div>
+<aside class="sheet" id="sheet" aria-label="全部功能">
+  <div class="sheet-head">
+    <b>全部功能</b>
+    <button class="sheet-close" id="sheetClose" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <div class="sheet-list">
+    <button class="nav-item" data-page="page-home"><svg class="ni"><use href="#i-home"/></svg><span>首页</span></button>
+    <button class="nav-item" data-page="page-quiz"><svg class="ni"><use href="#i-radar"/></svg><span>AI 风险测评</span></button>
+    <button class="nav-item" data-page="page-review"><svg class="ni"><use href="#i-doc"/></svg><span>AI 合同审查</span></button>
+    <button class="nav-item" data-page="page-ai"><svg class="ni"><use href="#i-chat"/></svg><span>维权导航</span></button>
+    <button class="nav-item" data-page="page-map"><svg class="ni"><use href="#i-pin"/></svg><span>线下法律服务地图</span></button>
+    <button class="nav-item" data-page="page-rights"><svg class="ni"><use href="#i-archive"/></svg><span>证据急救</span></button>
+    <button class="nav-item" data-page="page-about"><svg class="ni"><use href="#i-info"/></svg><span>关于我们</span></button>
+  </div>
+  <div class="sheet-foot">公益演示原型 · AI 回答不构成法律意见<br>紧急法律问题请拨打 <b>12348</b></div>
+</aside>
+
 <!-- ================= 页脚 ================= -->
 <footer class="site-foot">
   <div class="wrap foot-in">
@@ -877,6 +905,29 @@
   } else {
     wraps.forEach(function(w){ w.classList.add('in'); });
   }
+})();
+</script>
+
+<script>
+/* 移动端“全部功能”底部弹层（纯 UI） */
+(function(){
+  var more = document.getElementById('moreBtn');
+  var mask = document.getElementById('sheetMask');
+  var sheet = document.getElementById('sheet');
+  var close = document.getElementById('sheetClose');
+  function setSheet(on){
+    if (!sheet || !mask) return;
+    sheet.classList.toggle('on', on);
+    mask.classList.toggle('on', on);
+    document.body.classList.toggle('sheet-open', on);
+  }
+  if (more) more.addEventListener('click', function(){ setSheet(true); });
+  if (close) close.addEventListener('click', function(){ setSheet(false); });
+  if (mask) mask.addEventListener('click', function(){ setSheet(false); });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.nav-item');
+    if (t && sheet && sheet.classList.contains('on')) setSheet(false);
+  });
 })();
 </script>
 </body>
